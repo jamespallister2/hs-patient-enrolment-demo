@@ -1,0 +1,80 @@
+// Filter a list – X-GOV: MoJ Filter layout and Filter component in NHS styling
+.app-filter-layout {
+  @include nhsuk-media-query($from: desktop) {
+    display: flex;
+    gap: nhsuk-spacing(5);
+    align-items: flex-start;
+  }
+}
+
+.app-filter-layout__filter {
+  @include nhsuk-responsive-margin(5, "bottom");
+  background-color: $nhsuk-reverse-text-colour;
+
+  @include nhsuk-media-query($from: desktop) {
+    flex: 0 0 18rem;
+  }
+}
+
+.app-filter-layout__content {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.app-filter__header {
+  padding: nhsuk-spacing(2) nhsuk-spacing(3);
+  background-color: nhsuk-colour("grey-1");
+  color: $nhsuk-reverse-text-colour;
+}
+
+.app-filter__header-title {
+  @include nhsuk-font(22, $weight: bold);
+  margin: 0;
+  color: $nhsuk-reverse-text-colour;
+}
+
+.app-filter__content {
+  padding: nhsuk-spacing(3);
+  border: 1px solid $nhsuk-border-colour;
+  border-top: 0;
+}
+
+.app-filter__selected {
+  @include nhsuk-responsive-margin(4, "bottom");
+  padding-bottom: nhsuk-spacing(3);
+  border-bottom: 1px solid $nhsuk-border-colour;
+}
+
+.app-filter__selected-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.app-filter__tag {
+  @include nhsuk-font(16);
+  display: inline-block;
+  margin: 0 nhsuk-spacing(1) nhsuk-spacing(1) 0;
+  padding: nhsuk-spacing(1) nhsuk-spacing(2);
+  border: 1px solid nhsuk-colour("grey-1");
+  border-radius: 4px;
+  color: $nhsuk-text-colour;
+  background-color: $nhsuk-reverse-text-colour;
+  text-decoration: none;
+
+  &:hover {
+    background-color: nhsuk-colour("grey-5");
+  }
+
+  &:focus {
+    @include nhsuk-focused-text;
+  }
+
+  &::after {
+    content: " \00D7";
+  }
+}
+
+.app-filter__options {
+  margin-bottom: 0;
+}

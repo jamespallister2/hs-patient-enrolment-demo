@@ -1,0 +1,68 @@
+{#
+  CES-013 – Check before submitting the bulk file
+  Patterns: NHS Check answers; NHS Summary list; NHS Warning callout
+            (rows that will not be enrolled)
+#}
+{% extends "layout.html" %}
+
+{% set pageName = "Lorem ipsum dolor sit amet (check before you submit the file)" %}
+
+{% block beforeContent %}
+  {{ backLink({
+    href: "/bulk/" + b.id + "/results",
+    text: "Back"
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      <h1 class="nhsuk-heading-l">{{ pageName }}</h1>
+
+      {{ summaryList({
+        rows: [
+          {
+            key: { text: "File" },
+            value: { text: b.fileName },
+            actions: {
+              items: [
+                { href: "/bulk/upload", text: "Change", visuallyHiddenText: "file" }
+              ]
+            }
+          },
+          {
+            key: { text: "Accountable clinical organisation" },
+            value: { text: bOrganisation.name }
+          },
+          {
+            key: { text: "Lorem ipsum (rows in file)" },
+            value: { text: b.rows | length | string }
+          },
+          {
+            key: { text: "Lorem ipsum (patients to be enrolled)" },
+            value: { text: validCount | string }
+          },
+          {
+            key: { text: "Lorem ipsum (rows not included)" },
+            value: { html: excludedCount + ' <a class="nhsuk-link" href="/bulk/' + b.id + '/results?_show=problems">Lorem ipsum (view)</a>' if excludedCount else "0" }
+          }
+        ]
+      }) }}
+
+      {% if excludedCount %}
+        {% call warningCallout({
+          heading: "Lorem ipsum (important)"
+        }) %}
+          <p>Lorem ipsum dolor sit amet {{ excludedCount }} consectetur adipiscing elit (these rows will not be enrolled).</p>
+        {% endcall %}
+      {% endif %}
+
+      <form method="post" action="/bulk/{{ b.id }}/check-answer" novalidate>
+        {{ button({
+          text: "Lorem ipsum (submit bulk file)",
+          preventDoubleClick: true
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

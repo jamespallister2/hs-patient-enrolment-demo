@@ -1,0 +1,43 @@
+{#
+  CES-009 / CES-011 – Possible duplicate enrolment
+  Pattern: NHS Interruption page ("Continue anyway" / "Cancel" follow the
+  pattern's default example). Policy on whether duplicates can go ahead is not
+  in the backlog – this version lets the clinician continue.
+#}
+{% extends "layout.html" %}
+
+{% set pageName = "Lorem ipsum dolor sit amet (patient may already be enrolled on this product)" %}
+
+{% block beforeContent %}
+  {{ backLink({
+    href: "/enrol/" + variant + "/check",
+    text: "Back"
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      {% call panel({
+        variant: "interruption",
+        heading: {
+          text: pageName,
+          size: "l"
+        }
+      }) %}
+        <p>Lorem ipsum dolor sit amet {{ duplicate.patientName }} consectetur {{ duplicateProduct.name }} ({{ duplicate.status | lower }}, {{ duplicate.createdAt | appDate }}).</p>
+        <p><a class="nhsuk-link nhsuk-link--reverse" href="/enrolments/{{ duplicate.id }}">Lorem ipsum (view enrolment {{ duplicate.id }})</a></p>
+        <form method="post" action="/enrol/{{ variant }}/duplicate-answer" novalidate>
+          <div class="nhsuk-button-group">
+            {{ button({
+              text: "Continue anyway",
+              variant: "reverse",
+              preventDoubleClick: true
+            }) }}
+            <a class="nhsuk-link nhsuk-link--reverse" href="/enrol/{{ variant }}/check">Cancel</a>
+          </div>
+        </form>
+      {% endcall %}
+    </div>
+  </div>
+{% endblock %}

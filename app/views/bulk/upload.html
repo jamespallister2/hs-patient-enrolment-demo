@@ -1,0 +1,68 @@
+{#
+  CES-011 – Upload a bulk enrolment file
+  Patterns: NHS Question page; NHS File upload; NHS Hint text (format, size,
+            row limit); NHS Error message + Error summary; plain link for the
+            template download stating file type and size;
+            X-GOV MoJ Upload files pattern
+#}
+{% extends "layout.html" %}
+
+{% set pageName = "Lorem ipsum dolor sit amet (upload a bulk enrolment file)" %}
+
+{% block beforeContent %}
+  {{ backLink({
+    href: "/bulk",
+    text: "Back"
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+
+      {% include "_partials/error-summary.njk" %}
+
+      <h1 class="nhsuk-heading-l">{{ pageName }}</h1>
+
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit:</p>
+      <ol class="nhsuk-list nhsuk-list--number">
+        <li>lorem ipsum dolor sit amet (download the template)</li>
+        <li>consectetur adipiscing elit (add one patient per row)</li>
+        <li>sed do eiusmod tempor (upload the completed file)</li>
+      </ol>
+
+      <p><a class="nhsuk-link" href="/bulk/template.csv" download>Lorem ipsum (bulk enrolment file template) (CSV, 1 KB)</a></p>
+
+      <form method="post" action="/bulk/upload-answer" novalidate>
+        {{ fileUpload({
+          id: "file",
+          name: "_file",
+          label: {
+            text: "Lorem ipsum (upload a file)",
+            size: "m"
+          },
+          hint: {
+            text: "Lorem ipsum dolor sit amet (CSV file, up to 500 rows, smaller than 2 MB)"
+          },
+          attributes: {
+            accept: ".csv,text/csv"
+          },
+          errorMessage: {
+            text: errors.file.text
+          } if errors.file
+        }) }}
+
+        {{ button({
+          text: "Lorem ipsum (upload file)",
+          preventDoubleClick: true
+        }) }}
+      </form>
+
+      {{ details({
+        summaryText: "Prototype only – how to test",
+        html: "<p>No file is really uploaded. Choose any .csv file to see validation results. Use a file with “empty” in its name to see the empty file error, or a non-CSV file to see the wrong type error.</p><p><a href=\"/bulk/prototype-upload\">Simulate uploading a sample file</a></p>"
+      }) }}
+
+    </div>
+  </div>
+{% endblock %}

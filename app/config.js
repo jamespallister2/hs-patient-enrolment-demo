@@ -1,9 +1,9 @@
 // Use this file to change prototype configuration.
 
 module.exports = {
-  // Service name
-  serviceName: 'Service name goes here',
+  // Service name – taken from the backlog title. Content designers may wish to change this.
+  serviceName: 'HealthStore Clinical Enrolment Service',
 
   // Port to run the prototype on locally
-  port: 3000
+  port: process.env.PORT || 3000
 }

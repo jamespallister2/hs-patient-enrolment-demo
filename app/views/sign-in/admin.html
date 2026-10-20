@@ -1,0 +1,71 @@
+{#
+  CES-002 – Log in with an admin account (AWS Cognito) for admin and technical users
+  Patterns: NHS Text input; NHS Password input; NHS Error message + Error summary;
+            X-GOV: GOV.UK Passwords pattern (show/hide, no paste blocking)
+  The "Email address" and "Password" labels and the email format error follow the
+  GOV.UK email address and passwords patterns.
+#}
+{% extends "layout.html" %}
+
+{% set pageName = "Lorem ipsum dolor (admin log in)" %}
+
+{% block beforeContent %}
+  {{ backLink({
+    href: "/sign-in",
+    text: "Back"
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+
+      {% include "_partials/error-summary.njk" %}
+
+      <h1 class="nhsuk-heading-l">{{ pageName }}</h1>
+
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+
+      <form method="post" action="/sign-in/admin-answer" novalidate>
+        {{ input({
+          id: "email",
+          name: "adminSignIn[email]",
+          type: "email",
+          autocomplete: "email",
+          spellcheck: false,
+          label: {
+            text: "Email address"
+          },
+          value: data.adminSignIn.email,
+          errorMessage: {
+            text: errors.email.text
+          } if errors.email
+        }) }}
+
+        {{ passwordInput({
+          id: "password",
+          name: "_password",
+          autocomplete: "current-password",
+          label: {
+            text: "Password"
+          },
+          errorMessage: {
+            text: errors.password.text
+          } if errors.password
+        }) }}
+
+        {{ button({
+          text: "Log in"
+        }) }}
+      </form>
+
+      <p><a class="nhsuk-link" href="#">Lorem ipsum dolor (forgotten password)</a></p>
+
+      {{ details({
+        text: "Prototype only. Use priya.shah@example.com (back office) or lee.morgan@example.com (technical admin) with any password.",
+        summaryText: "Test accounts"
+      }) }}
+
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{
+  "name": "healthstore-clinical-enrolment-02-enrol-task-list",
+  "title": "HealthStore Clinical Enrolment Service: 02-enrol-task-list",
+  "updatedAt": "2026-10-20T13:31:35.476Z",
+  "viewerSchemaVersion": 1,
+  "mode": "scenario",
+  "scenario": "02-enrol-task-list",
+  "nodeCount": 14,
+  "edgeCount": 41,
+  "hasScreenshots": true,
+  "crawlStats": {
+    "pagesVisited": 14,
+    "runtimeLinksExtracted": 163,
+    "runtimeEdgesDiscovered": 40,
+    "setupStepsExecuted": 3
+  }
+}

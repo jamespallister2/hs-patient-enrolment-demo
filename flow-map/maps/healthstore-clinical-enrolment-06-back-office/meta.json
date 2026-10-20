@@ -1,0 +1,17 @@
+{
+  "name": "healthstore-clinical-enrolment-06-back-office",
+  "title": "HealthStore Clinical Enrolment Service: 06-back-office",
+  "updatedAt": "2026-10-20T13:31:35.513Z",
+  "viewerSchemaVersion": 1,
+  "mode": "scenario",
+  "scenario": "06-back-office",
+  "nodeCount": 4,
+  "edgeCount": 12,
+  "hasScreenshots": true,
+  "crawlStats": {
+    "pagesVisited": 4,
+    "runtimeLinksExtracted": 58,
+    "runtimeEdgesDiscovered": 11,
+    "setupStepsExecuted": 2
+  }
+}

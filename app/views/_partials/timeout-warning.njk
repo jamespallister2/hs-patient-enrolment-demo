@@ -1,0 +1,15 @@
+{#
+  Session timeout warning (CES-002)
+  X-GOV: based on the MoJ Timeout warning, styled with NHS tokens.
+  https://design-patterns.service.justice.gov.uk/components/timeout-warning/
+  The heading, body and button text follow the MoJ component's example.
+  In the prototype it only opens from the prototype settings panel.
+#}
+<dialog class="app-timeout-warning" id="app-timeout-warning" aria-labelledby="app-timeout-warning-heading" aria-describedby="app-timeout-warning-text" data-module="app-timeout-warning">
+  <h2 class="nhsuk-heading-m" id="app-timeout-warning-heading">You’re about to be signed out</h2>
+  <p id="app-timeout-warning-text">For your security, we will sign you out in <span data-countdown>2 minutes</span>.</p>
+  <div class="nhsuk-button-group">
+    <button class="nhsuk-button" type="button" data-module="app-timeout-continue">Stay signed in</button>
+    <a class="nhsuk-link" href="/signed-out?reason=timeout">Sign out</a>
+  </div>
+</dialog>

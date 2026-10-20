@@ -1,0 +1,81 @@
+# CES-007 to CES-009 – find a patient by NHS number and create an enrolment
+# Variant A: task list
+
+Start /enrolments
+Scope /enrolments /enrol
+Exclude /prototype /prototype-admin /assets
+Tags enrolment CES-007 CES-008 CES-009
+
+--- Setup ---
+
+Use setup.clinician
+Goto /prototype/set?variant=a&next=/enrolments
+
+--- Map ---
+
+Visit /enrolments
+ClickLink "enrol a patient"
+Wait 1200
+Snapshot
+Fill "#nhsNumber" "999 123 4853"
+ClickButton "Continue"
+Wait 1200
+Snapshot
+WaitForUrl /enrol/confirm-patient
+Snapshot
+Choose "Yes"
+ClickButton "Continue"
+Wait 1200
+Snapshot
+
+# Task: accountable organisation and authorising clinician
+ClickLink "accountable organisation and authorising clinician"
+Wait 1200
+Snapshot
+ClickButton "Save and continue"
+Wait 1200
+Snapshot
+Fill "#clinicianId" "Asha"
+Wait 500
+Click "#clinicianId__option--0"
+Wait 1200
+ClickButton "Save and continue"
+Wait 1200
+Snapshot
+
+# Task: product, condition and indication
+ClickLink "product, condition and indication"
+Wait 1200
+Snapshot
+Choose "DTx product A"
+ClickButton "Save and continue"
+Wait 1200
+Snapshot
+Choose "Insomnia"
+ClickButton "Save and continue"
+Wait 1200
+Snapshot
+Choose "Indication A1"
+ClickButton "Save and continue"
+Wait 1200
+Snapshot
+
+# Task: pathway and date
+ClickLink "pathway and date"
+Wait 1200
+Snapshot
+Choose "Pathway 1"
+ClickButton "Save and continue"
+Wait 1200
+Snapshot
+ClickButton "Save and continue"
+Wait 1200
+Snapshot
+
+# Check and create
+ClickLink "check and create enrolment"
+Wait 1200
+Snapshot
+ClickButton "Create enrolment"
+Wait 1200
+Snapshot

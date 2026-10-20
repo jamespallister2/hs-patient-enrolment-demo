@@ -1,0 +1,66 @@
+{#
+  CES-003 – Choose an organisation (shown at log in when a user has more than one,
+  and from "Change" in the organisation switcher)
+  Patterns: NHS Question page; NHS Radios
+#}
+{% extends "layout.html" %}
+
+{% set pageName = "Lorem ipsum dolor sit amet (which organisation)?" %}
+
+{% block beforeContent %}
+  {% if query.change == "yes" %}
+    {{ backLink({
+      href: "/home",
+      text: "Back"
+    }) }}
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+
+      {% include "_partials/error-summary.njk" %}
+
+      <form method="post" action="/sign-in/select-organisation-answer" novalidate>
+        <input type="hidden" name="_change" value="{{ 'yes' if query.change == 'yes' }}">
+
+        {% set orgItems = [] %}
+        {% for org in userOrganisations %}
+          {% set orgItems = (orgItems.push({
+            value: org.id,
+            text: org.name,
+            hint: {
+              text: "ODS code: " + org.odsCode
+            },
+            checked: data.auth.organisationId == org.id
+          }), orgItems) %}
+        {% endfor %}
+
+        {{ radios({
+          name: "_organisationId",
+          idPrefix: "organisationId",
+          fieldset: {
+            legend: {
+              text: pageName,
+              size: "l",
+              isPageHeading: true
+            }
+          },
+          hint: {
+            text: "Lorem ipsum dolor sit amet"
+          },
+          errorMessage: {
+            text: errors.organisationId.text
+          } if errors.organisationId,
+          items: orgItems
+        }) }}
+
+        {{ button({
+          text: "Continue"
+        }) }}
+      </form>
+
+    </div>
+  </div>
+{% endblock %}

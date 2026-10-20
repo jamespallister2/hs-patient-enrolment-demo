@@ -1,0 +1,17 @@
+{#
+  CES-002 – Signed out (after Log out, or after the session times out)
+  Pattern: plain content page
+#}
+{% extends "layout.html" %}
+
+{% set pageName = "Lorem ipsum dolor sit amet (you have logged out)" if query.reason != "timeout" else "Lorem ipsum dolor sit amet (you were logged out because of inactivity)" %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      <h1 class="nhsuk-heading-l">{{ pageName }}</h1>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</p>
+      <p><a class="nhsuk-link nhsuk-link--no-visited-state" href="/sign-in">Lorem ipsum (log in again)</a></p>
+    </div>
+  </div>
+{% endblock %}

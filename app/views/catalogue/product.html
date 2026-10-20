@@ -1,0 +1,82 @@
+{#
+  CES-005 – Product page
+  Patterns: NHS Summary list (with Change links, and summary cards for each
+            condition); NHS Tag; NHS Button (warning – withdraw);
+            NHS Notification banner (success); X-GOV MoJ Page header actions
+#}
+{% extends "layout.html" %}
+
+{% set pageName = p.name %}
+
+{% block beforeContent %}
+  {{ backLink({
+    href: "/catalogue",
+    text: "Back"
+  }) }}
+{% endblock %}
+
+{% block content %}
+  {% include "_partials/success-banner.njk" %}
+
+  <div class="app-page-header">
+    <div class="app-page-header__heading">
+      <h1 class="nhsuk-heading-l">
+        {{ p.name }}
+        {{ tag({ text: p.status, colour: p.status | statusColour, classes: "nhsuk-u-margin-left-2" }) }}
+      </h1>
+    </div>
+    <div class="app-page-header__actions">
+      {{ button({
+        text: "Lorem ipsum (edit product)",
+        href: "/catalogue/" + p.id + "/edit",
+        variant: "secondary"
+      }) }}
+      {% if p.status == "Live" %}
+        {{ button({
+          text: "Lorem ipsum (withdraw product)",
+          href: "/catalogue/" + p.id + "/withdraw",
+          variant: "warning"
+        }) }}
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      {% set orgNames = [] %}
+      {% for o in entitledOrganisations %}{% set orgNames = (orgNames.push(o.name + " (" + o.odsCode + ")"), orgNames) %}{% endfor %}
+
+      {{ summaryList({
+        rows: [
+          { key: { text: "Lorem ipsum (product name)" }, value: { text: p.name } },
+          { key: { text: "Version" }, value: { text: p.version } },
+          { key: { text: "Lorem ipsum (description)" }, value: { text: p.description } },
+          { key: { text: "Pathways" }, value: { text: p.pathways | join(", ") } },
+          { key: { text: "Status" }, value: { html: tag({ text: p.status, colour: p.status | statusColour }) } },
+          { key: { text: "Lorem ipsum (organisations entitled)" }, value: { text: orgNames | join(", ") if orgNames | length else "None" } },
+          { key: { text: "Lorem ipsum (active enrolments)" }, value: { text: enrolmentCount | string } }
+        ]
+      }) }}
+
+      <h2 class="nhsuk-heading-m">Conditions and indications</h2>
+      {% for c in p.conditions %}
+        {% set indicationHtml %}
+          <ul class="nhsuk-list nhsuk-list--bullet nhsuk-u-margin-bottom-0">
+            {% for i in c.indications %}<li>{{ i }}</li>{% endfor %}
+          </ul>
+        {% endset %}
+        {{ summaryList({
+          card: {
+            heading: {
+              text: c.name,
+              level: 3
+            }
+          },
+          rows: [
+            { key: { text: "Indications" }, value: { html: indicationHtml } }
+          ]
+        }) }}
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}

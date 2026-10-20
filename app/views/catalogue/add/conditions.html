@@ -1,0 +1,64 @@
+{#
+  CES-005 – Conditions added so far
+  Pattern: X-GOV MoJ "Add to a list" (summary of items, then "Do you need to
+  add another ...?"). The heading and question follow the pattern's wording.
+#}
+{% extends "layout.html" %}
+
+{% set count = draft.conditions | length %}
+{% set pageName = "You have added " + count + (" condition" if count == 1 else " conditions") %}
+
+{% block beforeContent %}
+  {{ backLink({
+    href: "/catalogue/add/details",
+    text: "Back"
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+
+      {% include "_partials/error-summary.njk" %}
+
+      <h1 class="nhsuk-heading-l">{{ pageName }}</h1>
+
+      {% set rows = [] %}
+      {% for c in draft.conditions %}
+        {% set rows = (rows.push({
+          key: { text: c.name },
+          value: { text: c.indications | join(", ") },
+          actions: {
+            items: [
+              { href: "/catalogue/add/condition?_index=" + loop.index0, text: "Change", visuallyHiddenText: c.name },
+              { href: "/catalogue/add/condition-remove?_index=" + loop.index0, text: "Remove", visuallyHiddenText: c.name }
+            ]
+          }
+        }), rows) %}
+      {% endfor %}
+      {{ summaryList({ rows: rows }) }}
+
+      <form method="post" action="/catalogue/add/conditions-answer" novalidate>
+        {{ radios({
+          name: "_addAnother",
+          idPrefix: "addAnother",
+          classes: "nhsuk-radios--inline",
+          fieldset: {
+            legend: {
+              text: "Do you need to add another condition?",
+              size: "m"
+            }
+          },
+          errorMessage: { text: errors.addAnother.text } if errors.addAnother,
+          items: [
+            { value: "yes", text: "Yes" },
+            { value: "no", text: "No" }
+          ]
+        }) }}
+        {{ button({
+          text: "Continue"
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

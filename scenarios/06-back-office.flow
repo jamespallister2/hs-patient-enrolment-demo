@@ -1,0 +1,26 @@
+# CES-010 / CES-015 – back office: all organisations, audit log,
+# cancel on someone's behalf
+
+Start /enrolments
+Scope /enrolments
+Exclude /prototype /prototype-admin /assets
+Tags back-office CES-010 CES-015
+
+--- Setup ---
+
+Use setup.back-office
+
+--- Map ---
+
+Visit /enrolments
+Visit /enrolments/ENR-10005
+ClickLink "Cancel enrolment"
+Wait 1200
+Snapshot
+Choose "Lorem ipsum reason 2"
+ClickButton "Continue"
+Wait 1200
+Snapshot
+ClickButton "Cancel enrolment"
+Wait 1200
+Snapshot

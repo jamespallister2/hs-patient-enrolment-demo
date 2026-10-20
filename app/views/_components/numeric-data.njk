@@ -1,0 +1,25 @@
+{#
+  Numeric data
+  X-GOV: based on the MoJ Numeric data component, styled with NHS tokens.
+  https://design-patterns.service.justice.gov.uk/components/numeric-data/
+  Used for bulk file summary counts (CES-012).
+
+  params.items – [{ label, value, href }]
+#}
+{% macro appNumericData(params) %}
+<ul class="app-numeric-data">
+  {% for item in params.items %}
+    <li class="app-numeric-data__item">
+      {% if item.href %}
+        <a class="app-numeric-data__link nhsuk-link--no-visited-state" href="{{ item.href }}">
+          <span class="app-numeric-data__value">{{ item.value }}</span>
+          <span class="app-numeric-data__label">{{ item.label }}</span>
+        </a>
+      {% else %}
+        <span class="app-numeric-data__value">{{ item.value }}</span>
+        <span class="app-numeric-data__label">{{ item.label }}</span>
+      {% endif %}
+    </li>
+  {% endfor %}
+</ul>
+{% endmacro %}

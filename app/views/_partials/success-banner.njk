@@ -1,0 +1,10 @@
+{# One-off success notification banner (set by a route in req.session.success) #}
+{% if success %}
+  {{ notificationBanner({
+    variant: "success",
+    heading: {
+      text: success.text
+    },
+    html: success.html
+  }) }}
+{% endif %}

@@ -1,0 +1,40 @@
+{# CES-009 – Authorising clinician.
+   Pattern: NHS Select, enhanced with the accessible autocomplete (alphagov)
+   for long lists – referenced by the GOV.UK Select guidance. #}
+{% extends "enrol/questions/_base.html" %}
+
+{% set pageName = "Lorem ipsum dolor sit amet (authorising clinician)?" %}
+
+{% block question %}
+  {% set items = [{
+    value: "",
+    text: ""
+  }] %}
+  {% for c in cliniciansForOrg %}
+    {% set items = (items.push({
+      value: c.id,
+      text: c.name + " (" + c.registration + ")",
+      selected: enrol.clinicianId == c.id
+    }), items) %}
+  {% endfor %}
+
+  {{ select({
+    id: "clinicianId",
+    name: "_clinicianId",
+    label: {
+      text: pageName,
+      size: "l",
+      isPageHeading: true
+    },
+    hint: {
+      text: "Lorem ipsum dolor sit amet (start typing a name or registration number)"
+    },
+    errorMessage: {
+      text: errors.clinicianId.text
+    } if errors.clinicianId,
+    attributes: {
+      "data-module": "app-autocomplete"
+    },
+    items: items
+  }) }}
+{% endblock %}

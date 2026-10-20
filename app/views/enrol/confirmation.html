@@ -1,0 +1,35 @@
+{#
+  CES-009 – Enrolment created
+  Patterns: NHS Confirmation page; NHS Panel
+#}
+{% extends "layout.html" %}
+
+{% set pageName = "Lorem ipsum (enrolment created)" %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+
+      {% call panel({
+        heading: {
+          text: pageName,
+          size: "l"
+        }
+      }) %}
+        Lorem ipsum (reference)<br><strong>{{ created.id }}</strong>
+      {% endcall %}
+
+      <p>Lorem ipsum dolor sit amet {{ created.patientName }} consectetur {{ product.name }}.</p>
+
+      <h2 class="nhsuk-heading-m">Lorem ipsum (what happens next)</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>
+
+      <ul class="nhsuk-list">
+        <li><a class="nhsuk-link nhsuk-link--no-visited-state" href="/enrolments/{{ created.id }}">Lorem ipsum (view this enrolment)</a></li>
+        <li><a class="nhsuk-link nhsuk-link--no-visited-state" href="/enrol/start">Lorem ipsum (enrol another patient)</a></li>
+        <li><a class="nhsuk-link nhsuk-link--no-visited-state" href="/enrolments">Lorem ipsum (go to enrolments)</a></li>
+      </ul>
+
+    </div>
+  </div>
+{% endblock %}

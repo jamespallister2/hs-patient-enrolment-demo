@@ -1,0 +1,54 @@
+{#
+  CES-007 / CES-008 – Find the patient by NHS number
+  Patterns: NHS Ask for NHS numbers; NHS Question page; NHS Text input + Hint text;
+            NHS Error message + Error summary
+  The input follows the pattern: text input, numeric keyboard, spellcheck off,
+  width 10, allows spaces. The pattern's hint is written for patients, so the
+  hint here is a placeholder for content designers to write for clinicians.
+#}
+{% extends "layout.html" %}
+
+{% set pageName = "Lorem ipsum dolor sit amet (what is the patient's NHS number)?" %}
+
+{% block beforeContent %}
+  {{ backLink({
+    href: "/enrolments",
+    text: "Back"
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+
+      {% include "_partials/error-summary.njk" %}
+
+      <form method="post" action="/enrol/nhs-number-answer" novalidate>
+        {{ input({
+          id: "nhsNumber",
+          name: "_nhsNumber",
+          inputmode: "numeric",
+          spellcheck: false,
+          width: 10,
+          label: {
+            text: pageName,
+            size: "l",
+            isPageHeading: true
+          },
+          hint: {
+            text: "Lorem ipsum dolor sit amet (10 digit number, like 999 123 4567)"
+          },
+          value: enrol.nhsNumberEntered,
+          errorMessage: {
+            text: errors.nhsNumber.text
+          } if errors.nhsNumber
+        }) }}
+
+        {{ button({
+          text: "Continue"
+        }) }}
+      </form>
+
+    </div>
+  </div>
+{% endblock %}

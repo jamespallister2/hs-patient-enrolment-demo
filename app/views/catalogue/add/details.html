@@ -1,0 +1,107 @@
+{#
+  CES-005 – Product details (add or edit)
+  Patterns: NHS Text input; NHS Character count (description); NHS Checkboxes
+            (pathways); NHS Select (status); NHS Error summary
+#}
+{% extends "layout.html" %}
+
+{% set pageName = "Lorem ipsum (product details)" %}
+
+{% block beforeContent %}
+  {{ backLink({
+    href: "/catalogue/add/check" if query.returnTo == "check" or draft.id else "/catalogue",
+    text: "Back"
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+
+      {% include "_partials/error-summary.njk" %}
+
+      <h1 class="nhsuk-heading-l">{{ pageName }}</h1>
+
+      <form method="post" action="/catalogue/add/details-answer{{ '?returnTo=check' if query.returnTo == 'check' }}" novalidate>
+        {{ input({
+          id: "name",
+          name: "_name",
+          label: {
+            text: "Lorem ipsum (product name)",
+            size: "s"
+          },
+          value: draft.name,
+          errorMessage: { text: errors.name.text } if errors.name
+        }) }}
+
+        {{ input({
+          id: "version",
+          name: "_version",
+          width: 5,
+          label: {
+            text: "Version",
+            size: "s"
+          },
+          hint: {
+            text: "Lorem ipsum dolor sit amet, for example 2.1"
+          },
+          value: draft.version,
+          errorMessage: { text: errors.version.text } if errors.version
+        }) }}
+
+        {{ characterCount({
+          id: "description",
+          name: "_description",
+          maxlength: 300,
+          label: {
+            text: "Lorem ipsum (description)",
+            size: "s"
+          },
+          hint: {
+            text: "Lorem ipsum dolor sit amet"
+          },
+          value: draft.description,
+          errorMessage: { text: errors.description.text } if errors.description
+        }) }}
+
+        {% set pathwayItems = [] %}
+        {% for pw in knownPathways %}
+          {% set pathwayItems = (pathwayItems.push({ value: pw, text: pw }), pathwayItems) %}
+        {% endfor %}
+        {{ checkboxes({
+          idPrefix: "pathways",
+          name: "_pathways",
+          fieldset: {
+            legend: {
+              text: "Pathways",
+              size: "s"
+            }
+          },
+          hint: {
+            text: "Lorem ipsum dolor sit amet (select all that apply)"
+          },
+          values: draft.pathways,
+          errorMessage: { text: errors.pathways.text } if errors.pathways,
+          items: pathwayItems
+        }) }}
+
+        {{ select({
+          id: "status",
+          name: "_status",
+          label: {
+            text: "Status",
+            size: "s"
+          },
+          items: [
+            { value: "Live", text: "Live", selected: draft.status == "Live" },
+            { value: "Withdrawn", text: "Withdrawn", selected: draft.status == "Withdrawn" }
+          ]
+        }) }}
+
+        {{ button({
+          text: "Continue"
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

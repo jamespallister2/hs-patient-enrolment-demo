@@ -1,0 +1,17 @@
+{
+  "name": "healthstore-clinical-enrolment-03-enrol-one-question-per-page",
+  "title": "HealthStore Clinical Enrolment Service: 03-enrol-one-question-per-page",
+  "updatedAt": "2026-10-20T13:31:35.487Z",
+  "viewerSchemaVersion": 1,
+  "mode": "scenario",
+  "scenario": "03-enrol-one-question-per-page",
+  "nodeCount": 11,
+  "edgeCount": 19,
+  "hasScreenshots": true,
+  "crawlStats": {
+    "pagesVisited": 11,
+    "runtimeLinksExtracted": 116,
+    "runtimeEdgesDiscovered": 19,
+    "setupStepsExecuted": 3
+  }
+}

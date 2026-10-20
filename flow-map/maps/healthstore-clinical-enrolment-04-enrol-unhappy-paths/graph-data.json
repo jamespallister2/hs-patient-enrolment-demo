@@ -1,0 +1,194 @@
+{
+  "nodes": [
+    {
+      "id": "/enrol/nhs-number",
+      "label": "Lorem ipsum dolor sit amet (what is the patient's NHS number)? – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrol/nhs-number",
+      "filePath": "enrol/nhs-number.html",
+      "screenshot": "screenshots/enrol-nhs-number.png",
+      "type": "form",
+      "actualTitle": "Lorem ipsum dolor sit amet (what is the patient's NHS number)? – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "04-enrol-unhappy-paths",
+      "screenshotAspectRatio": 0.690625,
+      "visitOrder": 0,
+      "layoutRank": 0,
+      "isStartNode": true,
+      "staticEnriched": true
+    },
+    {
+      "id": "/enrol/no-match",
+      "label": "Lorem ipsum dolor sit amet (no patient found) – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrol/no-match",
+      "filePath": "enrol/no-match.html",
+      "screenshot": "screenshots/enrol-no-match.png",
+      "type": "page",
+      "actualTitle": "Lorem ipsum dolor sit amet (no patient found) – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "04-enrol-unhappy-paths",
+      "screenshotAspectRatio": 0.771875,
+      "visitOrder": 1,
+      "layoutRank": 0,
+      "staticEnriched": true
+    },
+    {
+      "id": "/enrol/restricted",
+      "label": "Lorem ipsum dolor sit amet (restricted record) – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrol/restricted",
+      "filePath": "enrol/restricted.html",
+      "screenshot": "screenshots/enrol-restricted.png",
+      "type": "page",
+      "actualTitle": "Lorem ipsum dolor sit amet (restricted record) – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "04-enrol-unhappy-paths",
+      "screenshotAspectRatio": 0.75,
+      "visitOrder": 2,
+      "layoutRank": 1,
+      "staticEnriched": true
+    },
+    {
+      "id": "/enrol/deceased",
+      "label": "Lorem ipsum dolor sit amet (patient has died) – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrol/deceased",
+      "filePath": "enrol/deceased.html",
+      "screenshot": "screenshots/enrol-deceased.png",
+      "type": "page",
+      "actualTitle": "Lorem ipsum dolor sit amet (patient has died) – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "04-enrol-unhappy-paths",
+      "screenshotAspectRatio": 0.790625,
+      "visitOrder": 3,
+      "layoutRank": 2,
+      "staticEnriched": true
+    },
+    {
+      "id": "/enrol/pds-unavailable",
+      "label": "Sorry, there is a problem with the service – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrol/pds-unavailable",
+      "filePath": "enrol/pds-unavailable.html",
+      "screenshot": "screenshots/enrol-pds-unavailable.png",
+      "type": "page",
+      "actualTitle": "Sorry, there is a problem with the service – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "04-enrol-unhappy-paths",
+      "screenshotAspectRatio": 0.64375,
+      "visitOrder": 4,
+      "layoutRank": 3,
+      "staticEnriched": true
+    },
+    {
+      "id": "/enrol/b/duplicate",
+      "label": "Lorem ipsum dolor sit amet (patient may already be enrolled on this product) – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrol/b/duplicate",
+      "filePath": null,
+      "screenshot": "screenshots/enrol-b-duplicate.png",
+      "type": "page",
+      "actualTitle": "Lorem ipsum dolor sit amet (patient may already be enrolled on this product) – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "04-enrol-unhappy-paths",
+      "screenshotAspectRatio": 0.8078125,
+      "visitOrder": 5,
+      "layoutRank": 4
+    },
+    {
+      "id": "/enrol/supplier-unavailable",
+      "label": "Sorry, there is a problem with the service – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrol/supplier-unavailable",
+      "filePath": "enrol/supplier-unavailable.html",
+      "screenshot": "screenshots/enrol-supplier-unavailable.png",
+      "type": "page",
+      "actualTitle": "Sorry, there is a problem with the service – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "04-enrol-unhappy-paths",
+      "screenshotAspectRatio": 0.665625,
+      "visitOrder": 6,
+      "layoutRank": 5,
+      "staticEnriched": true
+    }
+  ],
+  "edges": [
+    {
+      "source": "/enrol/nhs-number",
+      "target": "/enrol/no-match",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/no-match",
+      "target": "/enrol/restricted",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/restricted",
+      "target": "/enrol/deceased",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/deceased",
+      "target": "/enrol/pds-unavailable",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/pds-unavailable",
+      "target": "/enrol/b/duplicate",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/b/duplicate",
+      "target": "/enrol/supplier-unavailable",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/no-match",
+      "target": "/enrol/nhs-number",
+      "type": "link",
+      "label": "Back",
+      "method": "GET",
+      "provenance": "both",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/restricted",
+      "target": "/enrol/nhs-number",
+      "type": "link",
+      "label": "Back",
+      "method": "GET",
+      "provenance": "both",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/deceased",
+      "target": "/enrol/nhs-number",
+      "type": "link",
+      "label": "Back",
+      "method": "GET",
+      "provenance": "both",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/pds-unavailable",
+      "target": "/enrol/nhs-number",
+      "type": "link",
+      "label": "Lorem ipsum (try again)",
+      "method": "GET",
+      "provenance": "both",
+      "isGlobalNav": false
+    }
+  ]
+}

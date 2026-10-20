@@ -1,0 +1,44 @@
+{# CES-009 – Date (FIELD TO BE CONFIRMED).
+   The backlog suggests the NHS Date input for this story, but the user story
+   does not say which date is captured. Shown as optional until confirmed.
+   Pattern: NHS Date input. #}
+{% extends "enrol/questions/_base.html" %}
+
+{% set pageName = "Lorem ipsum dolor sit amet (date to be confirmed)? (optional)" %}
+
+{% block question %}
+  {{ dateInput({
+    id: "startDate",
+    namePrefix: "_startDate",
+    fieldset: {
+      legend: {
+        text: pageName,
+        size: "l",
+        isPageHeading: true
+      }
+    },
+    hint: {
+      text: "Lorem ipsum dolor sit amet, for example 27 3 2026"
+    },
+    errorMessage: {
+      text: errors.startDate.text
+    } if errors.startDate,
+    items: [
+      {
+        name: "day",
+        classes: "nhsuk-input--width-2" + (" nhsuk-input--error" if errors.startDate else ""),
+        value: enrol.startDate.day
+      },
+      {
+        name: "month",
+        classes: "nhsuk-input--width-2" + (" nhsuk-input--error" if errors.startDate else ""),
+        value: enrol.startDate.month
+      },
+      {
+        name: "year",
+        classes: "nhsuk-input--width-4" + (" nhsuk-input--error" if errors.startDate else ""),
+        value: enrol.startDate.year
+      }
+    ]
+  }) }}
+{% endblock %}

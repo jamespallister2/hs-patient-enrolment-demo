@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark light">
+  <title>HealthStore Clinical Enrolment Service: 02-enrol-task-list</title>
+  <script src="../../theme-bootstrap.js"></script>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#canvas-container">Skip to flow map</a>
+  <div id="toolbar" role="toolbar" aria-label="Flow map controls">
+    <div class="toolbar-row">
+      <div class="toolbar-row__left">
+        <a href="../../index.html" class="back-to-index">&larr; All maps</a>
+        <h1><span class="scenario-name">HealthStore Clinical Enrolment Service: 02-enrol-task-list</span></h1>
+        <span id="node-count" aria-live="polite" aria-atomic="true"></span>
+      </div>
+    </div>
+    <div class="toolbar-row">
+      <div class="toolbar-row__left toolbar-controls">
+        <label class="visually-hidden" for="search">Search pages</label>
+        <input type="text" id="search" placeholder="Search pages..." />
+        <label class="visually-hidden" id="hub-filter-label" for="hub-filter">Filter by hub</label>
+        <select id="hub-filter" style="display:none">
+          <option value="">All hubs</option>
+        </select>
+        <button id="toggle-thumbnail" type="button" onclick="toggleThumbnail()" aria-pressed="false" style="display:none">Show thumbnails</button>
+        <button id="toggle-screenshots" type="button" onclick="toggleScreenshots()" aria-pressed="false" style="display:none">Hide screenshots</button>
+        <button id="toggle-labels" type="button" aria-pressed="true">Hide labels</button>
+        <label id="toggle-global-nav-label" style="display:none"><input type="checkbox" id="toggle-global-nav"> Global nav</label>
+        <label class="visually-hidden" for="provenance-filter" id="provenance-filter-label">Filter by provenance</label>
+        <select id="provenance-filter" style="display:none">
+          <option value="">All edges</option>
+          <option value="runtime">Runtime only</option>
+          <option value="static">Static only</option>
+          <option value="both">Both sources</option>
+        </select>
+        <button id="outline-toggle" type="button" onclick="toggleOutlineView()" aria-pressed="false">View as outline</button>
+        <button type="button" onclick="fitToScreen()">Fit to screen</button>
+        <button id="show-all-btn" type="button" onclick="showHiddenListPopover()" aria-haspopup="dialog" aria-expanded="false" style="display:none">Show hidden (0)</button>
+        <button id="reset-positions-btn" type="button" onclick="resetPositions()">Reset positions</button>
+        <button id="save-layout-btn" type="button" onclick="saveLayout()" style="display:none">Save layout</button>
+      </div>
+      <div class="toolbar-row__right toolbar-controls">
+        <button id="theme-toggle" type="button" aria-pressed="false">Light mode</button>
+        <button id="keyboard-help-btn" type="button" onclick="openKeyboardHelp()" aria-haspopup="dialog" aria-expanded="false" title="Keyboard shortcuts (press ?)">Keyboard shortcuts</button>
+      </div>
+    </div>
+  </div>
+  <div id="a11y-status" class="visually-hidden" role="status" aria-live="polite" aria-atomic="true"></div>
+  <div id="canvas-container" tabindex="-1">
+    <svg id="flow-svg"></svg>
+  </div>
+  <nav id="flow-outline" aria-labelledby="outline-heading"></nav>
+  <div id="keyboard-help-overlay" class="kb-help-overlay" hidden></div>
+  <div id="keyboard-help-dialog" class="kb-help-dialog" role="dialog" aria-modal="true" aria-labelledby="kb-help-title" hidden tabindex="-1">
+    <div class="kb-help-header">
+      <h2 id="kb-help-title">Keyboard shortcuts</h2>
+      <button id="kb-help-close" type="button" aria-label="Close keyboard shortcuts">✕</button>
+    </div>
+    <div class="kb-help-body">
+      <h3>Navigation</h3>
+      <dl class="kb-help-list">
+        <dt><kbd>Tab</kbd></dt><dd>Move between toolbar, graph, and panels</dd>
+        <dt><kbd>Arrow</kbd> keys</dt><dd>On a node: move to spatial neighbour; otherwise: pan the canvas</dd>
+        <dt><kbd>]</kbd> / <kbd>[</kbd></dt><dd>Follow outgoing / incoming connection</dd>
+        <dt><kbd>Home</kbd> / <kbd>End</kbd></dt><dd>First / last node by visit order</dd>
+        <dt><kbd>Enter</kbd> or <kbd>Space</kbd></dt><dd>Open the focused node's details</dd>
+      </dl>
+      <h3>Zoom &amp; view</h3>
+      <dl class="kb-help-list">
+        <dt><kbd>+</kbd> or <kbd>=</kbd></dt><dd>Zoom in</dd>
+        <dt><kbd>−</kbd> or <kbd>_</kbd></dt><dd>Zoom out</dd>
+        <dt><kbd>0</kbd></dt><dd>Fit to screen</dd>
+      </dl>
+      <h3>Editing</h3>
+      <dl class="kb-help-list">
+        <dt><kbd>M</kbd></dt><dd>Enter move mode for the focused node (arrows nudge, <kbd>Shift</kbd>+arrows step further, <kbd>Enter</kbd> commits, <kbd>Esc</kbd> cancels)</dd>
+        <dt><kbd>Shift</kbd>+<kbd>F10</kbd> or <kbd>ContextMenu</kbd></dt><dd>Open node actions menu (also: Node actions toolbar button)</dd>
+      </dl>
+      <h3>Dialogs &amp; menus</h3>
+      <dl class="kb-help-list">
+        <dt><kbd>Esc</kbd></dt><dd>Close the open menu, popover, or panel; cancel move mode</dd>
+        <dt><kbd>?</kbd></dt><dd>Open this help dialog</dd>
+      </dl>
+    </div>
+  </div>
+  <aside id="legend" aria-labelledby="legend-title">
+    <h3 id="legend-title">Edge types</h3>
+    <ul class="legend-list" role="list">
+      <li class="legend-item"><span class="legend-swatch legend-swatch--form" aria-hidden="true"></span> Form submission</li>
+      <li class="legend-item"><span class="legend-swatch legend-swatch--link" aria-hidden="true"></span> Link / push nav</li>
+      <li class="legend-item"><span class="legend-swatch legend-swatch--conditional" aria-hidden="true"></span> Conditional</li>
+      <li class="legend-item"><span class="legend-swatch legend-swatch--nav" aria-hidden="true"></span> Tab / global nav</li>
+      <li class="legend-item"><span class="legend-swatch legend-swatch--sheet" aria-hidden="true"></span> Sheet (modal)</li>
+      <li class="legend-item"><span class="legend-swatch legend-swatch--full-screen" aria-hidden="true"></span> Full-screen cover</li>
+      <li class="legend-item"><span class="legend-swatch legend-swatch--web-view" aria-hidden="true"></span> Web view</li>
+      <li class="legend-item"><span class="legend-swatch legend-swatch--safari" aria-hidden="true"></span> Safari / external</li>
+    </ul>
+    <div id="legend-provenance" style="display:none">
+      <h3 class="legend-subhead">Provenance</h3>
+      <ul class="legend-list" role="list">
+        <li class="legend-item"><span class="legend-swatch legend-swatch--solid" aria-hidden="true"></span> Runtime</li>
+        <li class="legend-item"><span class="legend-swatch legend-swatch--dashed" aria-hidden="true"></span> Static only</li>
+        <li class="legend-item"><span class="legend-swatch legend-swatch--both" aria-hidden="true"></span> Both sources</li>
+      </ul>
+    </div>
+  </aside>
+  <aside id="detail-panel" class="hidden" role="complementary" aria-labelledby="panel-title" aria-hidden="true" inert tabindex="-1">
+    <button id="close-panel" type="button" onclick="closePanel()" aria-label="Close details">✕</button>
+    <div id="panel-content"></div>
+  </aside>
+  <script>
+    // Inline data island. The viewer prefers fetched sidecars
+    // (graph-data.json, runtime.json) when those load successfully, and
+    // falls back to these globals on file:// (where fetch is CORS-blocked).
+    window.__GRAPH_DATA__ = {"nodes":[{"id":"/enrolments","label":"Enrolments – HealthStore Clinical Enrolment Service – NHS","urlPath":"/enrolments","filePath":"enrolments/index.html","screenshot":"screenshots/enrolments.png","type":"form","actualTitle":"Enrolments – HealthStore Clinical Enrolment Service – NHS","scenario":"02-enrol-task-list","screenshotAspectRatio":1.61328125,"visitOrder":0,"layoutRank":0,"isStartNode":true,"staticEnriched":true},{"id":"/enrol/nhs-number","label":"Lorem ipsum dolor sit amet (what is the patient's NHS number)? – HealthStore Clinical Enrolment Service – NHS","urlPath":"/enrol/nhs-number","filePath":"enrol/nhs-number.html","screenshot":"screenshots/enrol-nhs-number.png","type":"form","actualTitle":"Lorem ipsum dolor sit amet (what is the patient's NHS number)? – HealthStore Clinical Enrolment Service – NHS","scenario":"02-enrol-task-list","screenshotAspectRatio":0.690625,"visitOrder":1,"layoutRank":1,"staticEnriched":true},{"id":"/enrol/searching","label":"Lorem ipsum dolor (searching for the patient) – HealthStore Clinical Enrolment Service – NHS","urlPath":"/enrol/searching","filePath":"enrol/searching.html","screenshot":"screenshots/enrol-searching.png","type":"page","actualTitle":"Lorem ipsum dolor (searching for the patient) – HealthStore Clinical Enrolment Service – NHS","scenario":"02-enrol-task-list","screenshotAspectRatio":0.609375,"visitOrder":2,"layoutRank":2,"staticEnriched":true},{"id":"/enrol/confirm-patient","label":"Is this the right patient? – HealthStore Clinical Enrolment Service – NHS","urlPath":"/enrol/confirm-patient","filePath":"enrol/confirm-patient.html","screenshot":"screenshots/enrol-confirm-patient.png","type":"form","actualTitle":"Is this the right patient? – HealthStore Clinical Enrolment Service – NHS","scenario":"02-enrol-task-list","screenshotAspectRatio":0.91875,"visitOrder":3,"layoutRank":3,"staticEnriched":true},{"id":"/enrol/a/tasks","label":"Lorem ipsum dolor sit amet (create an enrolment) – HealthStore Clinical Enrolment Service – NHS","urlPath":"/enrol/a/tasks","filePath":null,"screenshot":"screenshots/enrol-a-tasks.png","type":"page","actualTitle":"Lorem ipsum dolor sit amet (create an enrolment) – HealthStore Clinical Enrolment Service – NHS","scenario":"02-enrol-task-list","screenshotAspectRatio":0.9796875,"visitOrder":4,"layoutRank":4},{"id":"/enrol/a/organisation","label":"Lorem ipsum dolor sit amet (accountable clinical organisation)? – HealthStore Clinical Enrolment Service – NHS","urlPath":"/enrol/a/organisation","filePath":null,"screenshot":"screenshots/enrol-a-organisation.png","type":"page","actualTitle":"Lorem ipsum dolor sit amet (accountable clinical organisation)? – HealthStore Clinical Enrolment Service – NHS","scenario":"02-enrol-task-list","screenshotAspectRatio":0.83125,"visitOrder":5,"layoutRank":4},{"id":"/enrol/a/clinician","label":"Lorem ipsum dolor sit amet (authorising clinician)? – HealthStore Clinical Enrolment Service – NHS","urlPath":"/enrol/a/clinician","filePath":null,"screenshot":"screenshots/enrol-a-clinician.png","type":"page","actualTitle":"Lorem ipsum dolor sit amet (authorising clinician)? – HealthStore Clinical Enrolment Service – NHS","scenario":"02-enrol-task-list","screenshotAspectRatio":0.8125,"visitOrder":6,"layoutRank":5},{"id":"/enrol/a/product","label":"Lorem ipsum dolor sit amet (which product)? – HealthStore Clinical Enrolment Service – NHS","urlPath":"/enrol/a/product","filePath":null,"screenshot":"screenshots/enrol-a-product.png","type":"page","actualTitle":"Lorem ipsum dolor sit amet (which product)? – HealthStore Clinical Enrolment Service – NHS","scenario":"02-enrol-task-list","screenshotAspectRatio":0.96875,"visitOrder":7,"layoutRank":6},{"id":"/enrol/a/condition","label":"Lorem ipsum dolor sit amet (which condition)? – HealthStore Clinical Enrolment Service – NHS","urlPath":"/enrol/a/condition","filePath":null,"screenshot":"screenshots/enrol-a-condition.png","type":"page","actualTitle":"Lorem ipsum dolor sit amet (which condition)? – HealthStore Clinical Enrolment Service – NHS","scenario":"02-enrol-task-list","screenshotAspectRatio":0.8515625,"visitOrder":8,"layoutRank":6},{"id":"/enrol/a/indication","label":"Lorem ipsum dolor sit amet (which indication)? – HealthStore Clinical Enrolment Service – NHS","urlPath":"/enrol/a/indication","filePath":null,"screenshot":"screenshots/enrol-a-indication.png","type":"page","actualTitle":"Lorem ipsum dolor sit amet (which indication)? – HealthStore Clinical Enrolment Service – NHS","scenario":"02-enrol-task-list","screenshotAspectRatio":0.8515625,"visitOrder":9,"layoutRank":7},{"id":"/enrol/a/pathway","label":"Lorem ipsum dolor sit amet (which pathway)? – HealthStore Clinical Enrolment Service – NHS","urlPath":"/enrol/a/pathway","filePath":null,"screenshot":"screenshots/enrol-a-pathway.png","type":"page","actualTitle":"Lorem ipsum dolor sit amet (which pathway)? – HealthStore Clinical Enrolment Service – NHS","scenario":"02-enrol-task-list","screenshotAspectRatio":0.8578125,"visitOrder":10,"layoutRank":8},{"id":"/enrol/a/start-date","label":"Lorem ipsum dolor sit amet (date to be confirmed)? (optional) – HealthStore Clinical Enrolment Service – NHS","urlPath":"/enrol/a/start-date","filePath":null,"screenshot":"screenshots/enrol-a-start-date.png","type":"page","actualTitle":"Lorem ipsum dolor sit amet (date to be confirmed)? (optional) – HealthStore Clinical Enrolment Service – NHS","scenario":"02-enrol-task-list","screenshotAspectRatio":0.8375,"visitOrder":11,"layoutRank":8},{"id":"/enrol/a/check","label":"Lorem ipsum dolor sit amet (check your answers before creating the enrolment) – HealthStore Clinical Enrolment Service – NHS","urlPath":"/enrol/a/check","filePath":null,"screenshot":"screenshots/enrol-a-check.png","type":"page","actualTitle":"Lorem ipsum dolor sit amet (check your answers before creating the enrolment) – HealthStore Clinical Enrolment Service – NHS","scenario":"02-enrol-task-list","screenshotAspectRatio":1.2921875,"visitOrder":12,"layoutRank":9},{"id":"/enrol/confirmation","label":"Lorem ipsum (enrolment created) – HealthStore Clinical Enrolment Service – NHS","urlPath":"/enrol/confirmation","filePath":"enrol/confirmation.html","screenshot":"screenshots/enrol-confirmation.png","type":"page","actualTitle":"Lorem ipsum (enrolment created) – HealthStore Clinical Enrolment Service – NHS","scenario":"02-enrol-task-list","screenshotAspectRatio":0.8625,"visitOrder":13,"layoutRank":10,"staticEnriched":true}],"edges":[{"source":"/enrolments","target":"/enrol/nhs-number","type":"link","label":"","method":"GET","provenance":"runtime","isGlobalNav":false},{"source":"/enrol/nhs-number","target":"/enrol/searching","type":"link","label":"","method":"GET","provenance":"runtime","isGlobalNav":false},{"source":"/enrol/searching","target":"/enrol/confirm-patient","type":"link","label":"","method":"GET","provenance":"runtime","isGlobalNav":false},{"source":"/enrol/confirm-patient","target":"/enrol/a/tasks","type":"link","label":"","method":"GET","provenance":"runtime","isGlobalNav":false},{"source":"/enrol/a/tasks","target":"/enrol/a/organisation","type":"link","label":"","method":"GET","provenance":"runtime","isGlobalNav":false},{"source":"/enrol/a/organisation","target":"/enrol/a/clinician","type":"link","label":"","method":"GET","provenance":"runtime","isGlobalNav":false},{"source":"/enrol/a/clinician","target":"/enrol/a/tasks","type":"link","label":"","method":"GET","provenance":"runtime","isGlobalNav":false},{"source":"/enrol/a/tasks","target":"/enrol/a/product","type":"link","label":"","method":"GET","provenance":"runtime","isGlobalNav":false},{"source":"/enrol/a/product","target":"/enrol/a/condition","type":"link","label":"","method":"GET","provenance":"runtime","isGlobalNav":false},{"source":"/enrol/a/condition","target":"/enrol/a/indication","type":"link","label":"","method":"GET","provenance":"runtime","isGlobalNav":false},{"source":"/enrol/a/indication","target":"/enrol/a/tasks","type":"link","label":"","method":"GET","provenance":"runtime","isGlobalNav":false},{"source":"/enrol/a/tasks","target":"/enrol/a/pathway","type":"link","label":"","method":"GET","provenance":"runtime","isGlobalNav":false},{"source":"/enrol/a/pathway","target":"/enrol/a/start-date","type":"link","label":"","method":"GET","provenance":"runtime","isGlobalNav":false},{"source":"/enrol/a/start-date","target":"/enrol/a/tasks","type":"link","label":"","method":"GET","provenance":"runtime","isGlobalNav":false},{"source":"/enrol/a/tasks","target":"/enrol/a/check","type":"link","label":"","method":"GET","provenance":"runtime","isGlobalNav":false},{"source":"/enrol/a/check","target":"/enrol/confirmation","type":"link","label":"","method":"GET","provenance":"runtime","isGlobalNav":false},{"source":"/enrol/nhs-number","target":"/enrolments","type":"link","label":"Back","method":"GET","provenance":"both","isGlobalNav":false},{"source":"/enrol/searching","target":"/enrolments","type":"link","label":"NHS\n          \n        \n        HealthStore Clinical Enrolment Service","method":"GET","provenance":"runtime","isGlobalNav":true},{"source":"/enrol/confirm-patient","target":"/enrolments","type":"link","label":"NHS\n          \n        \n        HealthStore Clinical Enrolment Service","method":"GET","provenance":"runtime","isGlobalNav":true},{"source":"/enrol/confirm-patient","target":"/enrol/nhs-number","type":"link","label":"Back","method":"GET","provenance":"both","isGlobalNav":false},{"source":"/enrol/a/tasks","target":"/enrolments","type":"link","label":"NHS\n          \n        \n        HealthStore Clinical Enrolment Service","method":"GET","provenance":"runtime","isGlobalNav":true},{"source":"/enrol/a/tasks","target":"/enrol/confirm-patient","type":"link","label":"Back","method":"GET","provenance":"runtime","isGlobalNav":false},{"source":"/enrol/a/tasks","target":"/enrol/a/organisation","type":"link","label":"Lorem ipsum (accountable organisation and authorising clinician)","method":"GET","provenance":"runtime","isGlobalNav":false},{"source":"/enrol/a/organisation","target":"/enrolments","type":"link","label":"NHS\n          \n        \n        HealthStore Clinical Enrolment Service","method":"GET","provenance":"runtime","isGlobalNav":true},{"source":"/enrol/a/organisation","target":"/enrol/a/tasks","type":"link","label":"Back","method":"GET","provenance":"runtime","isGlobalNav":false},{"source":"/enrol/a/clinician","target":"/enrolments","type":"link","label":"NHS\n          \n        \n        HealthStore Clinical Enrolment Service","method":"GET","provenance":"runtime","isGlobalNav":true},{"source":"/enrol/a/clinician","target":"/enrol/a/organisation","type":"link","label":"Back","method":"GET","provenance":"runtime","isGlobalNav":false},{"source":"/enrol/a/product","target":"/enrolments","type":"link","label":"NHS\n          \n        \n        HealthStore Clinical Enrolment Service","method":"GET","provenance":"runtime","isGlobalNav":true},{"source":"/enrol/a/product","target":"/enrol/a/tasks","type":"link","label":"Back","method":"GET","provenance":"runtime","isGlobalNav":false},{"source":"/enrol/a/condition","target":"/enrolments","type":"link","label":"NHS\n          \n        \n        HealthStore Clinical Enrolment Service","method":"GET","provenance":"runtime","isGlobalNav":true},{"source":"/enrol/a/condition","target":"/enrol/a/product","type":"link","label":"Back","method":"GET","provenance":"runtime","isGlobalNav":false},{"source":"/enrol/a/indication","target":"/enrolments","type":"link","label":"NHS\n          \n        \n        HealthStore Clinical Enrolment Service","method":"GET","provenance":"runtime","isGlobalNav":true},{"source":"/enrol/a/indication","target":"/enrol/a/condition","type":"link","label":"Back","method":"GET","provenance":"runtime","isGlobalNav":false},{"source":"/enrol/a/pathway","target":"/enrolments","type":"link","label":"NHS\n          \n        \n        HealthStore Clinical Enrolment Service","method":"GET","provenance":"runtime","isGlobalNav":true},{"source":"/enrol/a/pathway","target":"/enrol/a/tasks","type":"link","label":"Back","method":"GET","provenance":"runtime","isGlobalNav":false},{"source":"/enrol/a/start-date","target":"/enrolments","type":"link","label":"NHS\n          \n        \n        HealthStore Clinical Enrolment Service","method":"GET","provenance":"runtime","isGlobalNav":true},{"source":"/enrol/a/start-date","target":"/enrol/a/pathway","type":"link","label":"Back","method":"GET","provenance":"runtime","isGlobalNav":false},{"source":"/enrol/a/check","target":"/enrolments","type":"link","label":"NHS\n          \n        \n        HealthStore Clinical Enrolment Service","method":"GET","provenance":"runtime","isGlobalNav":true},{"source":"/enrol/a/check","target":"/enrol/a/tasks","type":"link","label":"Back","method":"GET","provenance":"runtime","isGlobalNav":false},{"source":"/enrol/confirmation","target":"/enrolments","type":"link","label":"Lorem ipsum (go to enrolments)","method":"GET","provenance":"both","isGlobalNav":false},{"source":"/enrolments","target":"/enrolments","type":"form","label":"Status","method":"GET","provenance":"both"}]};
+    window.__HAS_SCREENSHOTS__ = true;
+    window.__VIEWPORT_WIDTH__ = 1280;
+    window.__VIEWPORT_HEIGHT__ = 800;
+    window.__GENERATION_ID__ = "mvgq28c2";
+    window.__SAVED_POSITIONS__ = {};
+    window.__SAVED_HIDDEN__ = {};
+    window.__MAP_NAME__ = "healthstore-clinical-enrolment-02-enrol-task-list";
+  </script>
+  <script src="../../vendor/dagre.min.js"></script>
+  <script src="../../viewer.js"></script>
+</body>
+</html>

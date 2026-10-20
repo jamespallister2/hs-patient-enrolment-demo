@@ -1,0 +1,56 @@
+{#
+  CES-005 – Product catalogue (technical admin)
+  Patterns: NHS Table (sortable columns – NHS Frontend's built-in sortable table,
+            used instead of the MoJ Sortable table suggested in the backlog);
+            NHS Tag (Live / Withdrawn); NHS Notification banner (success);
+            X-GOV MoJ Page header actions
+#}
+{% extends "layout.html" %}
+
+{% set pageName = "Product catalogue" %}
+
+{% block content %}
+  {% include "_partials/success-banner.njk" %}
+
+  <div class="app-page-header">
+    <div class="app-page-header__heading">
+      <h1 class="nhsuk-heading-l">{{ pageName }}</h1>
+    </div>
+    <div class="app-page-header__actions">
+      {{ button({
+        text: "Lorem ipsum (add a product)",
+        href: "/catalogue/add/start"
+      }) }}
+    </div>
+  </div>
+
+  <p class="nhsuk-u-reading-width">Lorem ipsum dolor sit amet, consectetur adipiscing elit (only live products can be used for new enrolments).</p>
+
+  {% set rows = [] %}
+  {% for p in data.products %}
+    {% set nameHtml %}<a class="nhsuk-link nhsuk-link--no-visited-state" href="/catalogue/{{ p.id }}">{{ p.name }}</a>{% endset %}
+    {% set conditionNames = [] %}
+    {% for c in p.conditions %}{% set conditionNames = (conditionNames.push(c.name), conditionNames) %}{% endfor %}
+    {% set rows = (rows.push([
+      { html: nameHtml, header: "Product", sortValue: p.name },
+      { text: p.version, header: "Version" },
+      { text: conditionNames | join(", "), header: "Conditions" },
+      { html: tag({ text: p.status, colour: p.status | statusColour }), header: "Status", sortValue: p.status }
+    ]), rows) %}
+  {% endfor %}
+
+  {{ table({
+    caption: {
+      text: "Lorem ipsum (products)",
+      classes: "nhsuk-u-visually-hidden"
+    },
+    responsive: true,
+    head: [
+      { text: "Product", sort: "ascending" },
+      { text: "Version", sort: "none" },
+      { text: "Conditions", sort: "none" },
+      { text: "Status", sort: "none" }
+    ],
+    rows: rows
+  }) }}
+{% endblock %}

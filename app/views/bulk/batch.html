@@ -1,0 +1,136 @@
+{#
+  CES-013 – Track a bulk file and its per-patient outcomes
+  Patterns: NHS Summary list (batch status); NHS Table + Tag (per-patient
+            outcome); NHS Notification banner (finished / partially failed);
+            X-GOV MoJ Spinner (processing); MoJ Filter a list (failed only)
+#}
+{% extends "layout.html" %}
+
+{% set pageName = b.id %}
+
+{% block pageHead %}
+  {% if b.status == "Processing" %}
+    <meta http-equiv="refresh" content="4">
+  {% endif %}
+{% endblock %}
+
+{% block beforeContent %}
+  {{ backLink({
+    href: "/bulk",
+    text: "Back"
+  }) }}
+{% endblock %}
+
+{% block content %}
+  {% if b.status == "Partially failed" %}
+    {{ notificationBanner({
+      heading: {
+        text: "Lorem ipsum dolor sit amet (" + failedCount + " patients were not enrolled)"
+      },
+      html: "<p class=\"nhsuk-body\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. <a class=\"nhsuk-notification-banner__link\" href=\"/bulk/" + b.id + "?_show=failed\">Lorem ipsum (show patients not enrolled)</a>.</p>",
+      disableAutoFocus: not wasUnseen
+    }) }}
+  {% elseif b.status == "Complete" %}
+    {{ notificationBanner({
+      variant: "success",
+      heading: {
+        text: "Lorem ipsum dolor sit amet (all " + enrolledCount + " patients enrolled)"
+      },
+      disableAutoFocus: not wasUnseen
+    }) }}
+  {% endif %}
+
+  <span class="nhsuk-caption-l">Lorem ipsum (bulk file)</span>
+  <h1 class="nhsuk-heading-l">{{ pageName }}</h1>
+
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      {% if b.status == "Processing" %}
+        {{ appSpinner({
+          text: "Lorem ipsum dolor sit amet (processing)"
+        }) }}
+      {% endif %}
+
+      {{ summaryList({
+        rows: [
+          { key: { text: "Status" }, value: { html: tag({ text: b.status, colour: b.status | statusColour }) } },
+          { key: { text: "File" }, value: { text: b.fileName } },
+          { key: { text: "Uploaded by" }, value: { text: b.uploadedBy } },
+          { key: { text: "Lorem ipsum (submitted)" }, value: { text: b.submittedAt | appDateTime } },
+          { key: { text: "Lorem ipsum (enrolled)" }, value: { text: enrolledCount | string } } if b.status != "Processing",
+          { key: { text: "Lorem ipsum (not enrolled)" }, value: { text: failedCount | string } } if b.status != "Processing"
+        ]
+      }) }}
+    </div>
+  </div>
+
+  {% if b.status != "Processing" %}
+    <form method="get" action="/bulk/{{ b.id }}" class="nhsuk-u-margin-bottom-4" novalidate>
+      {{ radios({
+        name: "_show",
+        idPrefix: "show",
+        classes: "nhsuk-radios--inline nhsuk-radios--small",
+        fieldset: {
+          legend: {
+            text: "Lorem ipsum (show)",
+            size: "s"
+          }
+        },
+        value: show,
+        items: [
+          { value: "all", text: "Lorem ipsum (all patients)" },
+          { value: "failed", text: "Lorem ipsum (only patients not enrolled)" }
+        ],
+        formGroup: {
+          classes: "nhsuk-u-margin-bottom-2"
+        }
+      }) }}
+      {{ button({ text: "Apply", variant: "secondary", small: true }) }}
+    </form>
+
+    {% set rows = [] %}
+    {% for r in paged.rows %}
+      {% set patientHtml %}
+        {% if r.enrolmentId %}<a class="nhsuk-link" href="/enrolments/{{ r.enrolmentId }}">{{ r.patientName }}</a>{% else %}{{ r.patientName }}{% endif %}
+      {% endset %}
+      {% set outcomeHtml %}
+        {{ tag({ text: r.outcome, colour: r.outcome | statusColour }) }}
+        {% if r.reason %}<p class="nhsuk-body-s nhsuk-u-margin-top-2 nhsuk-u-margin-bottom-0">{{ r.reason }}</p>{% endif %}
+      {% endset %}
+      {% set rows = (rows.push([
+        { text: r.row, header: "Row", format: "numeric" },
+        { html: patientHtml, header: "Patient" },
+        { text: r.nhsNumber | formatNhsNumber, header: "NHS number" },
+        { text: svc.product(data, r.productId).name, header: "Product" },
+        { html: outcomeHtml, header: "Outcome" }
+      ]), rows) %}
+    {% endfor %}
+
+    {% if rows | length %}
+      {{ table({
+        caption: {
+          text: "Lorem ipsum (outcome for each patient)",
+          size: "m"
+        },
+        responsive: true,
+        head: [
+          { text: "Row", format: "numeric" },
+          { text: "Patient" },
+          { text: "NHS number" },
+          { text: "Product" },
+          { text: "Outcome" }
+        ],
+        rows: rows
+      }) }}
+      {% if paged.pageCount > 1 %}
+        {{ pagination({
+          previous: paged.previous,
+          next: paged.next,
+          items: paged.items
+        }) }}
+      {% endif %}
+    {% else %}
+      <p>Lorem ipsum dolor sit amet (no patients to show).</p>
+    {% endif %}
+  {% endif %}
+{% endblock %}

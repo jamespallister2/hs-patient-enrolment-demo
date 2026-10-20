@@ -1,0 +1,13 @@
+// Small helpers used across pages
+.app-table-actions {
+  white-space: nowrap;
+}
+
+.app-section-break {
+  @include nhsuk-responsive-margin(6, "bottom");
+  border-bottom: 1px solid $nhsuk-border-colour;
+}
+
+.app-results-count {
+  @include nhsuk-font(19, $weight: bold);
+}

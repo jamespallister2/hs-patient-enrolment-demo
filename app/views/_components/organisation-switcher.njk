@@ -1,0 +1,16 @@
+{#
+  Organisation switcher
+  X-GOV: based on the MoJ Organisation switcher, styled with NHS tokens.
+  https://design-patterns.service.justice.gov.uk/components/organisation-switcher/
+  Used for CES-003 – switching between associated organisations.
+#}
+{% macro appOrganisationSwitcher(params) %}
+<div class="app-organisation-switcher">
+  <div class="nhsuk-width-container app-organisation-switcher__container">
+    <p class="app-organisation-switcher__heading">{{ params.organisation.name }} <span class="app-organisation-switcher__code">({{ params.organisation.odsCode }})</span></p>
+    {% if params.canChange %}
+      <a class="nhsuk-link nhsuk-link--no-visited-state app-organisation-switcher__link" href="/sign-in/select-organisation?change=yes">Change<span class="nhsuk-u-visually-hidden"> organisation</span></a>
+    {% endif %}
+  </div>
+</div>
+{% endmacro %}

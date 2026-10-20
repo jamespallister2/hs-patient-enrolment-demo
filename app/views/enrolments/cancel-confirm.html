@@ -1,0 +1,49 @@
+{#
+  CES-010 – Confirm you want to cancel the enrolment
+  Pattern: NHS Interruption page, confirmation example ("Confirm you want to
+  cancel your hospital appointment" with a "Cancel appointment" button).
+  NOTE: the backlog suggests the MoJ "Confirm an action" pattern because it
+  found no NHS equivalent. The NHS Interruption page now includes a
+  confirmation example for this case, so the NHS pattern is used first.
+#}
+{% extends "layout.html" %}
+
+{% set pageName = "Lorem ipsum dolor sit amet (confirm you want to cancel this enrolment)" %}
+
+{% block beforeContent %}
+  {{ backLink({
+    href: "/enrolments/" + e.id + "/cancel",
+    text: "Back"
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      {% call panel({
+        variant: "interruption",
+        heading: {
+          text: pageName,
+          size: "l"
+        }
+      }) %}
+        <p>{{ e.patientName }} ({{ e.nhsNumber | formatNhsNumber }})<br>{{ eProduct.name }}, {{ e.id }}</p>
+        <p>Lorem ipsum (reason): {{ cancel.details if cancel.reason == "Other" else cancel.reason }}</p>
+        {% if isBackOffice %}
+          <p>Lorem ipsum dolor sit amet (on behalf of {{ eOrganisation.name }}).</p>
+        {% endif %}
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit (this cannot be undone).</p>
+        <form method="post" action="/enrolments/{{ e.id }}/cancel/confirm-answer" novalidate>
+          <div class="nhsuk-button-group">
+            {{ button({
+              text: "Cancel enrolment",
+              variant: "reverse",
+              preventDoubleClick: true
+            }) }}
+            <a class="nhsuk-link nhsuk-link--reverse" href="/enrolments/{{ e.id }}">Lorem ipsum (keep this enrolment)</a>
+          </div>
+        </form>
+      {% endcall %}
+    </div>
+  </div>
+{% endblock %}

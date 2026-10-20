@@ -1,0 +1,15 @@
+// Timeout warning – X-GOV: MoJ Timeout warning in NHS styling (CES-002)
+.app-timeout-warning {
+  max-width: 35rem;
+  padding: nhsuk-spacing(5);
+  border: nhsuk-spacing(1) solid $nhsuk-text-colour;
+  background-color: $nhsuk-reverse-text-colour;
+
+  &::backdrop {
+    background-color: rgba(nhsuk-colour("black"), .8);
+  }
+
+  &:focus {
+    outline: $nhsuk-focus-width solid $nhsuk-focus-colour;
+  }
+}

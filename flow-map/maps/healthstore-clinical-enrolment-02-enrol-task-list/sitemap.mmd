@@ -1,0 +1,62 @@
+flowchart TD
+  enrolments["Enrolments – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_nhs_number["Lorem ipsum dolor sit amet (what is the patient's NHS number)? – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_searching["Lorem ipsum dolor (searching for the patient) – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_confirm_patient["Is this the right patient? – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_a_tasks["Lorem ipsum dolor sit amet (create an enrolment) – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_a_organisation["Lorem ipsum dolor sit amet (accountable clinical organisation)? – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_a_clinician["Lorem ipsum dolor sit amet (authorising clinician)? – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_a_product["Lorem ipsum dolor sit amet (which product)? – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_a_condition["Lorem ipsum dolor sit amet (which condition)? – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_a_indication["Lorem ipsum dolor sit amet (which indication)? – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_a_pathway["Lorem ipsum dolor sit amet (which pathway)? – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_a_start_date["Lorem ipsum dolor sit amet (date to be confirmed)? (optional) – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_a_check["Lorem ipsum dolor sit amet (check your answers before creating the enrolment) – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_confirmation["Lorem ipsum (enrolment created) – HealthStore Clinical Enrolment Service – NHS"]
+
+  enrolments --> enrol_nhs_number
+  enrol_nhs_number --> enrol_searching
+  enrol_searching --> enrol_confirm_patient
+  enrol_confirm_patient --> enrol_a_tasks
+  enrol_a_tasks --> enrol_a_organisation
+  enrol_a_organisation --> enrol_a_clinician
+  enrol_a_clinician --> enrol_a_tasks
+  enrol_a_tasks --> enrol_a_product
+  enrol_a_product --> enrol_a_condition
+  enrol_a_condition --> enrol_a_indication
+  enrol_a_indication --> enrol_a_tasks
+  enrol_a_tasks --> enrol_a_pathway
+  enrol_a_pathway --> enrol_a_start_date
+  enrol_a_start_date --> enrol_a_tasks
+  enrol_a_tasks --> enrol_a_check
+  enrol_a_check --> enrol_confirmation
+  enrol_nhs_number --> enrolments
+  enrol_searching --> enrolments
+  enrol_confirm_patient --> enrolments
+  enrol_confirm_patient --> enrol_nhs_number
+  enrol_a_tasks --> enrolments
+  enrol_a_tasks --> enrol_confirm_patient
+  enrol_a_tasks --> enrol_a_organisation
+  enrol_a_organisation --> enrolments
+  enrol_a_organisation --> enrol_a_tasks
+  enrol_a_clinician --> enrolments
+  enrol_a_clinician --> enrol_a_organisation
+  enrol_a_product --> enrolments
+  enrol_a_product --> enrol_a_tasks
+  enrol_a_condition --> enrolments
+  enrol_a_condition --> enrol_a_product
+  enrol_a_indication --> enrolments
+  enrol_a_indication --> enrol_a_condition
+  enrol_a_pathway --> enrolments
+  enrol_a_pathway --> enrol_a_tasks
+  enrol_a_start_date --> enrolments
+  enrol_a_start_date --> enrol_a_pathway
+  enrol_a_check --> enrolments
+  enrol_a_check --> enrol_a_tasks
+  enrol_confirmation --> enrolments
+
+  classDef start fill:#53d8fb,stroke:#0f3460,color:#000
+  classDef question fill:#e94560,stroke:#0f3460,color:#fff
+  classDef confirmation fill:#4ecca3,stroke:#0f3460,color:#000
+  classDef error fill:#ff6b6b,stroke:#0f3460,color:#fff
+  class enrolments start

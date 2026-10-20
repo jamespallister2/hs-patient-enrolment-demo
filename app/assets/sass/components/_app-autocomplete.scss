@@ -1,0 +1,26 @@
+// Accessible autocomplete (alphagov) restyled with NHS tokens (CES-009 authorising clinician)
+.autocomplete__wrapper {
+  @include nhsuk-font(19);
+}
+
+.autocomplete__input {
+  @include nhsuk-font(19);
+  border: $nhsuk-border-width-form-element solid $nhsuk-input-border-colour;
+  border-radius: 0;
+
+  &:focus,
+  &.autocomplete__input--focused {
+    @include nhsuk-focused-input;
+  }
+}
+
+.autocomplete__option {
+  @include nhsuk-font(19);
+}
+
+.autocomplete__option--focused,
+.autocomplete__option:hover {
+  border-color: nhsuk-colour("blue");
+  background-color: nhsuk-colour("blue");
+  color: $nhsuk-reverse-text-colour;
+}

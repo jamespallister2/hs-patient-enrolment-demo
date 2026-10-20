@@ -1,0 +1,19 @@
+{#
+  CES-009 – Supplier outage when creating the enrolment
+  Pattern: X-GOV GOV.UK "There is a problem with the service" page.
+  The answers are kept so the user can try again.
+#}
+{% extends "layout.html" %}
+
+{% set pageName = "Sorry, there is a problem with the service" %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      <h1 class="nhsuk-heading-l">{{ pageName }}</h1>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit (enrolment has not been created).</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit (your answers have been saved).</p>
+      <p><a class="nhsuk-link" href="/enrol/{{ data.settings.enrolVariant }}/check">Lorem ipsum (try again)</a></p>
+    </div>
+  </div>
+{% endblock %}

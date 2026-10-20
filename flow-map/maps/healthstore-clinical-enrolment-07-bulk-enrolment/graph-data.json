@@ -1,0 +1,271 @@
+{
+  "nodes": [
+    {
+      "id": "/bulk",
+      "label": "Bulk enrolment – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/bulk",
+      "filePath": "bulk/index.html",
+      "screenshot": "screenshots/bulk.png",
+      "type": "page",
+      "actualTitle": "Bulk enrolment – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "07-bulk-enrolment",
+      "screenshotAspectRatio": 0.790625,
+      "visitOrder": 0,
+      "layoutRank": 0,
+      "isStartNode": true,
+      "staticEnriched": true
+    },
+    {
+      "id": "/bulk/upload",
+      "label": "Lorem ipsum dolor sit amet (upload a bulk enrolment file) – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/bulk/upload",
+      "filePath": "bulk/upload.html",
+      "screenshot": "screenshots/bulk-upload.png",
+      "type": "form",
+      "actualTitle": "Lorem ipsum dolor sit amet (upload a bulk enrolment file) – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "07-bulk-enrolment",
+      "screenshotAspectRatio": 1.071875,
+      "visitOrder": 1,
+      "layoutRank": 1,
+      "staticEnriched": true
+    },
+    {
+      "id": "/bulk/B-2026-0013/validating",
+      "label": "Lorem ipsum dolor (checking your file) – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/bulk/B-2026-0013/validating",
+      "filePath": null,
+      "screenshot": "screenshots/bulk-B-2026-0013-validating.png",
+      "type": "page",
+      "actualTitle": "Lorem ipsum dolor (checking your file) – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "07-bulk-enrolment",
+      "screenshotAspectRatio": 0.65,
+      "visitOrder": 2,
+      "layoutRank": 2
+    },
+    {
+      "id": "/bulk/B-2026-0013/results",
+      "label": "Lorem ipsum dolor sit amet (check the results for your file) – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/bulk/B-2026-0013/results",
+      "filePath": null,
+      "screenshot": "screenshots/bulk-B-2026-0013-results.png",
+      "type": "page",
+      "actualTitle": "Lorem ipsum dolor sit amet (check the results for your file) – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "07-bulk-enrolment",
+      "screenshotAspectRatio": 1.62890625,
+      "visitOrder": 3,
+      "layoutRank": 3
+    },
+    {
+      "id": "/bulk/B-2026-0013/check",
+      "label": "Lorem ipsum dolor sit amet (check before you submit the file) – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/bulk/B-2026-0013/check",
+      "filePath": null,
+      "screenshot": "screenshots/bulk-B-2026-0013-check.png",
+      "type": "page",
+      "actualTitle": "Lorem ipsum dolor sit amet (check before you submit the file) – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "07-bulk-enrolment",
+      "screenshotAspectRatio": 1.12734375,
+      "visitOrder": 4,
+      "layoutRank": 3
+    },
+    {
+      "id": "/bulk/B-2026-0013/submitted",
+      "label": "Lorem ipsum (bulk file submitted) – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/bulk/B-2026-0013/submitted",
+      "filePath": null,
+      "screenshot": "screenshots/bulk-B-2026-0013-submitted.png",
+      "type": "page",
+      "actualTitle": "Lorem ipsum (bulk file submitted) – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "07-bulk-enrolment",
+      "screenshotAspectRatio": 0.834375,
+      "visitOrder": 5,
+      "layoutRank": 4
+    },
+    {
+      "id": "/bulk/B-2026-0013",
+      "label": "B-2026-0013 – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/bulk/B-2026-0013",
+      "filePath": null,
+      "screenshot": "screenshots/bulk-B-2026-0013.png",
+      "type": "page",
+      "actualTitle": "B-2026-0013 – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "07-bulk-enrolment",
+      "screenshotAspectRatio": 0.79375,
+      "visitOrder": 6,
+      "layoutRank": 5
+    }
+  ],
+  "edges": [
+    {
+      "source": "/bulk",
+      "target": "/bulk/upload",
+      "type": "link",
+      "label": "}) }}",
+      "method": "GET",
+      "provenance": "both",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/bulk/upload",
+      "target": "/bulk/B-2026-0013/validating",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/bulk/B-2026-0013/validating",
+      "target": "/bulk/B-2026-0013/results",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/bulk/B-2026-0013/results",
+      "target": "/bulk/B-2026-0013/check",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/bulk/B-2026-0013/check",
+      "target": "/bulk/B-2026-0013/submitted",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/bulk/B-2026-0013/submitted",
+      "target": "/bulk/B-2026-0013",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/bulk",
+      "target": "/bulk/upload",
+      "type": "link",
+      "label": "Lorem ipsum (upload a file)",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/bulk/upload",
+      "target": "/bulk",
+      "type": "link",
+      "label": "Back",
+      "method": "GET",
+      "provenance": "both",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/bulk/B-2026-0013/validating",
+      "target": "/bulk",
+      "type": "link",
+      "label": "Bulk enrolment      1 new outcomes",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": true
+    },
+    {
+      "source": "/bulk/B-2026-0013/validating",
+      "target": "/bulk/B-2026-0013/results",
+      "type": "link",
+      "label": "Lorem ipsum (continue if this page does not update)",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/bulk/B-2026-0013/results",
+      "target": "/bulk",
+      "type": "link",
+      "label": "Bulk enrolment      1 new outcomes",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": true
+    },
+    {
+      "source": "/bulk/B-2026-0013/results",
+      "target": "/bulk/upload",
+      "type": "link",
+      "label": "Back",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/bulk/B-2026-0013/results",
+      "target": "/bulk/B-2026-0013/check",
+      "type": "link",
+      "label": "Continue",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/bulk/B-2026-0013/check",
+      "target": "/bulk",
+      "type": "link",
+      "label": "Bulk enrolment      1 new outcomes",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": true
+    },
+    {
+      "source": "/bulk/B-2026-0013/check",
+      "target": "/bulk/B-2026-0013/results",
+      "type": "link",
+      "label": "Back",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/bulk/B-2026-0013/check",
+      "target": "/bulk/upload",
+      "type": "link",
+      "label": "Change file",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/bulk/B-2026-0013/submitted",
+      "target": "/bulk",
+      "type": "link",
+      "label": "Lorem ipsum (go to bulk enrolment)",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/bulk/B-2026-0013/submitted",
+      "target": "/bulk/B-2026-0013",
+      "type": "link",
+      "label": "Lorem ipsum (check progress)",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/bulk/B-2026-0013",
+      "target": "/bulk",
+      "type": "link",
+      "label": "Back",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    }
+  ]
+}

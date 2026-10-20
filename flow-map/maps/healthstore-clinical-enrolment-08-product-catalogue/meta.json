@@ -1,0 +1,17 @@
+{
+  "name": "healthstore-clinical-enrolment-08-product-catalogue",
+  "title": "HealthStore Clinical Enrolment Service: 08-product-catalogue",
+  "updatedAt": "2026-10-20T13:31:35.534Z",
+  "viewerSchemaVersion": 1,
+  "mode": "scenario",
+  "scenario": "08-product-catalogue",
+  "nodeCount": 8,
+  "edgeCount": 24,
+  "hasScreenshots": true,
+  "crawlStats": {
+    "pagesVisited": 8,
+    "runtimeLinksExtracted": 87,
+    "runtimeEdgesDiscovered": 20,
+    "setupStepsExecuted": 2
+  }
+}

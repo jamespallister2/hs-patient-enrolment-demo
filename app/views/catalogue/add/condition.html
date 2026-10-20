@@ -1,0 +1,90 @@
+{#
+  CES-005 – Add or change a condition and its indications
+  Patterns: NHS Text input; X-GOV MoJ Add another (repeating indication inputs,
+            NHS styling). Without JavaScript the "add another" and "remove"
+            buttons submit the form and the server adds or removes a row.
+#}
+{% extends "layout.html" %}
+
+{% set pageName = "Lorem ipsum (add a condition)" if index === null else "Lorem ipsum (change condition)" %}
+
+{% block beforeContent %}
+  {{ backLink({
+    href: "/catalogue/add/conditions" if draft.conditions | length else "/catalogue/add/details",
+    text: "Back"
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+
+      {% include "_partials/error-summary.njk" %}
+
+      <span class="nhsuk-caption-l">{{ draft.name }}</span>
+      <h1 class="nhsuk-heading-l">{{ pageName }}</h1>
+
+      <form method="post" action="/catalogue/add/condition-answer" novalidate>
+        <input type="hidden" name="_index" value="{{ index if index !== null }}">
+
+        {{ input({
+          id: "conditionName",
+          name: "_conditionName",
+          label: {
+            text: "Condition",
+            size: "s"
+          },
+          value: form.name,
+          errorMessage: { text: errors.conditionName.text } if errors.conditionName
+        }) }}
+
+        <div class="nhsuk-form-group {{- ' nhsuk-form-group--error' if errors.indications }}" data-module="app-add-another" id="indications">
+          <fieldset class="nhsuk-fieldset">
+            <legend class="nhsuk-fieldset__legend nhsuk-fieldset__legend--s">Indications</legend>
+            <div class="nhsuk-hint">Lorem ipsum dolor sit amet</div>
+            {% if errors.indications %}
+              <span class="nhsuk-error-message"><span class="nhsuk-u-visually-hidden">Error:</span> {{ errors.indications.text }}</span>
+            {% endif %}
+            <div data-add-another-list>
+              {% for ind in form.indications %}
+                <div class="app-add-another__item" data-add-another-item>
+                  {{ input({
+                    id: "indication-" + loop.index0,
+                    name: "_indications",
+                    label: {
+                      html: "Indication <span data-add-another-number>" + loop.index + "</span>"
+                    },
+                    value: ind
+                  }) }}
+                  <div class="app-add-another__item-actions" data-add-another-remove {{- " hidden" if form.indications | length == 1 }}>
+                    {{ button({
+                      text: "Remove",
+                      name: "_action",
+                      value: "remove-" + loop.index0,
+                      variant: "secondary",
+                      small: true
+                    }) }}
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+            {{ button({
+              text: "Lorem ipsum (add another indication)",
+              name: "_action",
+              value: "add",
+              variant: "secondary",
+              small: true,
+              attributes: {
+                "data-add-another-add": true
+              }
+            }) }}
+          </fieldset>
+        </div>
+
+        {{ button({
+          text: "Continue"
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

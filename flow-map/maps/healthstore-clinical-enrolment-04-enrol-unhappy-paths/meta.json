@@ -1,0 +1,17 @@
+{
+  "name": "healthstore-clinical-enrolment-04-enrol-unhappy-paths",
+  "title": "HealthStore Clinical Enrolment Service: 04-enrol-unhappy-paths",
+  "updatedAt": "2026-10-20T13:31:35.499Z",
+  "viewerSchemaVersion": 1,
+  "mode": "scenario",
+  "scenario": "04-enrol-unhappy-paths",
+  "nodeCount": 7,
+  "edgeCount": 10,
+  "hasScreenshots": true,
+  "crawlStats": {
+    "pagesVisited": 7,
+    "runtimeLinksExtracted": 65,
+    "runtimeEdgesDiscovered": 10,
+    "setupStepsExecuted": 3
+  }
+}

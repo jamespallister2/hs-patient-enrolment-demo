@@ -1,0 +1,181 @@
+{#
+  CES-009 – Check answers before creating the enrolment
+  Patterns: NHS Check answers; NHS Summary list with Change links
+  The submit button uses the verb from the user story ("create the enrolment").
+#}
+{% extends "layout.html" %}
+
+{% set pageName = "Lorem ipsum dolor sit amet (check your answers before creating the enrolment)" %}
+
+{% block beforeContent %}
+  {{ backLink({
+    href: "/enrol/a/tasks" if variant == "a" else "/enrol/b/start-date",
+    text: "Back"
+  }) }}
+{% endblock %}
+
+{% block content %}
+  {% set base = "/enrol/" + variant + "/" %}
+  {% set startDateText = (enrol.startDate | dateInputToIso | appDate) if enrol.startDate and enrol.startDate.year else "Not provided" %}
+
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+
+      {% include "_partials/enrol-identity-bar.njk" %}
+
+      <h1 class="nhsuk-heading-l">{{ pageName }}</h1>
+
+      {{ summaryList({
+        rows: [
+          {
+            key: {
+              text: "Patient"
+            },
+            value: {
+              text: enrolPatient.givenName + " " + enrolPatient.familyName + " (" + (enrolPatient.nhsNumber | formatNhsNumber) + ")"
+            },
+            actions: {
+              items: [
+                {
+                  href: "/enrol/start",
+                  text: "Change",
+                  visuallyHiddenText: "patient"
+                }
+              ]
+            }
+          },
+          {
+            key: {
+              text: "Accountable clinical organisation"
+            },
+            value: {
+              text: organisation.name
+            },
+            actions: {
+              items: [
+                {
+                  href: base + "organisation?returnTo=check",
+                  text: "Change",
+                  visuallyHiddenText: "accountable clinical organisation"
+                }
+              ]
+            }
+          },
+          {
+            key: {
+              text: "Authorising clinician"
+            },
+            value: {
+              text: clinician.name + " (" + clinician.registration + ")"
+            },
+            actions: {
+              items: [
+                {
+                  href: base + "clinician?returnTo=check",
+                  text: "Change",
+                  visuallyHiddenText: "authorising clinician"
+                }
+              ]
+            }
+          },
+          {
+            key: {
+              text: "Product"
+            },
+            value: {
+              text: product.name + " (version " + product.version + ")"
+            },
+            actions: {
+              items: [
+                {
+                  href: base + "product?returnTo=check",
+                  text: "Change",
+                  visuallyHiddenText: "product"
+                }
+              ]
+            }
+          },
+          {
+            key: {
+              text: "Condition"
+            },
+            value: {
+              text: condition.name
+            },
+            actions: {
+              items: [
+                {
+                  href: base + "condition?returnTo=check",
+                  text: "Change",
+                  visuallyHiddenText: "condition"
+                }
+              ]
+            }
+          },
+          {
+            key: {
+              text: "Indication"
+            },
+            value: {
+              text: enrol.indication
+            },
+            actions: {
+              items: [
+                {
+                  href: base + "indication?returnTo=check",
+                  text: "Change",
+                  visuallyHiddenText: "indication"
+                }
+              ]
+            }
+          },
+          {
+            key: {
+              text: "Pathway"
+            },
+            value: {
+              text: enrol.pathway
+            },
+            actions: {
+              items: [
+                {
+                  href: base + "pathway?returnTo=check",
+                  text: "Change",
+                  visuallyHiddenText: "pathway"
+                }
+              ]
+            }
+          },
+          {
+            key: {
+              text: "Lorem ipsum (date to be confirmed)"
+            },
+            value: {
+              text: startDateText
+            },
+            actions: {
+              items: [
+                {
+                  href: base + "start-date?returnTo=check",
+                  text: "Change",
+                  visuallyHiddenText: "date"
+                }
+              ]
+            }
+          }
+        ]
+      }) }}
+
+      <h2 class="nhsuk-heading-m">Lorem ipsum dolor sit amet (declaration)</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+
+      <form method="post" action="/enrol/{{ variant }}/check-answer" novalidate>
+        {{ button({
+          text: "Create enrolment",
+          preventDoubleClick: true
+        }) }}
+      </form>
+
+    </div>
+  </div>
+{% endblock %}

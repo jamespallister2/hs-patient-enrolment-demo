@@ -1,0 +1,11 @@
+{
+  "name": "healthstore-clinical-enrolment",
+  "title": "HealthStore Clinical Enrolment Service",
+  "updatedAt": "2026-10-20T13:31:35.569Z",
+  "viewerSchemaVersion": 1,
+  "mode": "scenario",
+  "scenario": "01-log-in + 02-enrol-task-list + 03-enrol-one-question-per-page + 04-enrol-unhappy-paths + 05-manage-enrolments + 06-back-office + 07-bulk-enrolment + 08-product-catalogue",
+  "nodeCount": 54,
+  "edgeCount": 139,
+  "hasScreenshots": true
+}

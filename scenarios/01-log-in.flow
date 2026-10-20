@@ -1,0 +1,45 @@
+# CES-001 to CES-004 – log in with CIS2 (simulated) or an admin account,
+# choose an organisation, log out
+
+Start /sign-in
+Scope /sign-in /signed-out /enrolments /catalogue /access-denied
+Exclude /prototype /prototype-admin /assets
+Tags log-in CES-001 CES-002 CES-003 CES-004
+
+--- Setup ---
+
+Goto /sign-in
+
+--- Map ---
+
+Visit /sign-in
+
+# CIS2 route – user with two organisations
+ClickLink "Log in with my Care Identity"
+Wait 1200
+Snapshot
+Choose "Dr Asha Patel"
+ClickButton "Continue"
+Wait 1200
+Snapshot
+Choose "Riverside Community Health Services"
+ClickButton "Continue"
+Wait 1200
+Snapshot
+
+# Log out
+ClickLink "Log out"
+Wait 1200
+Snapshot
+
+# Admin route (Cognito)
+Goto /sign-in
+ClickLink "log in with an admin account"
+Wait 1200
+Snapshot
+FillIn "Email address" with "lee.morgan@example.com"
+Fill "#password" "password"
+ClickButton "Log in"
+Wait 1200
+Snapshot
+

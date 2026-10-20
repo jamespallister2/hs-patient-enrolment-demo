@@ -1,0 +1,216 @@
+{#
+  CES-014 / CES-015 / CES-010 – Enrolment record
+  Patterns: NHS Summary list; NHS Tabs (Details / History, as suggested in the
+            backlog); NHS Tag; NHS Back link; NHS Notification banner (success);
+            NHS Inset text (cancelled on someone's behalf);
+            X-GOV: MoJ Identity bar; MoJ Page header actions;
+            MoJ Timeline (history); MoJ Filter a list (by action, back office);
+            NHS Table (dense audit log for back-office users)
+#}
+{% extends "layout.html" %}
+
+{% set pageName = e.id %}
+
+{% block beforeContent %}
+  {{ backLink({
+    href: "/enrolments",
+    text: "Back"
+  }) }}
+{% endblock %}
+
+{% block content %}
+  {% include "_partials/success-banner.njk" %}
+
+  {{ appIdentityBar({
+    patient: e
+  }) }}
+
+  <div class="app-page-header">
+    <div class="app-page-header__heading">
+      <span class="nhsuk-caption-l">Lorem ipsum (enrolment)</span>
+      <h1 class="nhsuk-heading-l">
+        {{ e.id }}
+        {{ tag({ text: e.status, colour: e.status | statusColour, classes: "nhsuk-u-margin-left-2" }) }}
+      </h1>
+    </div>
+    {% if eCanCancel %}
+      <div class="app-page-header__actions">
+        {{ button({
+          text: "Cancel enrolment",
+          href: "/enrolments/" + e.id + "/cancel",
+          variant: "warning"
+        }) }}
+      </div>
+    {% endif %}
+  </div>
+
+  {# ---------------- Details tab ---------------- #}
+  {% set sourceHtml %}
+    {% if e.source == "Bulk" %}
+      Lorem ipsum (bulk file)
+      {% if can("bulk:upload") %}<a class="nhsuk-link" href="/bulk/{{ e.batchId }}">{{ e.batchId }}</a>{% else %}{{ e.batchId }}{% endif %}
+    {% else %}
+      Lorem ipsum (single enrolment)
+    {% endif %}
+  {% endset %}
+
+  {% set detailsHtml %}
+    <h2 class="nhsuk-heading-m">Details</h2>
+
+    {% if e.cancellation %}
+      {% if e.cancellation.onBehalfOf %}
+        {{ insetText({
+          text: "Lorem ipsum dolor sit amet (cancelled by the back office on behalf of " + svc.organisation(data, e.cancellation.onBehalfOf).name + ")"
+        }) }}
+      {% endif %}
+      {{ summaryList({
+        card: {
+          heading: {
+            text: "Lorem ipsum (cancellation)",
+            level: 3
+          }
+        },
+        rows: [
+          {
+            key: { text: "Lorem ipsum (cancelled on)" },
+            value: { text: e.cancellation.at | appDateTime }
+          },
+          {
+            key: { text: "Lorem ipsum (cancelled by)" },
+            value: { text: e.cancellation.by + " (" + e.cancellation.role + ")" }
+          },
+          {
+            key: { text: "Lorem ipsum (reason)" },
+            value: { text: e.cancellation.reason }
+          },
+          {
+            key: { text: "Lorem ipsum (more detail)" },
+            value: { text: e.cancellation.details }
+          } if e.cancellation.details
+        ]
+      }) }}
+    {% endif %}
+
+    {{ summaryList({
+      rows: [
+        {
+          key: { text: "Status" },
+          value: { html: tag({ text: e.status, colour: e.status | statusColour }) }
+        },
+        {
+          key: { text: "Accountable clinical organisation" },
+          value: { text: eOrganisation.name + " (" + eOrganisation.odsCode + ")" }
+        },
+        {
+          key: { text: "Authorising clinician" },
+          value: { text: eClinician.name + " (" + eClinician.registration + ")" }
+        },
+        {
+          key: { text: "Product" },
+          value: { text: eProduct.name + " (version " + eProduct.version + ")" }
+        },
+        {
+          key: { text: "Condition" },
+          value: { text: eCondition.name }
+        },
+        {
+          key: { text: "Indication" },
+          value: { text: e.indication }
+        },
+        {
+          key: { text: "Pathway" },
+          value: { text: e.pathway }
+        },
+        {
+          key: { text: "Lorem ipsum (date to be confirmed)" },
+          value: { text: (e.startDate | appDate) if e.startDate else "Not provided" }
+        },
+        {
+          key: { text: "Created" },
+          value: { text: (e.createdAt | appDateTime) + " by " + e.createdBy }
+        },
+        {
+          key: { text: "Lorem ipsum (how it was created)" },
+          value: { html: sourceHtml }
+        }
+      ]
+    }) }}
+  {% endset %}
+
+  {# ---------------- History tab ---------------- #}
+  {% set historyHtml %}
+    <h2 class="nhsuk-heading-m">History</h2>
+    <p class="nhsuk-body-s nhsuk-u-secondary-text-colour">Lorem ipsum dolor sit amet (this record cannot be changed).</p>
+
+    {% if showAuditTable %}
+      {# Back office: filter by action and a dense table (CES-015) #}
+      <form method="get" action="/enrolments/{{ e.id }}#history" novalidate class="nhsuk-u-margin-bottom-4">
+        {% set actionItems = [{ value: "", text: "All actions" }] %}
+        {% for a in historyActions %}
+          {% set actionItems = (actionItems.push({ value: a, text: a, selected: actionFilter == a }), actionItems) %}
+        {% endfor %}
+        {{ select({
+          id: "action-filter",
+          name: "_action",
+          label: {
+            text: "Lorem ipsum (filter by action)"
+          },
+          items: actionItems,
+          formGroup: {
+            afterInput: {
+              html: button({ text: "Apply", variant: "secondary", small: true, classes: "nhsuk-u-margin-left-2 nhsuk-u-margin-bottom-0" })
+            }
+          }
+        }) }}
+      </form>
+
+      {% set auditRows = [] %}
+      {% for h in history %}
+        {% set auditRows = (auditRows.push([
+          { text: h.at | appDateTime, header: "When" },
+          { text: h.title, header: "Action" },
+          { text: h.by + ((" (" + h.role + ")") if h.role else ""), header: "Who" },
+          { text: h.description or "", header: "Detail" }
+        ]), auditRows) %}
+      {% endfor %}
+      {{ table({
+        caption: {
+          text: "Lorem ipsum (audit log)",
+          size: "s"
+        },
+        responsive: true,
+        compact: true,
+        head: [
+          { text: "When" },
+          { text: "Action" },
+          { text: "Who" },
+          { text: "Detail" }
+        ],
+        rows: auditRows
+      }) }}
+    {% else %}
+      {{ appTimeline({
+        items: history
+      }) }}
+    {% endif %}
+  {% endset %}
+
+  {{ tabs({
+    items: [
+      {
+        label: "Details",
+        id: "details",
+        panel: {
+          html: detailsHtml
+        }
+      },
+      {
+        label: "History",
+        id: "history",
+        panel: {
+          html: historyHtml
+        }
+      }
+    ]
+  }) }}
+{% endblock %}

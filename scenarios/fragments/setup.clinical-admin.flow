@@ -1,0 +1,3 @@
+# Log in as Sam Okafor (clinical admin)
+Goto /prototype/sign-in-as/clinical-admin
+WaitForUrl /enrolments

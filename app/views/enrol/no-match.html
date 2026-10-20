@@ -1,0 +1,39 @@
+{#
+  CES-008 – No PDS match for this NHS number
+  Pattern: NHS Interruption page (panel, interruption variant)
+#}
+{% extends "layout.html" %}
+
+{% set pageName = "Lorem ipsum dolor sit amet (no patient found)" %}
+
+{% block beforeContent %}
+  {{ backLink({
+    href: "/enrol/nhs-number",
+    text: "Back"
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      {% call panel({
+        variant: "interruption",
+        heading: {
+          text: pageName,
+          size: "l"
+        }
+      }) %}
+        <p>Lorem ipsum dolor sit amet {{ enrol.nhsNumber | formatNhsNumber }} consectetur adipiscing elit.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</p>
+        <div class="nhsuk-button-group">
+          {{ button({
+            text: "Lorem ipsum (check the NHS number)",
+            href: "/enrol/nhs-number",
+            variant: "reverse"
+          }) }}
+          <a class="nhsuk-link nhsuk-link--reverse" href="/enrolments">Cancel</a>
+        </div>
+      {% endcall %}
+    </div>
+  </div>
+{% endblock %}

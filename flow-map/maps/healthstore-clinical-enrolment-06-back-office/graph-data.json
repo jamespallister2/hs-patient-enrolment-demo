@@ -1,0 +1,167 @@
+{
+  "nodes": [
+    {
+      "id": "/enrolments",
+      "label": "Enrolments – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrolments",
+      "filePath": "enrolments/index.html",
+      "screenshot": "screenshots/enrolments.png",
+      "type": "form",
+      "actualTitle": "Enrolments – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "06-back-office",
+      "screenshotAspectRatio": 1.7546875,
+      "visitOrder": 0,
+      "layoutRank": 0,
+      "isStartNode": true,
+      "staticEnriched": true
+    },
+    {
+      "id": "/enrolments/ENR-10005",
+      "label": "ENR-10005 – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrolments/ENR-10005",
+      "filePath": null,
+      "screenshot": "screenshots/enrolments-ENR-10005.png",
+      "type": "page",
+      "actualTitle": "ENR-10005 – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "06-back-office",
+      "screenshotAspectRatio": 1.13359375,
+      "visitOrder": 1,
+      "layoutRank": 1
+    },
+    {
+      "id": "/enrolments/ENR-10005/cancel",
+      "label": "Lorem ipsum dolor sit amet (why are you cancelling this enrolment)? – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrolments/ENR-10005/cancel",
+      "filePath": null,
+      "screenshot": "screenshots/enrolments-ENR-10005-cancel.png",
+      "type": "page",
+      "actualTitle": "Lorem ipsum dolor sit amet (why are you cancelling this enrolment)? – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "06-back-office",
+      "screenshotAspectRatio": 1.00078125,
+      "visitOrder": 2,
+      "layoutRank": 2
+    },
+    {
+      "id": "/enrolments/ENR-10005/cancel/confirm",
+      "label": "Lorem ipsum dolor sit amet (confirm you want to cancel this enrolment) – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrolments/ENR-10005/cancel/confirm",
+      "filePath": null,
+      "screenshot": "screenshots/enrolments-ENR-10005-cancel-confirm.png",
+      "type": "page",
+      "actualTitle": "Lorem ipsum dolor sit amet (confirm you want to cancel this enrolment) – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "06-back-office",
+      "screenshotAspectRatio": 0.89765625,
+      "visitOrder": 3,
+      "layoutRank": 3
+    }
+  ],
+  "edges": [
+    {
+      "source": "/enrolments/ENR-10005",
+      "target": "/enrolments/ENR-10005/cancel",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrolments/ENR-10005/cancel",
+      "target": "/enrolments/ENR-10005/cancel/confirm",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrolments/ENR-10005/cancel/confirm",
+      "target": "/enrolments/ENR-10005",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrolments",
+      "target": "/enrolments/ENR-10005",
+      "type": "link",
+      "label": "Isla WILLIAMS",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrolments/ENR-10005",
+      "target": "/enrolments",
+      "type": "link",
+      "label": "Back",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrolments/ENR-10005",
+      "target": "/enrolments/ENR-10005/cancel",
+      "type": "link",
+      "label": "Cancel enrolment",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrolments/ENR-10005/cancel",
+      "target": "/enrolments",
+      "type": "link",
+      "label": "NHS\n          \n        \n        HealthStore Clinical Enrolment Service",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": true
+    },
+    {
+      "source": "/enrolments/ENR-10005/cancel",
+      "target": "/enrolments/ENR-10005",
+      "type": "link",
+      "label": "Back",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrolments/ENR-10005/cancel/confirm",
+      "target": "/enrolments",
+      "type": "link",
+      "label": "NHS\n          \n        \n        HealthStore Clinical Enrolment Service",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": true
+    },
+    {
+      "source": "/enrolments/ENR-10005/cancel/confirm",
+      "target": "/enrolments/ENR-10005/cancel",
+      "type": "link",
+      "label": "Back",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrolments/ENR-10005/cancel/confirm",
+      "target": "/enrolments/ENR-10005",
+      "type": "link",
+      "label": "Lorem ipsum (keep this enrolment)",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrolments",
+      "target": "/enrolments",
+      "type": "form",
+      "label": "Status",
+      "method": "GET",
+      "provenance": "both"
+    }
+  ]
+}

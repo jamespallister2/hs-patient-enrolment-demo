@@ -1,0 +1,200 @@
+flowchart TD
+  sign_in["Log in – HealthStore Clinical Enrolment Service – NHS"]
+  sign_in_cis2["Simulated CIS2 log in – HealthStore Clinical Enrolment Service – NHS"]
+  sign_in_select_organisation["Lorem ipsum dolor sit amet (which organisation)? – HealthStore Clinical Enrolment Service – NHS"]
+  enrolments["Enrolments – HealthStore Clinical Enrolment Service – NHS"]
+  signed_out["Lorem ipsum dolor sit amet (you have logged out) – HealthStore Clinical Enrolment Service – NHS"]
+  sign_in_admin["Lorem ipsum dolor (admin log in) – HealthStore Clinical Enrolment Service – NHS"]
+  catalogue["Product catalogue – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_nhs_number["Lorem ipsum dolor sit amet (what is the patient's NHS number)? – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_searching["Lorem ipsum dolor (searching for the patient) – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_confirm_patient["Is this the right patient? – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_a_tasks["Lorem ipsum dolor sit amet (create an enrolment) – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_a_organisation["Lorem ipsum dolor sit amet (accountable clinical organisation)? – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_a_clinician["Lorem ipsum dolor sit amet (authorising clinician)? – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_a_product["Lorem ipsum dolor sit amet (which product)? – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_a_condition["Lorem ipsum dolor sit amet (which condition)? – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_a_indication["Lorem ipsum dolor sit amet (which indication)? – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_a_pathway["Lorem ipsum dolor sit amet (which pathway)? – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_a_start_date["Lorem ipsum dolor sit amet (date to be confirmed)? (optional) – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_a_check["Lorem ipsum dolor sit amet (check your answers before creating the enrolment) – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_confirmation["Lorem ipsum (enrolment created) – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_b_organisation["Lorem ipsum dolor sit amet (accountable clinical organisation)? – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_b_clinician["Lorem ipsum dolor sit amet (authorising clinician)? – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_b_product["Lorem ipsum dolor sit amet (which product)? – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_b_condition["Lorem ipsum dolor sit amet (which condition)? – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_b_indication["Lorem ipsum dolor sit amet (which indication)? – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_b_pathway["Lorem ipsum dolor sit amet (which pathway)? – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_b_start_date["Lorem ipsum dolor sit amet (date to be confirmed)? (optional) – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_b_check["Lorem ipsum dolor sit amet (check your answers before creating the enrolment) – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_no_match["Lorem ipsum dolor sit amet (no patient found) – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_restricted["Lorem ipsum dolor sit amet (restricted record) – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_deceased["Lorem ipsum dolor sit amet (patient has died) – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_pds_unavailable["Sorry, there is a problem with the service – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_b_duplicate["Lorem ipsum dolor sit amet (patient may already be enrolled on this product) – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_supplier_unavailable["Sorry, there is a problem with the service – HealthStore Clinical Enrolment Service – NHS"]
+  enrolments_ENR_10001["ENR-10001 – HealthStore Clinical Enrolment Service – NHS"]
+  enrolments_ENR_10001_cancel["Lorem ipsum dolor sit amet (why are you cancelling this enrolment)? – HealthStore Clinical Enrolment Service – NHS"]
+  enrolments_ENR_10001_cancel_confirm["Lorem ipsum dolor sit amet (confirm you want to cancel this enrolment) – HealthStore Clinical Enrolment Service – NHS"]
+  enrolments_ENR_10005["Lorem ipsum dolor sit amet (you do not have access to this page) – HealthStore Clinical Enrolment Service – NHS"]
+  enrolments_ENR_10005_cancel["Lorem ipsum dolor sit amet (why are you cancelling this enrolment)? – HealthStore Clinical Enrolment Service – NHS"]
+  enrolments_ENR_10005_cancel_confirm["Lorem ipsum dolor sit amet (confirm you want to cancel this enrolment) – HealthStore Clinical Enrolment Service – NHS"]
+  bulk["Bulk enrolment – HealthStore Clinical Enrolment Service – NHS"]
+  bulk_upload["Lorem ipsum dolor sit amet (upload a bulk enrolment file) – HealthStore Clinical Enrolment Service – NHS"]
+  bulk_B_2026_0013_validating["Lorem ipsum dolor (checking your file) – HealthStore Clinical Enrolment Service – NHS"]
+  bulk_B_2026_0013_results["Lorem ipsum dolor sit amet (check the results for your file) – HealthStore Clinical Enrolment Service – NHS"]
+  bulk_B_2026_0013_check["Lorem ipsum dolor sit amet (check before you submit the file) – HealthStore Clinical Enrolment Service – NHS"]
+  bulk_B_2026_0013_submitted["Lorem ipsum (bulk file submitted) – HealthStore Clinical Enrolment Service – NHS"]
+  bulk_B_2026_0013["B-2026-0013 – HealthStore Clinical Enrolment Service – NHS"]
+  catalogue_p1["DTx product A – HealthStore Clinical Enrolment Service – NHS"]
+  catalogue_p1_withdraw["Lorem ipsum dolor sit amet (confirm you want to withdraw DTx product A) – HealthStore Clinical Enrolment Service – NHS"]
+  catalogue_add_details["Lorem ipsum (product details) – HealthStore Clinical Enrolment Service – NHS"]
+  catalogue_add_condition["Lorem ipsum (add a condition) – HealthStore Clinical Enrolment Service – NHS"]
+  catalogue_add_conditions["You have added 1 condition – HealthStore Clinical Enrolment Service – NHS"]
+  catalogue_add_check["Lorem ipsum dolor sit amet (check the product details) – HealthStore Clinical Enrolment Service – NHS"]
+  catalogue_p5["DTx product E – HealthStore Clinical Enrolment Service – NHS"]
+
+  sign_in --> sign_in_cis2
+  sign_in_cis2 --> sign_in_select_organisation
+  sign_in_select_organisation --> enrolments
+  enrolments --> signed_out
+  signed_out --> sign_in_admin
+  sign_in_admin --> catalogue
+  sign_in --> sign_in_admin
+  sign_in_cis2 --> sign_in
+  sign_in_select_organisation --> catalogue
+  sign_in_select_organisation --> signed_out
+  enrolments --> catalogue
+  enrolments --> sign_in
+  signed_out --> sign_in
+  sign_in_admin --> sign_in
+  catalogue --> signed_out
+  catalogue --> sign_in
+  enrolments --> enrol_nhs_number
+  enrol_nhs_number --> enrol_searching
+  enrol_searching --> enrol_confirm_patient
+  enrol_confirm_patient --> enrol_a_tasks
+  enrol_a_tasks --> enrol_a_organisation
+  enrol_a_organisation --> enrol_a_clinician
+  enrol_a_clinician --> enrol_a_tasks
+  enrol_a_tasks --> enrol_a_product
+  enrol_a_product --> enrol_a_condition
+  enrol_a_condition --> enrol_a_indication
+  enrol_a_indication --> enrol_a_tasks
+  enrol_a_tasks --> enrol_a_pathway
+  enrol_a_pathway --> enrol_a_start_date
+  enrol_a_start_date --> enrol_a_tasks
+  enrol_a_tasks --> enrol_a_check
+  enrol_a_check --> enrol_confirmation
+  enrol_nhs_number --> enrolments
+  enrol_searching --> enrolments
+  enrol_confirm_patient --> enrolments
+  enrol_confirm_patient --> enrol_nhs_number
+  enrol_a_tasks --> enrolments
+  enrol_a_tasks --> enrol_confirm_patient
+  enrol_a_organisation --> enrolments
+  enrol_a_organisation --> enrol_a_tasks
+  enrol_a_clinician --> enrolments
+  enrol_a_clinician --> enrol_a_organisation
+  enrol_a_product --> enrolments
+  enrol_a_product --> enrol_a_tasks
+  enrol_a_condition --> enrolments
+  enrol_a_condition --> enrol_a_product
+  enrol_a_indication --> enrolments
+  enrol_a_indication --> enrol_a_condition
+  enrol_a_pathway --> enrolments
+  enrol_a_pathway --> enrol_a_tasks
+  enrol_a_start_date --> enrolments
+  enrol_a_start_date --> enrol_a_pathway
+  enrol_a_check --> enrolments
+  enrol_a_check --> enrol_a_tasks
+  enrol_confirmation --> enrolments
+  enrol_nhs_number --> enrol_confirm_patient
+  enrol_confirm_patient --> enrol_b_organisation
+  enrol_b_organisation --> enrol_b_clinician
+  enrol_b_clinician --> enrol_b_product
+  enrol_b_product --> enrol_b_condition
+  enrol_b_condition --> enrol_b_indication
+  enrol_b_indication --> enrol_b_pathway
+  enrol_b_pathway --> enrol_b_start_date
+  enrol_b_start_date --> enrol_b_check
+  enrol_b_check --> enrol_confirmation
+  enrol_b_organisation --> enrol_confirm_patient
+  enrol_b_clinician --> enrol_b_organisation
+  enrol_b_product --> enrol_b_clinician
+  enrol_b_condition --> enrol_b_product
+  enrol_b_indication --> enrol_b_condition
+  enrol_b_pathway --> enrol_b_indication
+  enrol_b_start_date --> enrol_b_pathway
+  enrol_b_check --> enrol_b_start_date
+  enrol_nhs_number --> enrol_no_match
+  enrol_no_match --> enrol_restricted
+  enrol_restricted --> enrol_deceased
+  enrol_deceased --> enrol_pds_unavailable
+  enrol_pds_unavailable --> enrol_b_duplicate
+  enrol_b_duplicate --> enrol_supplier_unavailable
+  enrol_no_match --> enrol_nhs_number
+  enrol_restricted --> enrol_nhs_number
+  enrol_deceased --> enrol_nhs_number
+  enrol_pds_unavailable --> enrol_nhs_number
+  enrolments_ENR_10001 --> enrolments_ENR_10001_cancel
+  enrolments_ENR_10001_cancel --> enrolments_ENR_10001_cancel_confirm
+  enrolments_ENR_10001_cancel_confirm --> enrolments_ENR_10001
+  enrolments --> enrolments_ENR_10001
+  enrolments_ENR_10001 --> enrolments
+  enrolments_ENR_10001_cancel --> enrolments
+  enrolments_ENR_10001_cancel --> enrolments_ENR_10001
+  enrolments_ENR_10001_cancel_confirm --> enrolments
+  enrolments_ENR_10001_cancel_confirm --> enrolments_ENR_10001_cancel
+  enrolments_ENR_10005 --> enrolments
+  enrolments_ENR_10005 --> enrolments_ENR_10005_cancel
+  enrolments_ENR_10005_cancel --> enrolments_ENR_10005_cancel_confirm
+  enrolments_ENR_10005_cancel_confirm --> enrolments_ENR_10005
+  enrolments --> enrolments_ENR_10005
+  enrolments_ENR_10005_cancel --> enrolments
+  enrolments_ENR_10005_cancel --> enrolments_ENR_10005
+  enrolments_ENR_10005_cancel_confirm --> enrolments
+  enrolments_ENR_10005_cancel_confirm --> enrolments_ENR_10005_cancel
+  bulk --> bulk_upload
+  bulk_upload --> bulk_B_2026_0013_validating
+  bulk_B_2026_0013_validating --> bulk_B_2026_0013_results
+  bulk_B_2026_0013_results --> bulk_B_2026_0013_check
+  bulk_B_2026_0013_check --> bulk_B_2026_0013_submitted
+  bulk_B_2026_0013_submitted --> bulk_B_2026_0013
+  bulk_upload --> bulk
+  bulk_B_2026_0013_validating --> bulk
+  bulk_B_2026_0013_results --> bulk
+  bulk_B_2026_0013_results --> bulk_upload
+  bulk_B_2026_0013_check --> bulk
+  bulk_B_2026_0013_check --> bulk_B_2026_0013_results
+  bulk_B_2026_0013_check --> bulk_upload
+  bulk_B_2026_0013_submitted --> bulk
+  bulk_B_2026_0013 --> bulk
+  catalogue_p1 --> catalogue_p1_withdraw
+  catalogue_p1_withdraw --> catalogue_p1
+  catalogue_p1 --> catalogue_add_details
+  catalogue_add_details --> catalogue_add_condition
+  catalogue_add_condition --> catalogue_add_conditions
+  catalogue_add_conditions --> catalogue_add_check
+  catalogue_add_check --> catalogue_p5
+  catalogue --> catalogue_p1
+  catalogue_p1 --> catalogue
+  catalogue_p1_withdraw --> catalogue
+  catalogue_add_details --> catalogue
+  catalogue_add_condition --> catalogue
+  catalogue_add_condition --> catalogue_add_details
+  catalogue_add_conditions --> catalogue
+  catalogue_add_conditions --> catalogue_add_details
+  catalogue_add_check --> catalogue
+  catalogue_add_check --> catalogue_add_conditions
+  catalogue_p5 --> catalogue
+  catalogue_add_details --> catalogue_add_check
+  catalogue_add_conditions --> catalogue_add_condition
+  catalogue_add_check --> catalogue_add_details
+  catalogue_add_check --> catalogue_add_condition
+
+  classDef start fill:#53d8fb,stroke:#0f3460,color:#000
+  classDef question fill:#e94560,stroke:#0f3460,color:#fff
+  classDef confirmation fill:#4ecca3,stroke:#0f3460,color:#000
+  classDef error fill:#ff6b6b,stroke:#0f3460,color:#fff
+  class sign_in,bulk start

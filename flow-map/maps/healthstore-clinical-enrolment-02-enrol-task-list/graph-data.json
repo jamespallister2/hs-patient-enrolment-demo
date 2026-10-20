@@ -1,0 +1,562 @@
+{
+  "nodes": [
+    {
+      "id": "/enrolments",
+      "label": "Enrolments – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrolments",
+      "filePath": "enrolments/index.html",
+      "screenshot": "screenshots/enrolments.png",
+      "type": "form",
+      "actualTitle": "Enrolments – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "02-enrol-task-list",
+      "screenshotAspectRatio": 1.61328125,
+      "visitOrder": 0,
+      "layoutRank": 0,
+      "isStartNode": true,
+      "staticEnriched": true
+    },
+    {
+      "id": "/enrol/nhs-number",
+      "label": "Lorem ipsum dolor sit amet (what is the patient's NHS number)? – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrol/nhs-number",
+      "filePath": "enrol/nhs-number.html",
+      "screenshot": "screenshots/enrol-nhs-number.png",
+      "type": "form",
+      "actualTitle": "Lorem ipsum dolor sit amet (what is the patient's NHS number)? – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "02-enrol-task-list",
+      "screenshotAspectRatio": 0.690625,
+      "visitOrder": 1,
+      "layoutRank": 1,
+      "staticEnriched": true
+    },
+    {
+      "id": "/enrol/searching",
+      "label": "Lorem ipsum dolor (searching for the patient) – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrol/searching",
+      "filePath": "enrol/searching.html",
+      "screenshot": "screenshots/enrol-searching.png",
+      "type": "page",
+      "actualTitle": "Lorem ipsum dolor (searching for the patient) – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "02-enrol-task-list",
+      "screenshotAspectRatio": 0.609375,
+      "visitOrder": 2,
+      "layoutRank": 2,
+      "staticEnriched": true
+    },
+    {
+      "id": "/enrol/confirm-patient",
+      "label": "Is this the right patient? – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrol/confirm-patient",
+      "filePath": "enrol/confirm-patient.html",
+      "screenshot": "screenshots/enrol-confirm-patient.png",
+      "type": "form",
+      "actualTitle": "Is this the right patient? – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "02-enrol-task-list",
+      "screenshotAspectRatio": 0.91875,
+      "visitOrder": 3,
+      "layoutRank": 3,
+      "staticEnriched": true
+    },
+    {
+      "id": "/enrol/a/tasks",
+      "label": "Lorem ipsum dolor sit amet (create an enrolment) – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrol/a/tasks",
+      "filePath": null,
+      "screenshot": "screenshots/enrol-a-tasks.png",
+      "type": "page",
+      "actualTitle": "Lorem ipsum dolor sit amet (create an enrolment) – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "02-enrol-task-list",
+      "screenshotAspectRatio": 0.9796875,
+      "visitOrder": 4,
+      "layoutRank": 4
+    },
+    {
+      "id": "/enrol/a/organisation",
+      "label": "Lorem ipsum dolor sit amet (accountable clinical organisation)? – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrol/a/organisation",
+      "filePath": null,
+      "screenshot": "screenshots/enrol-a-organisation.png",
+      "type": "page",
+      "actualTitle": "Lorem ipsum dolor sit amet (accountable clinical organisation)? – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "02-enrol-task-list",
+      "screenshotAspectRatio": 0.83125,
+      "visitOrder": 5,
+      "layoutRank": 4
+    },
+    {
+      "id": "/enrol/a/clinician",
+      "label": "Lorem ipsum dolor sit amet (authorising clinician)? – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrol/a/clinician",
+      "filePath": null,
+      "screenshot": "screenshots/enrol-a-clinician.png",
+      "type": "page",
+      "actualTitle": "Lorem ipsum dolor sit amet (authorising clinician)? – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "02-enrol-task-list",
+      "screenshotAspectRatio": 0.8125,
+      "visitOrder": 6,
+      "layoutRank": 5
+    },
+    {
+      "id": "/enrol/a/product",
+      "label": "Lorem ipsum dolor sit amet (which product)? – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrol/a/product",
+      "filePath": null,
+      "screenshot": "screenshots/enrol-a-product.png",
+      "type": "page",
+      "actualTitle": "Lorem ipsum dolor sit amet (which product)? – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "02-enrol-task-list",
+      "screenshotAspectRatio": 0.96875,
+      "visitOrder": 7,
+      "layoutRank": 6
+    },
+    {
+      "id": "/enrol/a/condition",
+      "label": "Lorem ipsum dolor sit amet (which condition)? – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrol/a/condition",
+      "filePath": null,
+      "screenshot": "screenshots/enrol-a-condition.png",
+      "type": "page",
+      "actualTitle": "Lorem ipsum dolor sit amet (which condition)? – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "02-enrol-task-list",
+      "screenshotAspectRatio": 0.8515625,
+      "visitOrder": 8,
+      "layoutRank": 6
+    },
+    {
+      "id": "/enrol/a/indication",
+      "label": "Lorem ipsum dolor sit amet (which indication)? – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrol/a/indication",
+      "filePath": null,
+      "screenshot": "screenshots/enrol-a-indication.png",
+      "type": "page",
+      "actualTitle": "Lorem ipsum dolor sit amet (which indication)? – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "02-enrol-task-list",
+      "screenshotAspectRatio": 0.8515625,
+      "visitOrder": 9,
+      "layoutRank": 7
+    },
+    {
+      "id": "/enrol/a/pathway",
+      "label": "Lorem ipsum dolor sit amet (which pathway)? – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrol/a/pathway",
+      "filePath": null,
+      "screenshot": "screenshots/enrol-a-pathway.png",
+      "type": "page",
+      "actualTitle": "Lorem ipsum dolor sit amet (which pathway)? – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "02-enrol-task-list",
+      "screenshotAspectRatio": 0.8578125,
+      "visitOrder": 10,
+      "layoutRank": 8
+    },
+    {
+      "id": "/enrol/a/start-date",
+      "label": "Lorem ipsum dolor sit amet (date to be confirmed)? (optional) – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrol/a/start-date",
+      "filePath": null,
+      "screenshot": "screenshots/enrol-a-start-date.png",
+      "type": "page",
+      "actualTitle": "Lorem ipsum dolor sit amet (date to be confirmed)? (optional) – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "02-enrol-task-list",
+      "screenshotAspectRatio": 0.8375,
+      "visitOrder": 11,
+      "layoutRank": 8
+    },
+    {
+      "id": "/enrol/a/check",
+      "label": "Lorem ipsum dolor sit amet (check your answers before creating the enrolment) – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrol/a/check",
+      "filePath": null,
+      "screenshot": "screenshots/enrol-a-check.png",
+      "type": "page",
+      "actualTitle": "Lorem ipsum dolor sit amet (check your answers before creating the enrolment) – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "02-enrol-task-list",
+      "screenshotAspectRatio": 1.2921875,
+      "visitOrder": 12,
+      "layoutRank": 9
+    },
+    {
+      "id": "/enrol/confirmation",
+      "label": "Lorem ipsum (enrolment created) – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrol/confirmation",
+      "filePath": "enrol/confirmation.html",
+      "screenshot": "screenshots/enrol-confirmation.png",
+      "type": "page",
+      "actualTitle": "Lorem ipsum (enrolment created) – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "02-enrol-task-list",
+      "screenshotAspectRatio": 0.8625,
+      "visitOrder": 13,
+      "layoutRank": 10,
+      "staticEnriched": true
+    }
+  ],
+  "edges": [
+    {
+      "source": "/enrolments",
+      "target": "/enrol/nhs-number",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/nhs-number",
+      "target": "/enrol/searching",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/searching",
+      "target": "/enrol/confirm-patient",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/confirm-patient",
+      "target": "/enrol/a/tasks",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/a/tasks",
+      "target": "/enrol/a/organisation",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/a/organisation",
+      "target": "/enrol/a/clinician",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/a/clinician",
+      "target": "/enrol/a/tasks",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/a/tasks",
+      "target": "/enrol/a/product",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/a/product",
+      "target": "/enrol/a/condition",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/a/condition",
+      "target": "/enrol/a/indication",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/a/indication",
+      "target": "/enrol/a/tasks",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/a/tasks",
+      "target": "/enrol/a/pathway",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/a/pathway",
+      "target": "/enrol/a/start-date",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/a/start-date",
+      "target": "/enrol/a/tasks",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/a/tasks",
+      "target": "/enrol/a/check",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/a/check",
+      "target": "/enrol/confirmation",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/nhs-number",
+      "target": "/enrolments",
+      "type": "link",
+      "label": "Back",
+      "method": "GET",
+      "provenance": "both",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/searching",
+      "target": "/enrolments",
+      "type": "link",
+      "label": "NHS\n          \n        \n        HealthStore Clinical Enrolment Service",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": true
+    },
+    {
+      "source": "/enrol/confirm-patient",
+      "target": "/enrolments",
+      "type": "link",
+      "label": "NHS\n          \n        \n        HealthStore Clinical Enrolment Service",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": true
+    },
+    {
+      "source": "/enrol/confirm-patient",
+      "target": "/enrol/nhs-number",
+      "type": "link",
+      "label": "Back",
+      "method": "GET",
+      "provenance": "both",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/a/tasks",
+      "target": "/enrolments",
+      "type": "link",
+      "label": "NHS\n          \n        \n        HealthStore Clinical Enrolment Service",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": true
+    },
+    {
+      "source": "/enrol/a/tasks",
+      "target": "/enrol/confirm-patient",
+      "type": "link",
+      "label": "Back",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/a/tasks",
+      "target": "/enrol/a/organisation",
+      "type": "link",
+      "label": "Lorem ipsum (accountable organisation and authorising clinician)",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/a/organisation",
+      "target": "/enrolments",
+      "type": "link",
+      "label": "NHS\n          \n        \n        HealthStore Clinical Enrolment Service",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": true
+    },
+    {
+      "source": "/enrol/a/organisation",
+      "target": "/enrol/a/tasks",
+      "type": "link",
+      "label": "Back",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/a/clinician",
+      "target": "/enrolments",
+      "type": "link",
+      "label": "NHS\n          \n        \n        HealthStore Clinical Enrolment Service",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": true
+    },
+    {
+      "source": "/enrol/a/clinician",
+      "target": "/enrol/a/organisation",
+      "type": "link",
+      "label": "Back",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/a/product",
+      "target": "/enrolments",
+      "type": "link",
+      "label": "NHS\n          \n        \n        HealthStore Clinical Enrolment Service",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": true
+    },
+    {
+      "source": "/enrol/a/product",
+      "target": "/enrol/a/tasks",
+      "type": "link",
+      "label": "Back",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/a/condition",
+      "target": "/enrolments",
+      "type": "link",
+      "label": "NHS\n          \n        \n        HealthStore Clinical Enrolment Service",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": true
+    },
+    {
+      "source": "/enrol/a/condition",
+      "target": "/enrol/a/product",
+      "type": "link",
+      "label": "Back",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/a/indication",
+      "target": "/enrolments",
+      "type": "link",
+      "label": "NHS\n          \n        \n        HealthStore Clinical Enrolment Service",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": true
+    },
+    {
+      "source": "/enrol/a/indication",
+      "target": "/enrol/a/condition",
+      "type": "link",
+      "label": "Back",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/a/pathway",
+      "target": "/enrolments",
+      "type": "link",
+      "label": "NHS\n          \n        \n        HealthStore Clinical Enrolment Service",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": true
+    },
+    {
+      "source": "/enrol/a/pathway",
+      "target": "/enrol/a/tasks",
+      "type": "link",
+      "label": "Back",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/a/start-date",
+      "target": "/enrolments",
+      "type": "link",
+      "label": "NHS\n          \n        \n        HealthStore Clinical Enrolment Service",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": true
+    },
+    {
+      "source": "/enrol/a/start-date",
+      "target": "/enrol/a/pathway",
+      "type": "link",
+      "label": "Back",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/a/check",
+      "target": "/enrolments",
+      "type": "link",
+      "label": "NHS\n          \n        \n        HealthStore Clinical Enrolment Service",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": true
+    },
+    {
+      "source": "/enrol/a/check",
+      "target": "/enrol/a/tasks",
+      "type": "link",
+      "label": "Back",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/confirmation",
+      "target": "/enrolments",
+      "type": "link",
+      "label": "Lorem ipsum (go to enrolments)",
+      "method": "GET",
+      "provenance": "both",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrolments",
+      "target": "/enrolments",
+      "type": "form",
+      "label": "Status",
+      "method": "GET",
+      "provenance": "both"
+    }
+  ]
+}

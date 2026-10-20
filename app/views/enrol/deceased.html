@@ -1,0 +1,40 @@
+{#
+  CES-008 – PDS shows the patient has died
+  Pattern: NHS Interruption page. The journey stops here.
+#}
+{% extends "layout.html" %}
+
+{% set deceased = svc.patient(data, enrol.nhsNumber) %}
+{% set pageName = "Lorem ipsum dolor sit amet (patient has died)" %}
+
+{% block beforeContent %}
+  {{ backLink({
+    href: "/enrol/nhs-number",
+    text: "Back"
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      {% call panel({
+        variant: "interruption",
+        heading: {
+          text: pageName,
+          size: "l"
+        }
+      }) %}
+        <p>Lorem ipsum dolor sit amet {{ deceased.givenName }} {{ deceased.familyName }} ({{ enrol.nhsNumber | formatNhsNumber }}) consectetur {{ deceased.dateOfDeath | appDate }}.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <div class="nhsuk-button-group">
+          {{ button({
+            text: "Lorem ipsum (go to enrolments)",
+            href: "/enrolments",
+            variant: "reverse"
+          }) }}
+          <a class="nhsuk-link nhsuk-link--reverse" href="/enrol/start">Lorem ipsum (enter a different NHS number)</a>
+        </div>
+      {% endcall %}
+    </div>
+  </div>
+{% endblock %}

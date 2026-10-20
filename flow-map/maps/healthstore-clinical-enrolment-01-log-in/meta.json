@@ -1,0 +1,17 @@
+{
+  "name": "healthstore-clinical-enrolment-01-log-in",
+  "title": "HealthStore Clinical Enrolment Service: 01-log-in",
+  "updatedAt": "2026-10-20T13:31:35.467Z",
+  "viewerSchemaVersion": 1,
+  "mode": "scenario",
+  "scenario": "01-log-in",
+  "nodeCount": 7,
+  "edgeCount": 20,
+  "hasScreenshots": true,
+  "crawlStats": {
+    "pagesVisited": 7,
+    "runtimeLinksExtracted": 64,
+    "runtimeEdgesDiscovered": 19,
+    "setupStepsExecuted": 1
+  }
+}

@@ -1,0 +1,34 @@
+{# CES-009 – Condition (from the chosen product's catalogue entry). Pattern: NHS Radios. #}
+{% extends "enrol/questions/_base.html" %}
+
+{% set pageName = "Lorem ipsum dolor sit amet (which condition)?" %}
+
+{% block question %}
+  {% set items = [] %}
+  {% for c in selectedProduct.conditions %}
+    {% set items = (items.push({
+      value: c.id,
+      text: c.name,
+      checked: enrol.conditionId == c.id
+    }), items) %}
+  {% endfor %}
+
+  {{ radios({
+    name: "_conditionId",
+    idPrefix: "conditionId",
+    fieldset: {
+      legend: {
+        text: pageName,
+        size: "l",
+        isPageHeading: true
+      }
+    },
+    hint: {
+      text: "Lorem ipsum dolor sit amet " + selectedProduct.name
+    },
+    errorMessage: {
+      text: errors.conditionId.text
+    } if errors.conditionId,
+    items: items
+  }) }}
+{% endblock %}

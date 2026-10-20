@@ -1,0 +1,28 @@
+// Organisation switcher – X-GOV: MoJ Organisation switcher in NHS styling (CES-003)
+.app-organisation-switcher {
+  border-bottom: 1px solid $nhsuk-border-colour;
+  background-color: $nhsuk-reverse-text-colour;
+}
+
+.app-organisation-switcher__container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-top: nhsuk-spacing(2);
+  padding-bottom: nhsuk-spacing(2);
+}
+
+.app-organisation-switcher__heading {
+  @include nhsuk-font(19, $weight: bold);
+  margin: 0 nhsuk-spacing(3) 0 0;
+}
+
+.app-organisation-switcher__code {
+  @include nhsuk-font-weight-normal;
+  color: $nhsuk-secondary-text-colour;
+}
+
+.app-organisation-switcher__link {
+  @include nhsuk-font(19);
+}

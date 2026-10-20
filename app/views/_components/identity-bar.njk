@@ -1,0 +1,28 @@
+{#
+  Identity bar
+  X-GOV: based on the MoJ Identity bar, styled with NHS tokens.
+  https://design-patterns.service.justice.gov.uk/components/identity-bar/
+  Keeps the confirmed patient visible (CES-008, CES-009, CES-014).
+
+  params.patient – { givenName, familyName, nhsNumber, dateOfBirth } or
+                   { patientName, nhsNumber, dateOfBirth }
+  params.actionsHtml – optional HTML for actions on the right
+#}
+{% macro appIdentityBar(params) %}
+{% set p = params.patient %}
+<div class="app-identity-bar">
+  <div class="app-identity-bar__container">
+    <div class="app-identity-bar__details">
+      <span class="nhsuk-u-visually-hidden">Patient:</span>
+      <span class="app-identity-bar__name">{{ p.patientName if p.patientName else (p.givenName ~ " " ~ p.familyName) }}</span>
+      <span class="app-identity-bar__item"><span class="app-identity-bar__label">NHS number</span> {{ p.nhsNumber | formatNhsNumber }}</span>
+      <span class="app-identity-bar__item"><span class="app-identity-bar__label">Date of birth</span> {{ p.dateOfBirth | appDate }}</span>
+    </div>
+    {% if params.actionsHtml %}
+      <div class="app-identity-bar__actions">
+        {{ params.actionsHtml | safe }}
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endmacro %}

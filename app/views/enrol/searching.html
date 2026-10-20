@@ -1,0 +1,24 @@
+{#
+  CES-008 – Checking PDS (Personal Demographics Service)
+  Pattern: X-GOV MoJ Spinner progress indicator. The page moves on by itself
+  (meta refresh, so it works without JavaScript).
+#}
+{% extends "layout.html" %}
+
+{% set pageName = "Lorem ipsum dolor (searching for the patient)" %}
+
+{% block pageHead %}
+  <meta http-equiv="refresh" content="2;url=/enrol/search-result">
+{% endblock %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      <h1 class="nhsuk-heading-l">{{ pageName }}</h1>
+      {{ appSpinner({
+        text: "Lorem ipsum dolor sit amet (checking PDS)"
+      }) }}
+      <p><a class="nhsuk-link" href="/enrol/search-result">Lorem ipsum (continue if this page does not update)</a></p>
+    </div>
+  </div>
+{% endblock %}

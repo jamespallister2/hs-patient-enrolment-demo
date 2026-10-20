@@ -1,0 +1,43 @@
+{#
+  CES-005 – Withdraw a product
+  Pattern: NHS Interruption page, confirmation example.
+  NOTE: the backlog suggests the MoJ "Confirm an action" pattern. The NHS
+  Interruption page has a confirmation example for this case, so it is used first.
+#}
+{% extends "layout.html" %}
+
+{% set pageName = "Lorem ipsum dolor sit amet (confirm you want to withdraw " + p.name + ")" %}
+
+{% block beforeContent %}
+  {{ backLink({
+    href: "/catalogue/" + p.id,
+    text: "Back"
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      {% call panel({
+        variant: "interruption",
+        heading: {
+          text: pageName,
+          size: "l"
+        }
+      }) %}
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit (no new enrolments can be made).</p>
+        <p>Lorem ipsum dolor sit amet {{ enrolmentCount }} consectetur adipiscing elit (existing enrolments).</p>
+        <form method="post" action="/catalogue/{{ p.id }}/withdraw-answer" novalidate>
+          <div class="nhsuk-button-group">
+            {{ button({
+              text: "Lorem ipsum (withdraw product)",
+              variant: "reverse",
+              preventDoubleClick: true
+            }) }}
+            <a class="nhsuk-link nhsuk-link--reverse" href="/catalogue/{{ p.id }}">Cancel</a>
+          </div>
+        </form>
+      {% endcall %}
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,89 @@
+{#
+  CES-009 variant A – Task list
+  Patterns: NHS Complete multiple tasks; NHS Task list
+  Status wording follows the NHS Task list: Completed, Incomplete, Cannot start yet.
+#}
+{% extends "layout.html" %}
+
+{% set pageName = "Lorem ipsum dolor sit amet (create an enrolment)" %}
+
+{% block beforeContent %}
+  {{ backLink({
+    href: "/enrol/confirm-patient",
+    text: "Back"
+  }) }}
+{% endblock %}
+
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+
+      {% include "_partials/enrol-identity-bar.njk" %}
+
+      <h1 class="nhsuk-heading-l">{{ pageName }}</h1>
+
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+
+      {% set taskLabels = {
+        organisation: "Lorem ipsum (accountable organisation and authorising clinician)",
+        product: "Lorem ipsum (product, condition and indication)",
+        pathway: "Lorem ipsum (pathway and date)"
+      } %}
+
+      {% set items = [
+        {
+          heading: {
+            text: "Lorem ipsum (patient)"
+          },
+          hint: {
+            text: enrolPatient.givenName + " " + enrolPatient.familyName + ", NHS number " + (enrolPatient.nhsNumber | formatNhsNumber)
+          },
+          href: "/enrol/start",
+          status: {
+            text: "Completed"
+          }
+        }
+      ] %}
+
+      {% for task in tasks %}
+        {% if task.status == "Completed" %}
+          {% set status = { text: "Completed" } %}
+        {% elseif task.status == "Incomplete" %}
+          {% set status = { tag: { text: "Incomplete", colour: "blue" } } %}
+        {% else %}
+          {% set status = { text: "Cannot start yet", classes: "nhsuk-task-list__status--cannot-start-yet" } %}
+        {% endif %}
+        {% set items = (items.push({
+          heading: {
+            text: taskLabels[task.id]
+          },
+          href: task.href if task.status != "Cannot start yet",
+          status: status
+        }), items) %}
+      {% endfor %}
+
+      {% set items = (items.push({
+        heading: {
+          text: "Lorem ipsum (check and create enrolment)"
+        },
+        href: "/enrol/a/check" if readyToCheck,
+        status: {
+          tag: {
+            text: "Incomplete",
+            colour: "blue"
+          }
+        } if readyToCheck else {
+          text: "Cannot start yet",
+          classes: "nhsuk-task-list__status--cannot-start-yet"
+        }
+      }), items) %}
+
+      {{ taskList({
+        idPrefix: "enrolment-tasks",
+        items: items
+      }) }}
+
+    </div>
+  </div>
+{% endblock %}

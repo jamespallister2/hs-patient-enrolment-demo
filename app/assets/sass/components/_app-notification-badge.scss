@@ -1,0 +1,13 @@
+// Notification badge – X-GOV: MoJ Notification badge in NHS styling (CES-013)
+.app-notification-badge {
+  @include nhsuk-font(14, $weight: bold, $line-height: 1);
+  display: inline-block;
+  min-width: 1.5em;
+  margin-left: nhsuk-spacing(1);
+  padding: nhsuk-spacing(1) nhsuk-spacing(1);
+  border-radius: 1em;
+  color: $nhsuk-reverse-text-colour;
+  background-color: nhsuk-colour("red");
+  text-align: center;
+  vertical-align: middle;
+}

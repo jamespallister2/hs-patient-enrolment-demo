@@ -1,0 +1,17 @@
+{
+  "name": "healthstore-clinical-enrolment-07-bulk-enrolment",
+  "title": "HealthStore Clinical Enrolment Service: 07-bulk-enrolment",
+  "updatedAt": "2026-10-20T13:31:35.523Z",
+  "viewerSchemaVersion": 1,
+  "mode": "scenario",
+  "scenario": "07-bulk-enrolment",
+  "nodeCount": 7,
+  "edgeCount": 19,
+  "hasScreenshots": true,
+  "crawlStats": {
+    "pagesVisited": 7,
+    "runtimeLinksExtracted": 83,
+    "runtimeEdgesDiscovered": 19,
+    "setupStepsExecuted": 2
+  }
+}

@@ -1,0 +1,11 @@
+// Add another – X-GOV: MoJ Add another in NHS styling (CES-005 indications)
+.app-add-another__item {
+  position: relative;
+  margin-bottom: nhsuk-spacing(3);
+  padding-bottom: nhsuk-spacing(1);
+  border-bottom: 1px solid $nhsuk-border-colour;
+}
+
+.app-add-another__item-actions {
+  margin-bottom: nhsuk-spacing(3);
+}

@@ -3,4 +3,23 @@ $nhsuk-assets-path: "/nhsuk-frontend/assets/";
 // Import NHS.UK frontend library
 @import "nhsuk-frontend/dist/nhsuk";
 
-// Add your custom CSS/Sass styles below.
+// Accessible autocomplete (alphagov) – base styles, restyled in _app-autocomplete.scss
+@import "accessible-autocomplete/dist/accessible-autocomplete.min";
+
+// Custom components – one file per block.
+// X-GOV components are rebuilt here using NHS Frontend tokens so they sit
+// visually with the NHS design system.
+@import "components/app-organisation-switcher";
+@import "components/app-identity-bar";
+@import "components/app-timeline";
+@import "components/app-spinner";
+@import "components/app-numeric-data";
+@import "components/app-notification-badge";
+@import "components/app-page-header";
+@import "components/app-filter-layout";
+@import "components/app-timeout-warning";
+@import "components/app-add-another";
+@import "components/app-autocomplete";
+@import "components/app-care-identity-button";
+@import "components/app-prototype-panel";
+@import "components/app-utilities";

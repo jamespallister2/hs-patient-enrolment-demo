@@ -1,0 +1,324 @@
+{
+  "nodes": [
+    {
+      "id": "/enrol/nhs-number",
+      "label": "Lorem ipsum dolor sit amet (what is the patient's NHS number)? – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrol/nhs-number",
+      "filePath": "enrol/nhs-number.html",
+      "screenshot": "screenshots/enrol-nhs-number.png",
+      "type": "form",
+      "actualTitle": "Lorem ipsum dolor sit amet (what is the patient's NHS number)? – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "03-enrol-one-question-per-page",
+      "screenshotAspectRatio": 0.690625,
+      "visitOrder": 0,
+      "layoutRank": 0,
+      "isStartNode": true,
+      "staticEnriched": true
+    },
+    {
+      "id": "/enrol/confirm-patient",
+      "label": "Is this the right patient? – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrol/confirm-patient",
+      "filePath": "enrol/confirm-patient.html",
+      "screenshot": "screenshots/enrol-confirm-patient.png",
+      "type": "form",
+      "actualTitle": "Is this the right patient? – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "03-enrol-one-question-per-page",
+      "screenshotAspectRatio": 0.91875,
+      "visitOrder": 1,
+      "layoutRank": 0,
+      "staticEnriched": true
+    },
+    {
+      "id": "/enrol/b/organisation",
+      "label": "Lorem ipsum dolor sit amet (accountable clinical organisation)? – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrol/b/organisation",
+      "filePath": null,
+      "screenshot": "screenshots/enrol-b-organisation.png",
+      "type": "page",
+      "actualTitle": "Lorem ipsum dolor sit amet (accountable clinical organisation)? – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "03-enrol-one-question-per-page",
+      "screenshotAspectRatio": 0.83125,
+      "visitOrder": 2,
+      "layoutRank": 1
+    },
+    {
+      "id": "/enrol/b/clinician",
+      "label": "Lorem ipsum dolor sit amet (authorising clinician)? – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrol/b/clinician",
+      "filePath": null,
+      "screenshot": "screenshots/enrol-b-clinician.png",
+      "type": "page",
+      "actualTitle": "Lorem ipsum dolor sit amet (authorising clinician)? – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "03-enrol-one-question-per-page",
+      "screenshotAspectRatio": 0.8125,
+      "visitOrder": 3,
+      "layoutRank": 1
+    },
+    {
+      "id": "/enrol/b/product",
+      "label": "Lorem ipsum dolor sit amet (which product)? – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrol/b/product",
+      "filePath": null,
+      "screenshot": "screenshots/enrol-b-product.png",
+      "type": "page",
+      "actualTitle": "Lorem ipsum dolor sit amet (which product)? – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "03-enrol-one-question-per-page",
+      "screenshotAspectRatio": 0.96875,
+      "visitOrder": 4,
+      "layoutRank": 2
+    },
+    {
+      "id": "/enrol/b/condition",
+      "label": "Lorem ipsum dolor sit amet (which condition)? – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrol/b/condition",
+      "filePath": null,
+      "screenshot": "screenshots/enrol-b-condition.png",
+      "type": "page",
+      "actualTitle": "Lorem ipsum dolor sit amet (which condition)? – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "03-enrol-one-question-per-page",
+      "screenshotAspectRatio": 0.8515625,
+      "visitOrder": 5,
+      "layoutRank": 2
+    },
+    {
+      "id": "/enrol/b/indication",
+      "label": "Lorem ipsum dolor sit amet (which indication)? – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrol/b/indication",
+      "filePath": null,
+      "screenshot": "screenshots/enrol-b-indication.png",
+      "type": "page",
+      "actualTitle": "Lorem ipsum dolor sit amet (which indication)? – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "03-enrol-one-question-per-page",
+      "screenshotAspectRatio": 0.8515625,
+      "visitOrder": 6,
+      "layoutRank": 3
+    },
+    {
+      "id": "/enrol/b/pathway",
+      "label": "Lorem ipsum dolor sit amet (which pathway)? – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrol/b/pathway",
+      "filePath": null,
+      "screenshot": "screenshots/enrol-b-pathway.png",
+      "type": "page",
+      "actualTitle": "Lorem ipsum dolor sit amet (which pathway)? – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "03-enrol-one-question-per-page",
+      "screenshotAspectRatio": 0.8578125,
+      "visitOrder": 7,
+      "layoutRank": 3
+    },
+    {
+      "id": "/enrol/b/start-date",
+      "label": "Lorem ipsum dolor sit amet (date to be confirmed)? (optional) – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrol/b/start-date",
+      "filePath": null,
+      "screenshot": "screenshots/enrol-b-start-date.png",
+      "type": "page",
+      "actualTitle": "Lorem ipsum dolor sit amet (date to be confirmed)? (optional) – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "03-enrol-one-question-per-page",
+      "screenshotAspectRatio": 0.8375,
+      "visitOrder": 8,
+      "layoutRank": 4
+    },
+    {
+      "id": "/enrol/b/check",
+      "label": "Lorem ipsum dolor sit amet (check your answers before creating the enrolment) – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrol/b/check",
+      "filePath": null,
+      "screenshot": "screenshots/enrol-b-check.png",
+      "type": "page",
+      "actualTitle": "Lorem ipsum dolor sit amet (check your answers before creating the enrolment) – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "03-enrol-one-question-per-page",
+      "screenshotAspectRatio": 1.2921875,
+      "visitOrder": 9,
+      "layoutRank": 4
+    },
+    {
+      "id": "/enrol/confirmation",
+      "label": "Lorem ipsum (enrolment created) – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrol/confirmation",
+      "filePath": "enrol/confirmation.html",
+      "screenshot": "screenshots/enrol-confirmation.png",
+      "type": "page",
+      "actualTitle": "Lorem ipsum (enrolment created) – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "03-enrol-one-question-per-page",
+      "screenshotAspectRatio": 0.8625,
+      "visitOrder": 10,
+      "layoutRank": 5,
+      "staticEnriched": true
+    }
+  ],
+  "edges": [
+    {
+      "source": "/enrol/nhs-number",
+      "target": "/enrol/confirm-patient",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/confirm-patient",
+      "target": "/enrol/b/organisation",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/b/organisation",
+      "target": "/enrol/b/clinician",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/b/clinician",
+      "target": "/enrol/b/product",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/b/product",
+      "target": "/enrol/b/condition",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/b/condition",
+      "target": "/enrol/b/indication",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/b/indication",
+      "target": "/enrol/b/pathway",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/b/pathway",
+      "target": "/enrol/b/start-date",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/b/start-date",
+      "target": "/enrol/b/check",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/b/check",
+      "target": "/enrol/confirmation",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/confirm-patient",
+      "target": "/enrol/nhs-number",
+      "type": "link",
+      "label": "Back",
+      "method": "GET",
+      "provenance": "both",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/b/organisation",
+      "target": "/enrol/confirm-patient",
+      "type": "link",
+      "label": "Back",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/b/clinician",
+      "target": "/enrol/b/organisation",
+      "type": "link",
+      "label": "Back",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/b/product",
+      "target": "/enrol/b/clinician",
+      "type": "link",
+      "label": "Back",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/b/condition",
+      "target": "/enrol/b/product",
+      "type": "link",
+      "label": "Back",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/b/indication",
+      "target": "/enrol/b/condition",
+      "type": "link",
+      "label": "Back",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/b/pathway",
+      "target": "/enrol/b/indication",
+      "type": "link",
+      "label": "Back",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/b/start-date",
+      "target": "/enrol/b/pathway",
+      "type": "link",
+      "label": "Back",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrol/b/check",
+      "target": "/enrol/b/start-date",
+      "type": "link",
+      "label": "Back",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    }
+  ]
+}

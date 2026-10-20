@@ -1,0 +1,10 @@
+{# Error summary – shown at the top of the page when there are errors.
+   "There is a problem" is the standard NHS heading. #}
+{% if errorList %}
+  {{ errorSummary({
+    heading: {
+      text: "There is a problem"
+    },
+    errorList: errorList
+  }) }}
+{% endif %}

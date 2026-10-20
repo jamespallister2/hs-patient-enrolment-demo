@@ -1,0 +1,34 @@
+flowchart TD
+  sign_in["Log in – HealthStore Clinical Enrolment Service – NHS"]
+  sign_in_cis2["Simulated CIS2 log in – HealthStore Clinical Enrolment Service – NHS"]
+  sign_in_select_organisation["Lorem ipsum dolor sit amet (which organisation)? – HealthStore Clinical Enrolment Service – NHS"]
+  enrolments["Enrolments – HealthStore Clinical Enrolment Service – NHS"]
+  signed_out["Lorem ipsum dolor sit amet (you have logged out) – HealthStore Clinical Enrolment Service – NHS"]
+  sign_in_admin["Lorem ipsum dolor (admin log in) – HealthStore Clinical Enrolment Service – NHS"]
+  catalogue["Product catalogue – HealthStore Clinical Enrolment Service – NHS"]
+
+  sign_in --> sign_in_cis2
+  sign_in_cis2 --> sign_in_select_organisation
+  sign_in_select_organisation --> enrolments
+  enrolments --> signed_out
+  signed_out --> sign_in_admin
+  sign_in_admin --> catalogue
+  sign_in --> sign_in_cis2
+  sign_in --> sign_in_admin
+  sign_in_cis2 --> sign_in
+  sign_in_select_organisation --> catalogue
+  sign_in_select_organisation --> signed_out
+  sign_in_select_organisation --> enrolments
+  enrolments --> catalogue
+  enrolments --> signed_out
+  enrolments --> sign_in
+  signed_out --> sign_in
+  sign_in_admin --> sign_in
+  catalogue --> signed_out
+  catalogue --> sign_in
+
+  classDef start fill:#53d8fb,stroke:#0f3460,color:#000
+  classDef question fill:#e94560,stroke:#0f3460,color:#fff
+  classDef confirmation fill:#4ecca3,stroke:#0f3460,color:#000
+  classDef error fill:#ff6b6b,stroke:#0f3460,color:#fff
+  class sign_in start

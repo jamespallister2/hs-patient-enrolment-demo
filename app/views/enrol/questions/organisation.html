@@ -1,0 +1,38 @@
+{# CES-009 – Accountable clinical organisation. Pattern: NHS Radios.
+   Only organisations the user belongs to are offered (CES-003). #}
+{% extends "enrol/questions/_base.html" %}
+
+{% set pageName = "Lorem ipsum dolor sit amet (accountable clinical organisation)?" %}
+
+{% block question %}
+  {% set items = [] %}
+  {% for org in userOrganisations %}
+    {% set items = (items.push({
+      value: org.id,
+      text: org.name,
+      hint: {
+        text: "ODS code: " + org.odsCode
+      },
+      checked: enrol.organisationId == org.id
+    }), items) %}
+  {% endfor %}
+
+  {{ radios({
+    name: "_organisationId",
+    idPrefix: "organisationId",
+    fieldset: {
+      legend: {
+        text: pageName,
+        size: "l",
+        isPageHeading: true
+      }
+    },
+    hint: {
+      text: "Lorem ipsum dolor sit amet"
+    },
+    errorMessage: {
+      text: errors.organisationId.text
+    } if errors.organisationId,
+    items: items
+  }) }}
+{% endblock %}

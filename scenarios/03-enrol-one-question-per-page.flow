@@ -1,0 +1,56 @@
+# CES-009 – create an enrolment
+# Variant B: one question per page
+
+Start /enrolments
+Scope /enrolments /enrol
+Exclude /prototype /prototype-admin /assets
+Tags enrolment CES-009
+
+--- Setup ---
+
+Use setup.clinician
+Goto /prototype/set?variant=b&next=/enrol/start
+
+--- Map ---
+
+Snapshot
+Fill "#nhsNumber" "999 123 4853"
+ClickButton "Continue"
+WaitForUrl /enrol/confirm-patient
+Snapshot
+Choose "Yes"
+ClickButton "Continue"
+Wait 1200
+Snapshot
+ClickButton "Continue"
+Wait 1200
+Snapshot
+Fill "#clinicianId" "Asha"
+Wait 500
+Click "#clinicianId__option--0"
+Wait 1200
+ClickButton "Continue"
+Wait 1200
+Snapshot
+Choose "DTx product A"
+ClickButton "Continue"
+Wait 1200
+Snapshot
+Choose "Insomnia"
+ClickButton "Continue"
+Wait 1200
+Snapshot
+Choose "Indication A1"
+ClickButton "Continue"
+Wait 1200
+Snapshot
+Choose "Pathway 1"
+ClickButton "Continue"
+Wait 1200
+Snapshot
+ClickButton "Continue"
+Wait 1200
+Snapshot
+ClickButton "Create enrolment"
+Wait 1200
+Snapshot

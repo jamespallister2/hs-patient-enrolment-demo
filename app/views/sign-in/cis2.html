@@ -1,0 +1,64 @@
+{#
+  PROTOTYPE ONLY – stands in for the real NHS CIS2 Authentication screens.
+  In the live service the user is sent to CIS2 and comes back signed in.
+  Nothing on this page needs content design.
+#}
+{% extends "layout.html" %}
+
+{% set pageName = "Simulated CIS2 log in" %}
+
+{% block beforeContent %}
+  {{ backLink({
+    href: "/sign-in",
+    text: "Back"
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+
+      {{ insetText({
+        text: "Prototype only. This page stands in for NHS CIS2 Authentication (smartcard or other authenticator)."
+      }) }}
+
+      <form method="post" action="/sign-in/cis2-answer" novalidate>
+        {% set cis2Items = [] %}
+        {% for u in data.users %}
+          {% if u.authMethod == "cis2" %}
+            {% set orgNames = [] %}
+            {% for id in u.organisationIds %}
+              {% set orgNames = (orgNames.push(svc.organisation(data, id).name), orgNames) %}
+            {% endfor %}
+            {% set cis2Items = (cis2Items.push({
+              value: u.id,
+              text: u.name + " – " + data.roles[u.role].label,
+              hint: {
+                text: orgNames | join(", ")
+              },
+              checked: loop.first
+            }), cis2Items) %}
+          {% endif %}
+        {% endfor %}
+
+        {{ radios({
+          name: "_cis2User",
+          idPrefix: "cis2User",
+          fieldset: {
+            legend: {
+              text: "Simulated CIS2 – choose who to log in as",
+              size: "l",
+              isPageHeading: true
+            }
+          },
+          items: cis2Items
+        }) }}
+
+        {{ button({
+          text: "Continue"
+        }) }}
+      </form>
+
+    </div>
+  </div>
+{% endblock %}

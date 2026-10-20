@@ -1,0 +1,80 @@
+# CES-008 / CES-009 – unhappy paths: no match, restricted, deceased,
+# superseded NHS number, PDS unavailable, duplicate, supplier unavailable
+
+Start /enrol/start
+Scope /enrol
+Exclude /prototype /prototype-admin /assets
+Tags enrolment unhappy-paths CES-008 CES-009
+
+--- Setup ---
+
+Use setup.clinician
+Goto /prototype/set?variant=b&next=/enrol/start
+
+--- Map ---
+
+# No PDS match
+Snapshot
+Fill "#nhsNumber" "999 555 5018"
+ClickButton "Continue"
+WaitForUrl /enrol/no-match
+Snapshot
+
+# Restricted record
+Goto /enrol/start
+Fill "#nhsNumber" "999 200 1003"
+ClickButton "Continue"
+WaitForUrl /enrol/restricted
+Snapshot
+
+# Patient has died
+Goto /enrol/start
+Fill "#nhsNumber" "999 200 2018"
+ClickButton "Continue"
+WaitForUrl /enrol/deceased
+Snapshot
+
+# PDS unavailable
+Goto /enrol/start
+Fill "#nhsNumber" "999 200 5009"
+ClickButton "Continue"
+WaitForUrl /enrol/pds-unavailable
+Snapshot
+
+# Possible duplicate, then supplier unavailable
+Goto /enrol/start
+Fill "#nhsNumber" "999 123 4004"
+ClickButton "Continue"
+WaitForUrl /enrol/confirm-patient
+Choose "Yes"
+ClickButton "Continue"
+Wait 1200
+ClickButton "Continue"
+Wait 1200
+Fill "#clinicianId" "Asha"
+Wait 500
+Click "#clinicianId__option--0"
+Wait 1200
+ClickButton "Continue"
+Wait 1200
+Choose "DTx product A"
+ClickButton "Continue"
+Wait 1200
+Choose "Insomnia"
+ClickButton "Continue"
+Wait 1200
+Choose "Indication A1"
+ClickButton "Continue"
+Wait 1200
+Choose "Pathway 1"
+ClickButton "Continue"
+Wait 1200
+ClickButton "Continue"
+Wait 1200
+ClickButton "Create enrolment"
+Wait 1200
+Snapshot
+Goto /prototype/set?supplier=yes&next=/enrol/b/duplicate
+ClickButton "Continue anyway"
+Wait 1200
+Snapshot

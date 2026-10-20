@@ -1,0 +1,125 @@
+{#
+  CES-008 – Confirm this is the right patient
+  Patterns: NHS Summary list (PDS details); NHS Radios; NHS Warning callout
+            (superseded NHS number). "Is this the right patient?" is the
+            question suggested in the backlog.
+#}
+{% extends "layout.html" %}
+
+{% set pageName = "Is this the right patient?" %}
+
+{% block beforeContent %}
+  {{ backLink({
+    href: "/enrol/nhs-number",
+    text: "Back"
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+
+      {% include "_partials/error-summary.njk" %}
+
+      <h1 class="nhsuk-heading-l">{{ pageName }}</h1>
+
+      {% if enrol.supersededFrom %}
+        {% call warningCallout({
+          heading: "Lorem ipsum dolor sit amet (NHS number has changed)"
+        }) %}
+          <p>Lorem ipsum dolor sit amet {{ enrol.supersededFrom | formatNhsNumber }} consectetur adipiscing elit {{ patient.nhsNumber | formatNhsNumber }}.</p>
+        {% endcall %}
+      {% endif %}
+
+      {% set addressHtml %}
+        {% for line in patient.address %}{{ line }}<br>{% endfor %}{{ patient.postcode }}
+      {% endset %}
+
+      {{ summaryList({
+        rows: [
+          {
+            key: {
+              text: "Name"
+            },
+            value: {
+              text: patient.givenName + " " + patient.familyName
+            }
+          },
+          {
+            key: {
+              text: "NHS number"
+            },
+            value: {
+              text: patient.nhsNumber | formatNhsNumber
+            }
+          },
+          {
+            key: {
+              text: "Date of birth"
+            },
+            value: {
+              text: patient.dateOfBirth | appDate
+            }
+          },
+          {
+            key: {
+              text: "Gender"
+            },
+            value: {
+              text: patient.gender
+            }
+          },
+          {
+            key: {
+              text: "Address"
+            },
+            value: {
+              html: addressHtml
+            }
+          },
+          {
+            key: {
+              text: "GP practice"
+            },
+            value: {
+              text: patient.gpPractice
+            }
+          }
+        ]
+      }) }}
+
+      <form method="post" action="/enrol/confirm-patient-answer" novalidate>
+        {{ radios({
+          name: "_confirmPatient",
+          idPrefix: "confirmPatient",
+          classes: "nhsuk-radios--inline",
+          fieldset: {
+            legend: {
+              text: pageName,
+              size: "m",
+              classes: "nhsuk-u-visually-hidden"
+            }
+          },
+          errorMessage: {
+            text: errors.confirmPatient.text
+          } if errors.confirmPatient,
+          items: [
+            {
+              value: "yes",
+              text: "Yes"
+            },
+            {
+              value: "no",
+              text: "No"
+            }
+          ]
+        }) }}
+
+        {{ button({
+          text: "Continue"
+        }) }}
+      </form>
+
+    </div>
+  </div>
+{% endblock %}

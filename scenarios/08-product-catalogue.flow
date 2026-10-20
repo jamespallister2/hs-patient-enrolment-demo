@@ -1,0 +1,45 @@
+# CES-005 – product catalogue: view, add a product, withdraw a product
+
+Start /catalogue
+Scope /catalogue
+Exclude /prototype /prototype-admin /assets
+Tags catalogue CES-005
+
+--- Setup ---
+
+Use setup.tech-admin
+
+--- Map ---
+
+Visit /catalogue
+Visit /catalogue/p1
+ClickLink "withdraw product"
+Wait 1200
+Snapshot
+ClickButton "withdraw product"
+Wait 1200
+Snapshot
+
+# Add a product
+Goto /catalogue
+ClickLink "add a product"
+Wait 1200
+Snapshot
+FillIn "product name" with "DTx product E"
+FillIn "Version" with "1.0"
+Check "Pathway 1"
+ClickButton "Continue"
+Wait 1200
+Snapshot
+Fill "#conditionName" "Asthma"
+Fill "#indication-0" "Indication E1"
+ClickButton "Continue"
+Wait 1200
+Snapshot
+Choose "No"
+ClickButton "Continue"
+Wait 1200
+Snapshot
+ClickButton "save product"
+Wait 1200
+Snapshot

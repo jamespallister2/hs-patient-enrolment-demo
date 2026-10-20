@@ -1,31 +1,93 @@
-<!--
-  This is the main layout where you can:
-    - change the header and footer
-    - add custom CSS and JavaScript
--->
+{#
+  Main layout for the HealthStore Clinical Enrolment Service prototype.
 
-<!-- Extends the prototype kit template which in turn extends the NHS.UK frontend template -->
+  - Header: NHS header, account variant (user name, role, Log out) – CES-002, CES-004
+  - Navigation: only the sections the signed-in role can use – CES-004
+  - Organisation switcher (MoJ pattern, NHS styling) – CES-003
+  - Prototype settings panel (NOT part of the service – for testers only)
+#}
 {% extends "prototype-kit-template.njk" %}
 
+{% from "_components/organisation-switcher.njk" import appOrganisationSwitcher %}
+{% from "_components/identity-bar.njk" import appIdentityBar %}
+{% from "_components/timeline.njk" import appTimeline %}
+{% from "_components/spinner.njk" import appSpinner %}
+{% from "_components/numeric-data.njk" import appNumericData %}
+
 {% block head %}
-  <!-- Add your custom CSS or Sass in /app/assets/sass/main.scss -->
   <link href="/assets/sass/main.css" rel="stylesheet">
+  {% block pageHead %}{% endblock %}
 {% endblock %}
 
-<!-- Edit the header -->
-<!-- Header code examples can be found at https://service-manual.nhs.uk/design-system/components/header -->
 {% block header %}
-  {{ header({
-    service: {
-      text: serviceName,
-      href: "/"
-    }
-  }) }}
+  {% set bulkNavHtml %}
+    Bulk enrolment
+    {%- if unseenBatchCount > 0 %}
+      <span class="app-notification-badge">{{ unseenBatchCount }}<span class="nhsuk-u-visually-hidden"> new outcomes</span></span>
+    {%- endif %}
+  {% endset %}
+
+  {% if user %}
+    {{ header({
+      service: {
+        text: serviceName,
+        href: "/home"
+      },
+      account: {
+        items: [
+          {
+            text: user.name,
+            icon: true
+          },
+          {
+            text: roleLabel
+          },
+          {
+            href: "/sign-out",
+            text: "Log out"
+          }
+        ]
+      },
+      navigation: {
+        items: [
+          {
+            href: "/enrolments",
+            text: "Enrolments",
+            active: currentPath | startsWith("/enrolments") or currentPath | startsWith("/enrol/")
+          } if can("enrolments:view"),
+          {
+            href: "/bulk",
+            html: bulkNavHtml,
+            active: currentPath | startsWith("/bulk")
+          } if can("bulk:upload"),
+          {
+            href: "/catalogue",
+            text: "Product catalogue",
+            active: currentPath | startsWith("/catalogue")
+          } if can("catalogue:manage")
+        ]
+      }
+    }) }}
+
+    {% if currentOrganisation %}
+      {{ appOrganisationSwitcher({
+        organisation: currentOrganisation,
+        canChange: user.organisationIds | length > 1
+      }) }}
+    {% endif %}
+  {% else %}
+    {{ header({
+      service: {
+        text: serviceName,
+        href: "/sign-in"
+      }
+    }) }}
+  {% endif %}
 {% endblock %}
 
-<!-- Edit the footer -->
-<!-- Footer code examples can be found at https://service-manual.nhs.uk/design-system/components/footer -->
 {% block footer %}
+  {% include "_partials/prototype-panel.njk" %}
+
   {% set metaAboutHtml %}
     <p class="nhsuk-body-s">Built on <a class="nhsuk-footer__list-item-link" href="https://prototype-kit.service-manual.nhs.uk/updates/">NHS prototype kit {{ prototypeKitVersion }}</a> and <a class="nhsuk-footer__list-item-link" href="https://github.com/nhsuk/nhsuk-frontend/releases/">NHS.UK frontend {{ nhsukFrontendVersion }}</a></p>
   {% endset %}
@@ -35,7 +97,7 @@
       items: [
         {
           href: "/",
-          text: "Home"
+          text: "Prototype index"
         },
         {
           href: "/prototype-admin/reset?returnPage=" + (currentPage | urlencode),
@@ -45,6 +107,10 @@
       html: metaAboutHtml
     }
   }) }}
+
+  {% if user %}
+    {% include "_partials/timeout-warning.njk" %}
+  {% endif %}
 {% endblock %}
 
 {% block bodyEnd %}

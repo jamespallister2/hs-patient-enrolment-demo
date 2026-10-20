@@ -1,0 +1,25 @@
+flowchart TD
+  enrolments["Enrolments – HealthStore Clinical Enrolment Service – NHS"]
+  enrolments_ENR_10001["ENR-10001 – HealthStore Clinical Enrolment Service – NHS"]
+  enrolments_ENR_10001_cancel["Lorem ipsum dolor sit amet (why are you cancelling this enrolment)? – HealthStore Clinical Enrolment Service – NHS"]
+  enrolments_ENR_10001_cancel_confirm["Lorem ipsum dolor sit amet (confirm you want to cancel this enrolment) – HealthStore Clinical Enrolment Service – NHS"]
+  enrolments_ENR_10005["Lorem ipsum dolor sit amet (you do not have access to this page) – HealthStore Clinical Enrolment Service – NHS"]
+
+  enrolments_ENR_10001 --> enrolments_ENR_10001_cancel
+  enrolments_ENR_10001_cancel --> enrolments_ENR_10001_cancel_confirm
+  enrolments_ENR_10001_cancel_confirm --> enrolments_ENR_10001
+  enrolments --> enrolments_ENR_10001
+  enrolments_ENR_10001 --> enrolments
+  enrolments_ENR_10001 --> enrolments_ENR_10001_cancel
+  enrolments_ENR_10001_cancel --> enrolments
+  enrolments_ENR_10001_cancel --> enrolments_ENR_10001
+  enrolments_ENR_10001_cancel_confirm --> enrolments
+  enrolments_ENR_10001_cancel_confirm --> enrolments_ENR_10001_cancel
+  enrolments_ENR_10001_cancel_confirm --> enrolments_ENR_10001
+  enrolments_ENR_10005 --> enrolments
+
+  classDef start fill:#53d8fb,stroke:#0f3460,color:#000
+  classDef question fill:#e94560,stroke:#0f3460,color:#fff
+  classDef confirmation fill:#4ecca3,stroke:#0f3460,color:#000
+  classDef error fill:#ff6b6b,stroke:#0f3460,color:#fff
+  class enrolments start

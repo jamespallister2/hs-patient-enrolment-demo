@@ -1,0 +1,32 @@
+{#
+  CES-013 – Bulk file submitted
+  Patterns: NHS Confirmation page; NHS Panel (with batch reference)
+#}
+{% extends "layout.html" %}
+
+{% set pageName = "Lorem ipsum (bulk file submitted)" %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      {% call panel({
+        heading: {
+          text: pageName,
+          size: "l"
+        }
+      }) %}
+        Lorem ipsum (reference)<br><strong>{{ b.id }}</strong>
+      {% endcall %}
+
+      <p>Lorem ipsum dolor sit amet {{ validCount }} consectetur adipiscing elit.</p>
+
+      <h2 class="nhsuk-heading-m">Lorem ipsum (what happens next)</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>
+
+      <ul class="nhsuk-list">
+        <li><a class="nhsuk-link nhsuk-link--no-visited-state" href="/bulk/{{ b.id }}">Lorem ipsum (check progress)</a></li>
+        <li><a class="nhsuk-link nhsuk-link--no-visited-state" href="/bulk">Lorem ipsum (go to bulk enrolment)</a></li>
+      </ul>
+    </div>
+  </div>
+{% endblock %}

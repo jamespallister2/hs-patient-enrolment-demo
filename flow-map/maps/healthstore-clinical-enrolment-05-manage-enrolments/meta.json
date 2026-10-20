@@ -1,0 +1,17 @@
+{
+  "name": "healthstore-clinical-enrolment-05-manage-enrolments",
+  "title": "HealthStore Clinical Enrolment Service: 05-manage-enrolments",
+  "updatedAt": "2026-10-20T13:31:35.507Z",
+  "viewerSchemaVersion": 1,
+  "mode": "scenario",
+  "scenario": "05-manage-enrolments",
+  "nodeCount": 5,
+  "edgeCount": 13,
+  "hasScreenshots": true,
+  "crawlStats": {
+    "pagesVisited": 5,
+    "runtimeLinksExtracted": 64,
+    "runtimeEdgesDiscovered": 12,
+    "setupStepsExecuted": 2
+  }
+}

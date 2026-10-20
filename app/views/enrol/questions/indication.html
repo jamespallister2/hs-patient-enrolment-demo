@@ -1,0 +1,34 @@
+{# CES-009 – Indication (for the chosen condition). Pattern: NHS Radios. #}
+{% extends "enrol/questions/_base.html" %}
+
+{% set pageName = "Lorem ipsum dolor sit amet (which indication)?" %}
+
+{% block question %}
+  {% set items = [] %}
+  {% for i in selectedCondition.indications %}
+    {% set items = (items.push({
+      value: i,
+      text: i,
+      checked: enrol.indication == i
+    }), items) %}
+  {% endfor %}
+
+  {{ radios({
+    name: "_indication",
+    idPrefix: "indication",
+    fieldset: {
+      legend: {
+        text: pageName,
+        size: "l",
+        isPageHeading: true
+      }
+    },
+    hint: {
+      text: "Lorem ipsum dolor sit amet " + selectedCondition.name
+    },
+    errorMessage: {
+      text: errors.indication.text
+    } if errors.indication,
+    items: items
+  }) }}
+{% endblock %}

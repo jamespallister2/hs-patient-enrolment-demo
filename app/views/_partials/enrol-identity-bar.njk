@@ -1,0 +1,10 @@
+{# Identity bar for the patient being enrolled (MoJ Identity bar, NHS styling) #}
+{% if enrolPatient %}
+  {% set changePatientHtml %}
+    <a class="nhsuk-link nhsuk-link--no-visited-state" href="/enrol/start">Lorem ipsum (change patient)</a>
+  {% endset %}
+  {{ appIdentityBar({
+    patient: enrolPatient,
+    actionsHtml: changePatientHtml
+  }) }}
+{% endif %}

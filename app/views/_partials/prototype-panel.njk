@@ -1,0 +1,102 @@
+{#
+  PROTOTYPE ONLY – not part of the service.
+  Lets testers switch persona/role, choose the enrolment journey variant and
+  trigger unhappy paths. Content here does not need content design.
+#}
+<div class="app-prototype-panel" aria-label="Prototype settings">
+  <div class="nhsuk-width-container">
+    <details class="nhsuk-details app-prototype-panel__details">
+      <summary class="nhsuk-details__summary">
+        <span class="nhsuk-details__summary-text">Prototype settings (not part of the service)</span>
+      </summary>
+      <div class="nhsuk-details__text">
+        <form method="post" action="/prototype/settings" novalidate>
+          <input type="hidden" name="_returnTo" value="{{ currentPage }}">
+          <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-one-third">
+              {{ select({
+                id: "prototype-persona",
+                name: "_persona",
+                label: {
+                  text: "Signed in as"
+                },
+                items: [
+                  {
+                    value: "",
+                    text: "Not signed in",
+                    selected: not user
+                  }
+                ].concat(personaItems(data.users, user))
+              }) }}
+            </div>
+            <div class="nhsuk-grid-column-one-third">
+              {{ radios({
+                name: "settings[enrolVariant]",
+                idPrefix: "prototype-variant",
+                classes: "nhsuk-radios--small",
+                fieldset: {
+                  legend: {
+                    text: "Single enrolment journey (CES-009)",
+                    size: "s"
+                  }
+                },
+                value: data.settings.enrolVariant,
+                items: [
+                  {
+                    value: "a",
+                    text: "A – task list"
+                  },
+                  {
+                    value: "b",
+                    text: "B – one question per page"
+                  }
+                ]
+              }) }}
+            </div>
+            <div class="nhsuk-grid-column-one-third">
+              {{ checkboxes({
+                name: "settings[outages]",
+                idPrefix: "prototype-outages",
+                classes: "nhsuk-checkboxes--small",
+                fieldset: {
+                  legend: {
+                    text: "Simulate",
+                    size: "s"
+                  }
+                },
+                values: [
+                  "pds" if data.settings.pdsUnavailable == "yes",
+                  "supplier" if data.settings.supplierUnavailable == "yes",
+                  "bulkAllValid" if data.settings.bulkScenario == "allValid"
+                ],
+                items: [
+                  {
+                    value: "pds",
+                    text: "PDS unavailable"
+                  },
+                  {
+                    value: "supplier",
+                    text: "Supplier unavailable on submit"
+                  },
+                  {
+                    value: "bulkAllValid",
+                    text: "Bulk file has no problems"
+                  }
+                ]
+              }) }}
+            </div>
+          </div>
+          <div class="nhsuk-button-group">
+            {{ button({
+              text: "Apply settings",
+              classes: "nhsuk-button--secondary nhsuk-button--small"
+            }) }}
+            {% if user %}
+              <a class="nhsuk-link" href="#" data-module="app-show-timeout-warning">Show session timeout warning</a>
+            {% endif %}
+          </div>
+        </form>
+      </div>
+    </details>
+  </div>
+</div>

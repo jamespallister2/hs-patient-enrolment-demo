@@ -1,61 +1,118 @@
-<!-- Use this page as the index for your project -->
+{#
+  PROTOTYPE INDEX – not part of the service.
+  A map of the prototype for testers and content designers.
+#}
+{% extends "layout.html" %}
 
-<!-- ADDING CUSTOM CSS - Add your custom CSS or Sass in /app/assets/sass/main.scss -->
+{% set pageName = "Prototype index" %}
 
-<!-- Extends the layout from /app/views/layout.html -->
-{% extends 'layout.html' %}
-<!--
-  In /app/views/layout.html you can:
-    - change the header and footer
-    - add custom CSS and JavaScript
--->
-
-<!--
-  Use this to set the page name which will appear at the
-  start of the <title> tag, followed by the service name.
-  This is often not needed on the homepage, where only the
-  service name is needed. You can also reuse this variable
-  within the <h1>, where they are the same.
--->
-{% set pageName = "" %}
-
-<!-- For adding a breadcrumb or back link -->
-<!-- Code examples can be found at https://service-manual.nhs.uk/design-system/components/breadcrumbs and https://service-manual.nhs.uk/design-system/components/back-link -->
-{% block beforeContent %}
-{% endblock %}
-
-<!-- For adding page content -->
-<!-- Page layout code can be found at https://service-manual.nhs.uk/design-system/styles/layout -->
 {% block content %}
   <div class="nhsuk-grid-row">
-    <div class="nhsuk-grid-column-two-thirds">
+    <div class="nhsuk-grid-column-full">
 
-      <!-- Add your content here -->
-      <!-- Styles and components can be found at https://service-manual.nhs.uk/design-system -->
+      <span class="nhsuk-caption-l">Prototype – not part of the service</span>
+      <h1 class="nhsuk-heading-xl">{{ serviceName }}</h1>
 
-      <h1 class="nhsuk-heading-xl">
-        {{ serviceName }}
-      </h1>
+      <div class="nhsuk-u-reading-width">
+        <p class="nhsuk-lede-text">A clickable wireframe of the backlog in <em>HealthStore Clinical Enrolment Service – Technical Backlog</em> (CES-001 to CES-015), built with the NHS prototype kit.</p>
 
-      <p>Set the service name for your prototype by editing <strong>/app/config.js</strong>.</p>
+        {% call insetText() %}
+          <p><strong>About the text.</strong> Anything that reads “Lorem ipsum … (description)” is a placeholder for content design – the words in brackets say what it needs to do. Text without a placeholder comes from the user stories or backlog (for example field names like “Authorising clinician”), or is the standard wording of an NHS or GOV.UK pattern (for example “There is a problem”, “Log in with my Care Identity”, “Continue anyway”).</p>
+        {% endcall %}
+      </div>
 
-      <p>
-        This is the index page for your prototype. You can find it at <strong>/app/views/index.html</strong>.
-      </p>
+      <h2 class="nhsuk-heading-l">Start as a user</h2>
+      <p>Log in through the service, or jump straight in as one of these test users. You can change user at any time from <strong>Prototype settings</strong> at the bottom of every page.</p>
 
-      <hr>
+      {% set personaRows = [] %}
+      {% for u in data.users %}
+        {% set orgNames = [] %}
+        {% for id in u.organisationIds %}{% set orgNames = (orgNames.push(svc.organisation(data, id).name), orgNames) %}{% endfor %}
+        {% set linkHtml %}<a class="nhsuk-link" href="/prototype/sign-in-as/{{ u.id }}">Start as {{ u.name }}</a>{% endset %}
+        {% set personaRows = (personaRows.push([
+          { html: linkHtml, header: "User" },
+          { text: data.roles[u.role].label, header: "Role" },
+          { text: "CIS2" if u.authMethod == "cis2" else "Cognito (admin log in)", header: "Logs in with" },
+          { text: orgNames | join(", ") if orgNames | length else "All organisations / none", header: "Organisations" }
+        ]), personaRows) %}
+      {% endfor %}
+      {{ table({
+        caption: { text: "Test users", classes: "nhsuk-u-visually-hidden" },
+        responsive: true,
+        head: [
+          { text: "User" },
+          { text: "Role" },
+          { text: "Logs in with" },
+          { text: "Organisations" }
+        ],
+        rows: personaRows
+      }) }}
 
-      <h2 class="nhsuk-heading-l">
-        Get started
-      </h2>
+      <p><a class="nhsuk-link" href="/sign-in">Go to the log in page (CES-002)</a></p>
 
+      <h2 class="nhsuk-heading-l">Journeys by backlog ticket</h2>
+
+      {{ table({
+        caption: { text: "Journeys", classes: "nhsuk-u-visually-hidden" },
+        responsive: true,
+        head: [
+          { text: "Ticket" },
+          { text: "Journey" },
+          { text: "Who" },
+          { text: "Start here" }
+        ],
+        rows: [
+          [ { text: "CES-001, 002" }, { text: "Log in with CIS2 (simulated) or an admin account (Cognito), log out, session timeout warning" }, { text: "Everyone" }, { html: '<a class="nhsuk-link" href="/sign-in">Log in page</a>' } ],
+          [ { text: "CES-003" }, { text: "Choose organisation at log in, change organisation, access denied for another organisation’s record" }, { text: "Dr Asha Patel" }, { html: '<a class="nhsuk-link" href="/prototype/sign-in-as/clinician-multi?next=/sign-in/select-organisation">Choose organisation</a><br><a class="nhsuk-link" href="/prototype/sign-in-as/clinician?next=/enrolments/ENR-10005">Access denied example</a>' } ],
+          [ { text: "CES-004" }, { text: "Navigation and actions change by role (try each test user)" }, { text: "All" }, { text: "Use Prototype settings" } ],
+          [ { text: "CES-005" }, { text: "Product catalogue: view, add a product with conditions and indications, edit, withdraw" }, { text: "Technical admin" }, { html: '<a class="nhsuk-link" href="/prototype/sign-in-as/tech-admin?next=/catalogue">Product catalogue</a>' } ],
+          [ { text: "CES-006" }, { text: "Product entitlement by organisation – static map (no screens in Private Beta). Shown read-only on each product page and applied when choosing a product." }, { text: "–" }, { text: "app/data/session-data-defaults.js" } ],
+          [ { text: "CES-007, 008" }, { text: "Find a patient by NHS number via PDS, confirm the patient, unhappy paths" }, { text: "Clinician" }, { html: '<a class="nhsuk-link" href="/prototype/sign-in-as/clinician?next=/enrol/start">Enrol a patient</a>' } ],
+          [ { text: "CES-009" }, { text: "Create an enrolment – variant A (task list) or B (one question per page), duplicate check, supplier outage" }, { text: "Clinician" }, { html: '<a class="nhsuk-link" href="/prototype/sign-in-as/clinician?next=/enrol/start">Enrol a patient</a>' } ],
+          [ { text: "CES-010" }, { text: "Cancel an enrolment (clinician or clinical admin), or on someone’s behalf (back office)" }, { text: "Clinician, Back office" }, { html: '<a class="nhsuk-link" href="/prototype/sign-in-as/clinician?next=/enrolments/ENR-10001">Enrolment ENR-10001</a><br><a class="nhsuk-link" href="/prototype/sign-in-as/back-office?next=/enrolments/ENR-10005">As back office</a>' } ],
+          [ { text: "CES-011, 012, 013" }, { text: "Download template, upload a file, row-by-row results, submit and track outcomes" }, { text: "Clinical admin" }, { html: '<a class="nhsuk-link" href="/prototype/sign-in-as/clinical-admin?next=/bulk">Bulk enrolment</a>' } ],
+          [ { text: "CES-014" }, { text: "List, search, filter, sort and view enrolments" }, { text: "Clinician, Clinical admin, Back office" }, { html: '<a class="nhsuk-link" href="/prototype/sign-in-as/clinician?next=/enrolments">Enrolments</a>' } ],
+          [ { text: "CES-015" }, { text: "Audit trail on each enrolment’s History tab (timeline; table with filter for back office)" }, { text: "All with access" }, { html: '<a class="nhsuk-link" href="/prototype/sign-in-as/back-office?next=/enrolments/ENR-10004">History example</a>' } ]
+        ]
+      }) }}
+
+      <h2 class="nhsuk-heading-l">Test NHS numbers</h2>
+      <p>Any other valid NHS number gives “no match”. Letters, too few or too many digits, or a failed checksum show validation errors.</p>
+      {% set p0 = data.patients[0] %}
+      {% set p5 = data.patients[5] %}
+      {{ table({
+        caption: { text: "Test NHS numbers", classes: "nhsuk-u-visually-hidden" },
+        responsive: true,
+        head: [
+          { text: "NHS number" },
+          { text: "What happens" }
+        ],
+        rows: [
+          [ { text: p5.nhsNumber | formatNhsNumber }, { text: p5.givenName + " " + p5.familyName + " – found, no enrolments" } ],
+          [ { text: p0.nhsNumber | formatNhsNumber }, { text: p0.givenName + " " + p0.familyName + " – found, already enrolled on DTx product A (choose it to see the duplicate warning)" } ],
+          [ { text: data.scenarioNumbers.superseded | formatNhsNumber }, { text: "Superseded NHS number – PDS returns the new record" } ],
+          [ { text: data.scenarioNumbers.restricted | formatNhsNumber }, { text: "Restricted record" } ],
+          [ { text: data.scenarioNumbers.deceased | formatNhsNumber }, { text: "Patient has died" } ],
+          [ { text: data.scenarioNumbers.noMatch | formatNhsNumber }, { text: "No PDS match" } ],
+          [ { text: data.scenarioNumbers.pdsUnavailable | formatNhsNumber }, { text: "PDS unavailable (or tick “PDS unavailable” in Prototype settings)" } ]
+        ]
+      }) }}
+
+      <h2 class="nhsuk-heading-l">Prototype settings</h2>
       <ul class="nhsuk-list nhsuk-list--bullet">
-        <li>
-          <a href="https://prototype-kit.service-manual.nhs.uk/how-tos">NHS prototype kit guides</a> – including a tutorial
-        </li>
-        <li>
-          <a href="https://service-manual.nhs.uk/design-system">NHS digital service manual</a> – for code snippets and guidance on using NHS styles, components and patterns
-        </li>
+        <li><strong>Signed in as</strong> – switch user and role</li>
+        <li><strong>Single enrolment journey</strong> – A (task list) or B (one question per page)</li>
+        <li><strong>Simulate</strong> – PDS unavailable, supplier unavailable on submit, bulk file with no problems</li>
+        <li><strong>Show session timeout warning</strong> – opens the MoJ timeout warning</li>
+        <li><strong>Reset data</strong> (footer) – puts all test data back to the start</li>
+      </ul>
+
+      <h2 class="nhsuk-heading-l">Patterns used</h2>
+      <p>NHS design system first; X-GOV patterns (rebuilt with NHS styles) only where NHS has no fit. Each page template starts with a comment listing its ticket and patterns.</p>
+      <ul class="nhsuk-list nhsuk-list--bullet">
+        <li>X-GOV (MoJ): Organisation switcher, Identity bar, Timeline, Filter a list, Add to a list, Add another, Spinner, Numeric data, Notification badge, Page header actions, Timeout warning</li>
+        <li>X-GOV (GOV.UK): Passwords, There is a problem with the service, Recover from validation errors, Accessible autocomplete</li>
+        <li>Changed from the backlog: NHS sortable tables instead of MoJ Sortable table (now built into NHS Frontend); NHS Interruption page (confirmation example) instead of MoJ Confirm an action; NHS header navigation instead of GOV.UK Service navigation</li>
       </ul>
 
     </div>

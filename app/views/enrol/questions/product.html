@@ -1,0 +1,45 @@
+{# CES-009 – Product. Pattern: NHS Radios.
+   Only live products the organisation is entitled to are shown (CES-005, CES-006). #}
+{% extends "enrol/questions/_base.html" %}
+
+{% set pageName = "Lorem ipsum dolor sit amet (which product)?" %}
+
+{% block question %}
+  {% if productsForOrg | length %}
+    {% set items = [] %}
+    {% for p in productsForOrg %}
+      {% set items = (items.push({
+        value: p.id,
+        text: p.name,
+        hint: {
+          text: "Version " + p.version
+        },
+        checked: enrol.productId == p.id
+      }), items) %}
+    {% endfor %}
+
+    {{ radios({
+      name: "_productId",
+      idPrefix: "productId",
+      fieldset: {
+        legend: {
+          text: pageName,
+          size: "l",
+          isPageHeading: true
+        }
+      },
+      hint: {
+        text: "Lorem ipsum dolor sit amet (only products your organisation is commissioned for)"
+      },
+      errorMessage: {
+        text: errors.productId.text
+      } if errors.productId,
+      items: items
+    }) }}
+  {% else %}
+    <h1 class="nhsuk-heading-l">{{ pageName }}</h1>
+    {{ insetText({
+      text: "Lorem ipsum dolor sit amet (your organisation is not commissioned for any products)"
+    }) }}
+  {% endif %}
+{% endblock %}

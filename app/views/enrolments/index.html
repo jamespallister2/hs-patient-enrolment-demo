@@ -1,0 +1,249 @@
+{#
+  CES-014 – Enrolments: list, search and filter (within the user's organisation;
+  back office sees all organisations)
+  Patterns: NHS Table (server-side sortable headers); NHS Search input;
+            NHS Pagination; NHS Tag (status);
+            X-GOV: MoJ Filter a list + Filter component (NHS styling);
+            MoJ Page header actions
+#}
+{% extends "layout.html" %}
+
+{% set pageName = "Enrolments" %}
+
+{% block content %}
+  {% include "_partials/success-banner.njk" %}
+
+  <div class="app-page-header">
+    <div class="app-page-header__heading">
+      <h1 class="nhsuk-heading-l">{{ pageName }}</h1>
+    </div>
+    <div class="app-page-header__actions">
+      {% if can("enrolments:create") %}
+        {{ button({
+          text: "Lorem ipsum (enrol a patient)",
+          href: "/enrol/start"
+        }) }}
+      {% endif %}
+      {% if can("bulk:upload") %}
+        {{ button({
+          text: "Lorem ipsum (bulk enrolment)",
+          href: "/bulk",
+          variant: "secondary"
+        }) }}
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="app-filter-layout">
+
+    {# ---------------- Filter (MoJ Filter, NHS styling) ---------------- #}
+    <div class="app-filter-layout__filter">
+      <div class="app-filter__header">
+        <h2 class="app-filter__header-title">Filter</h2>
+      </div>
+      <div class="app-filter__content">
+        <form method="get" action="/enrolments" novalidate>
+          <input type="hidden" name="_q" value="{{ q }}">
+
+          {% if selected | length %}
+            <div class="app-filter__selected">
+              <div class="app-filter__selected-heading">
+                <h3 class="nhsuk-heading-s nhsuk-u-margin-bottom-2">Selected filters</h3>
+                <a class="nhsuk-link nhsuk-body-s" href="{{ clearHref }}">Clear filters</a>
+              </div>
+              {% for item in selected %}
+                <a class="app-filter__tag" href="{{ item.href }}"><span class="nhsuk-u-visually-hidden">Remove this filter: {{ item.group }} </span>{{ item.text }}</a>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          {% set statusItems = [] %}
+          {% for s in allStatuses %}
+            {% set statusItems = (statusItems.push({ value: s, text: s }), statusItems) %}
+          {% endfor %}
+          {{ checkboxes({
+            idPrefix: "status",
+            name: "_status",
+            classes: "nhsuk-checkboxes--small",
+            fieldset: {
+              legend: {
+                text: "Status",
+                size: "s"
+              }
+            },
+            values: statuses,
+            items: statusItems
+          }) }}
+
+          {% set productItems = [] %}
+          {% for p in filterProducts %}
+            {% set productItems = (productItems.push({ value: p.id, text: p.name }), productItems) %}
+          {% endfor %}
+          {{ checkboxes({
+            idPrefix: "product",
+            name: "_product",
+            classes: "nhsuk-checkboxes--small",
+            fieldset: {
+              legend: {
+                text: "Product",
+                size: "s"
+              }
+            },
+            values: productIds,
+            items: productItems
+          }) }}
+
+          {% if showOrganisation %}
+            {% set orgItems = [] %}
+            {% for o in data.organisations %}
+              {% set orgItems = (orgItems.push({ value: o.id, text: o.name }), orgItems) %}
+            {% endfor %}
+            {{ checkboxes({
+              idPrefix: "organisation",
+              name: "_organisation",
+              classes: "nhsuk-checkboxes--small",
+              fieldset: {
+                legend: {
+                  text: "Organisation",
+                  size: "s"
+                }
+              },
+              values: orgIds,
+              items: orgItems
+            }) }}
+          {% endif %}
+
+          {{ button({
+            text: "Apply filters",
+            variant: "secondary",
+            small: true,
+            classes: "nhsuk-u-margin-bottom-0"
+          }) }}
+        </form>
+      </div>
+    </div>
+
+    {# ---------------- Search and results ---------------- #}
+    <div class="app-filter-layout__content">
+      <form method="get" action="/enrolments" novalidate>
+        {% for s in statuses %}<input type="hidden" name="_status" value="{{ s }}">{% endfor %}
+        {% for p in productIds %}<input type="hidden" name="_product" value="{{ p }}">{% endfor %}
+        {% for o in orgIds %}<input type="hidden" name="_organisation" value="{{ o }}">{% endfor %}
+        {{ searchInput({
+          id: "search",
+          name: "_q",
+          value: q,
+          label: {
+            text: "Lorem ipsum dolor (search by patient name or NHS number)",
+            size: "s"
+          },
+          formGroup: {
+            classes: "nhsuk-u-margin-bottom-4"
+          }
+        }) }}
+      </form>
+
+      <p class="app-results-count" role="status">
+        {% if total %}
+          Showing {{ firstShown }} to {{ lastShown }} of {{ total }} results
+        {% else %}
+          0 results
+        {% endif %}
+      </p>
+
+      {% if total %}
+        {% set rows = [] %}
+        {% for item in results %}
+          {% set patientHtml %}
+            <a class="nhsuk-link nhsuk-link--no-visited-state" href="/enrolments/{{ item.id }}">{{ item.patientName }}</a><br>
+            <span class="nhsuk-body-s nhsuk-u-secondary-text-colour">{{ item.nhsNumber | formatNhsNumber }}</span>
+          {% endset %}
+          {% set statusHtml %}
+            {{ tag({ text: item.status, colour: item.status | statusColour }) }}
+          {% endset %}
+          {% set row = [
+            {
+              html: patientHtml,
+              header: "Patient"
+            },
+            {
+              text: svc.product(data, item.productId).name,
+              header: "Product"
+            }
+          ] %}
+          {% if showOrganisation %}
+            {% set row = (row.push({ text: svc.organisation(data, item.organisationId).name, header: "Organisation" }), row) %}
+          {% endif %}
+          {% set row = (row.push(
+            {
+              text: item.createdAt | appDate,
+              header: "Created"
+            },
+            {
+              html: statusHtml,
+              header: "Status"
+            }
+          ), row) %}
+          {% set rows = (rows.push(row), rows) %}
+        {% endfor %}
+
+        {% set head = [
+          {
+            text: "Patient",
+            href: sortHeader("patient").href,
+            sort: sortHeader("patient").sort
+          },
+          {
+            text: "Product",
+            href: sortHeader("product").href,
+            sort: sortHeader("product").sort
+          }
+        ] %}
+        {% if showOrganisation %}
+          {% set head = (head.push({ text: "Organisation", href: sortHeader("organisation").href, sort: sortHeader("organisation").sort }), head) %}
+        {% endif %}
+        {% set head = (head.push(
+          {
+            text: "Created",
+            href: sortHeader("created").href,
+            sort: sortHeader("created").sort
+          },
+          {
+            text: "Status",
+            href: sortHeader("status").href,
+            sort: sortHeader("status").sort
+          }
+        ), head) %}
+
+        {{ table({
+          caption: {
+            text: "Enrolments",
+            classes: "nhsuk-u-visually-hidden"
+          },
+          responsive: true,
+          head: head,
+          rows: rows
+        }) }}
+
+        {% if pageCount > 1 %}
+          {{ pagination({
+            previous: {
+              href: previousHref
+            } if previousHref,
+            next: {
+              href: nextHref
+            } if nextHref,
+            items: pageItems
+          }) }}
+        {% endif %}
+      {% else %}
+        <p>Lorem ipsum dolor sit amet (no enrolments match your search or filters).</p>
+        <ul class="nhsuk-list nhsuk-list--bullet">
+          <li>lorem ipsum dolor sit amet</li>
+          <li>consectetur adipiscing elit</li>
+        </ul>
+      {% endif %}
+    </div>
+
+  </div>
+{% endblock %}

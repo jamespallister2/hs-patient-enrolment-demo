@@ -1,0 +1,29 @@
+# CES-010, CES-014, CES-015 – find an enrolment, view details and history,
+# cancel it; access denied for another organisation's record
+
+Start /enrolments
+Scope /enrolments
+Exclude /prototype /prototype-admin /assets
+Tags manage CES-010 CES-014 CES-015
+
+--- Setup ---
+
+Use setup.clinician
+
+--- Map ---
+
+Visit /enrolments
+Visit /enrolments/ENR-10001
+ClickLink "Cancel enrolment"
+Wait 1200
+Snapshot
+Choose "Lorem ipsum reason 1"
+ClickButton "Continue"
+Wait 1200
+Snapshot
+ClickButton "Cancel enrolment"
+Wait 1200
+Snapshot
+
+# Another organisation's enrolment
+Visit /enrolments/ENR-10005

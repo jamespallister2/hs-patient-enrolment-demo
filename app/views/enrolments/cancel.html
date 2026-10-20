@@ -1,0 +1,87 @@
+{#
+  CES-010 – Cancel an enrolment: reason
+  Patterns: NHS Radios with conditional Textarea; NHS Inset text (back office
+            cancelling on someone's behalf); X-GOV MoJ Identity bar
+  Reasons are placeholders – the backlog does not list them.
+#}
+{% extends "layout.html" %}
+
+{% set pageName = "Lorem ipsum dolor sit amet (why are you cancelling this enrolment)?" %}
+
+{% block beforeContent %}
+  {{ backLink({
+    href: "/enrolments/" + e.id,
+    text: "Back"
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+
+      {% include "_partials/error-summary.njk" %}
+
+      {{ appIdentityBar({
+        patient: e
+      }) }}
+
+      {% if isBackOffice %}
+        {{ insetText({
+          text: "Lorem ipsum dolor sit amet (you are cancelling on behalf of " + eOrganisation.name + ")"
+        }) }}
+      {% endif %}
+
+      <form method="post" action="/enrolments/{{ e.id }}/cancel-answer" novalidate>
+        {% set otherHtml %}
+          {{ textarea({
+            id: "details",
+            name: "_details",
+            label: {
+              text: "Lorem ipsum (give a reason)"
+            },
+            value: cancel.details,
+            errorMessage: {
+              text: errors.details.text
+            } if errors.details
+          }) }}
+        {% endset %}
+
+        {% set items = [] %}
+        {% for r in reasons %}
+          {% set items = (items.push({
+            value: r,
+            text: r,
+            checked: cancel.reason == r,
+            conditional: {
+              html: otherHtml
+            } if r == "Other"
+          }), items) %}
+        {% endfor %}
+
+        {{ radios({
+          name: "_reason",
+          idPrefix: "reason",
+          fieldset: {
+            legend: {
+              text: pageName,
+              size: "l",
+              isPageHeading: true
+            }
+          },
+          hint: {
+            text: "Lorem ipsum dolor sit amet " + e.patientName + " " + eProduct.name
+          },
+          errorMessage: {
+            text: errors.reason.text
+          } if errors.reason,
+          items: items
+        }) }}
+
+        {{ button({
+          text: "Continue"
+        }) }}
+      </form>
+
+    </div>
+  </div>
+{% endblock %}

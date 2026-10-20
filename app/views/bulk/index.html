@@ -1,0 +1,64 @@
+{#
+  CES-011 / CES-013 – Bulk enrolment: files uploaded by this organisation
+  Patterns: NHS Table; NHS Tag (status); X-GOV MoJ Page header actions;
+            MoJ Notification badge (new outcomes, also shown in the navigation)
+#}
+{% extends "layout.html" %}
+
+{% set pageName = "Bulk enrolment" %}
+
+{% block content %}
+  <div class="app-page-header">
+    <div class="app-page-header__heading">
+      <h1 class="nhsuk-heading-l">{{ pageName }}</h1>
+    </div>
+    <div class="app-page-header__actions">
+      {{ button({
+        text: "Lorem ipsum (upload a file)",
+        href: "/bulk/upload"
+      }) }}
+    </div>
+  </div>
+
+  <p class="nhsuk-u-reading-width">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+
+  {% if batches | length %}
+    {% set rows = [] %}
+    {% for b in batches %}
+      {% set refHtml %}
+        <a class="nhsuk-link nhsuk-link--no-visited-state" href="/bulk/{{ b.id }}">{{ b.id }}</a>
+        {% if not b.seen and b.status != "Processing" %}
+          <span class="app-notification-badge">1<span class="nhsuk-u-visually-hidden"> new outcome</span></span>
+        {% endif %}
+      {% endset %}
+      {% set statusHtml %}{{ tag({ text: b.status, colour: b.status | statusColour }) }}{% endset %}
+      {% set rows = (rows.push([
+        { html: refHtml, header: "Reference" },
+        { text: b.fileName, header: "File" },
+        { text: b.uploadedAt | appDateTime, header: "Uploaded" },
+        { text: b.uploadedBy, header: "Uploaded by" },
+        { text: b.rows | length, header: "Rows", format: "numeric" },
+        { html: statusHtml, header: "Status" }
+      ]), rows) %}
+    {% endfor %}
+
+    {{ table({
+      caption: {
+        text: "Lorem ipsum (uploaded files)",
+        size: "m"
+      },
+      responsive: true,
+      head: [
+        { text: "Reference" },
+        { text: "File" },
+        { text: "Uploaded" },
+        { text: "Uploaded by" },
+        { text: "Rows", format: "numeric" },
+        { text: "Status" }
+      ],
+      rows: rows
+    }) }}
+  {% else %}
+    <p>Lorem ipsum dolor sit amet (no files uploaded yet).</p>
+  {% endif %}
+{% endblock %}

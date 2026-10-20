@@ -1,0 +1,19 @@
+{#
+  CES-008 – PDS is not available
+  Pattern: X-GOV GOV.UK "There is a problem with the service" page.
+  The heading is the standard wording from that pattern.
+#}
+{% extends "layout.html" %}
+
+{% set pageName = "Sorry, there is a problem with the service" %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      <h1 class="nhsuk-heading-l">{{ pageName }}</h1>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit (try again later).</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</p>
+      <p><a class="nhsuk-link" href="/enrol/nhs-number">Lorem ipsum (try again)</a></p>
+    </div>
+  </div>
+{% endblock %}

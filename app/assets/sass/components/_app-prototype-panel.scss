@@ -1,0 +1,10 @@
+// PROTOTYPE ONLY – settings panel shown above the footer
+.app-prototype-panel {
+  padding-top: nhsuk-spacing(3);
+  border-top: nhsuk-spacing(1) dashed nhsuk-colour("warm-yellow");
+  background-color: nhsuk-colour("pale-yellow");
+}
+
+.app-prototype-panel__details {
+  margin-bottom: nhsuk-spacing(3);
+}

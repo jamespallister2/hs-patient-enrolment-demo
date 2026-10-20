@@ -1,0 +1,71 @@
+{#
+  CES-005 – Check product before saving
+  Patterns: NHS Check answers; NHS Summary list (with Change links and a
+            summary card for the conditions)
+#}
+{% extends "layout.html" %}
+
+{% set pageName = "Lorem ipsum dolor sit amet (check the product details)" %}
+
+{% block beforeContent %}
+  {{ backLink({
+    href: "/catalogue/" + draft.id if draft.id else "/catalogue/add/conditions",
+    text: "Back"
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      <h1 class="nhsuk-heading-l">{{ pageName }}</h1>
+
+      {% set change = { href: "/catalogue/add/details?returnTo=check", text: "Change" } %}
+      {{ summaryList({
+        rows: [
+          { key: { text: "Lorem ipsum (product name)" }, value: { text: draft.name }, actions: { items: [{ href: change.href, text: "Change", visuallyHiddenText: "product name" }] } },
+          { key: { text: "Version" }, value: { text: draft.version }, actions: { items: [{ href: change.href, text: "Change", visuallyHiddenText: "version" }] } },
+          { key: { text: "Lorem ipsum (description)" }, value: { text: draft.description or "Not provided" }, actions: { items: [{ href: change.href, text: "Change", visuallyHiddenText: "description" }] } },
+          { key: { text: "Pathways" }, value: { text: draft.pathways | join(", ") }, actions: { items: [{ href: change.href, text: "Change", visuallyHiddenText: "pathways" }] } },
+          { key: { text: "Status" }, value: { text: draft.status }, actions: { items: [{ href: change.href, text: "Change", visuallyHiddenText: "status" }] } }
+        ]
+      }) }}
+
+      {% set rows = [] %}
+      {% for c in draft.conditions %}
+        {% set rows = (rows.push({
+          key: { text: c.name },
+          value: { text: c.indications | join(", ") },
+          actions: { items: [{ href: "/catalogue/add/condition?_index=" + loop.index0, text: "Change", visuallyHiddenText: c.name }] }
+        }), rows) %}
+      {% endfor %}
+      {{ summaryList({
+        card: {
+          heading: {
+            text: "Conditions and indications",
+            level: 2
+          },
+          actions: {
+            items: [
+              { href: "/catalogue/add/conditions", text: "Lorem ipsum (add or remove)" }
+            ]
+          }
+        },
+        rows: rows
+      }) if rows | length else "" }}
+
+      {% if not rows | length %}
+        {{ warningCallout({
+          heading: "Lorem ipsum (important)",
+          html: "<p>Lorem ipsum dolor sit amet (add at least one condition). <a href=\"/catalogue/add/condition\">Lorem ipsum (add a condition)</a></p>"
+        }) }}
+      {% endif %}
+
+      <form method="post" action="/catalogue/add/check-answer" novalidate>
+        {{ button({
+          text: "Lorem ipsum (save product)",
+          preventDoubleClick: true
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

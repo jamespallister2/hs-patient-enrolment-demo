@@ -1,0 +1,9 @@
+# Every journey in the HealthStore Clinical Enrolment Service prototype
+01-log-in
+02-enrol-task-list
+03-enrol-one-question-per-page
+04-enrol-unhappy-paths
+05-manage-enrolments
+06-back-office
+07-bulk-enrolment
+08-product-catalogue

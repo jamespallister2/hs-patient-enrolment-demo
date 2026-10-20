@@ -1,0 +1,42 @@
+{#
+  CES-001 / CES-002 – Sign in (start page)
+  Patterns: NHS Start page; NHS Buttons (login variant);
+            NHS England CIS2 "Alternative sign in" – Care Identity button as the
+            primary call to action, admin/technical sign in as the secondary route.
+  Note: "Log in with my Care Identity" is the recommended call to action from the
+  NHS England Care Identity button guidance. Replace this button with the official
+  button image from that guidance before research with real users.
+#}
+{% extends "layout.html" %}
+
+{% set pageName = "Log in" %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+
+      <h1 class="nhsuk-heading-xl">{{ serviceName }}</h1>
+
+      <p class="nhsuk-lede-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit:</p>
+      <ul class="nhsuk-list nhsuk-list--bullet">
+        <li>lorem ipsum dolor sit amet</li>
+        <li>consectetur adipiscing elit</li>
+        <li>sed do eiusmod tempor</li>
+      </ul>
+
+      {{ button({
+        text: "Log in with my Care Identity",
+        href: "/sign-in/cis2",
+        variant: "login",
+        classes: "app-care-identity-button"
+      }) }}
+
+      <h2 class="nhsuk-heading-m">Lorem ipsum dolor sit amet (admin and technical users)</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+      <p><a class="nhsuk-link nhsuk-link--no-visited-state" href="/sign-in/admin">Lorem ipsum dolor (log in with an admin account)</a></p>
+
+    </div>
+  </div>
+{% endblock %}

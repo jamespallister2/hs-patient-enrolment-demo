@@ -1,0 +1,32 @@
+{#
+  Timeline
+  X-GOV: based on the MoJ Timeline, styled with NHS tokens.
+  https://design-patterns.service.justice.gov.uk/components/timeline/
+  Used for the enrolment audit trail – who, what, when (CES-015).
+
+  params.items – [{ title, by, role, at, description }]
+  params.headingLevel – heading level for each item title (default 3)
+#}
+{% macro appTimeline(params) %}
+{% set level = params.headingLevel or 3 %}
+<div class="app-timeline">
+  {% for item in params.items %}
+    <div class="app-timeline__item">
+      <div class="app-timeline__header">
+        <h{{ level }} class="app-timeline__title">{{ item.title }}</h{{ level }}>
+        {% if item.by %}
+          <p class="app-timeline__byline">by {{ item.by }}{% if item.role %} ({{ item.role }}){% endif %}</p>
+        {% endif %}
+      </div>
+      <p class="app-timeline__date">
+        <time datetime="{{ item.at }}">{{ item.at | appDateTime }}</time>
+      </p>
+      {% if item.description %}
+        <div class="app-timeline__description">
+          <p class="nhsuk-body-s nhsuk-u-margin-bottom-0">{{ item.description }}</p>
+        </div>
+      {% endif %}
+    </div>
+  {% endfor %}
+</div>
+{% endmacro %}

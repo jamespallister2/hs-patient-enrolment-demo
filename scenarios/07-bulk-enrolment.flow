@@ -1,0 +1,35 @@
+# CES-011 to CES-013 – upload a bulk file, check row results, submit, track
+
+Start /bulk
+Scope /bulk
+Exclude /prototype /prototype-admin /assets /bulk/template.csv
+Tags bulk CES-011 CES-012 CES-013
+
+--- Setup ---
+
+Use setup.clinical-admin
+
+--- Map ---
+
+Visit /bulk
+ClickLink "upload a file"
+Wait 1200
+Snapshot
+Goto /bulk/prototype-upload
+Snapshot
+WaitForSelector "text=check the results for your file"
+Snapshot
+ClickLink "Continue"
+Wait 1200
+Snapshot
+ClickButton "submit bulk file"
+Wait 1200
+Snapshot
+ClickLink "check progress"
+Wait 1200
+Snapshot
+Wait 9000
+Goto /bulk
+ClickLink "B-2026-0013"
+Wait 1200
+Snapshot

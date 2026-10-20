@@ -1,0 +1,34 @@
+{#
+  Base for the CES-009 question pages (shared by variant A – task list – and
+  variant B – one question per page).
+  Patterns: NHS Question page; NHS Error message + Error summary;
+            X-GOV MoJ Identity bar (patient being enrolled)
+#}
+{% extends "layout.html" %}
+
+{% block beforeContent %}
+  {{ backLink({
+    href: backHref,
+    text: "Back"
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+
+      {% include "_partials/error-summary.njk" %}
+
+      {% include "_partials/enrol-identity-bar.njk" %}
+
+      <form method="post" action="{{ formAction }}" novalidate>
+        {% block question %}{% endblock %}
+
+        {{ button({
+          text: "Continue" if variant == "b" else "Save and continue"
+        }) }}
+      </form>
+
+    </div>
+  </div>
+{% endblock %}

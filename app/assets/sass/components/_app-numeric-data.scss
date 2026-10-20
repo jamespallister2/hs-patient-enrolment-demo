@@ -1,0 +1,37 @@
+// Numeric data – X-GOV: MoJ Numeric data in NHS styling (CES-012)
+.app-numeric-data {
+  @include nhsuk-responsive-margin(5, "bottom");
+  display: flex;
+  flex-wrap: wrap;
+  gap: nhsuk-spacing(3);
+  margin-top: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.app-numeric-data__item {
+  min-width: 9rem;
+  padding: nhsuk-spacing(3);
+  border-top: nhsuk-spacing(1) solid nhsuk-colour("blue");
+  background-color: $nhsuk-reverse-text-colour;
+}
+
+.app-numeric-data__link {
+  @include nhsuk-link-style-no-visited-state;
+  display: block;
+  text-decoration: none;
+
+  &:hover .app-numeric-data__label {
+    text-decoration: underline;
+  }
+}
+
+.app-numeric-data__value {
+  @include nhsuk-font(48, $weight: bold);
+  display: block;
+}
+
+.app-numeric-data__label {
+  @include nhsuk-font(16);
+  display: block;
+}

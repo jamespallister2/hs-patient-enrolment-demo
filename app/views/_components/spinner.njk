@@ -1,0 +1,14 @@
+{#
+  Spinner progress indicator
+  X-GOV: based on the MoJ Spinner progress indicator, styled with NHS tokens.
+  https://design-patterns.service.justice.gov.uk/components/spinner-progress-indicator/
+  Used for PDS lookup (CES-008), upload/validation (CES-011, CES-012), processing (CES-013).
+
+  params.text – status message, announced to screen readers
+#}
+{% macro appSpinner(params) %}
+<div class="app-spinner" role="status" aria-live="polite">
+  <span class="app-spinner__icon" aria-hidden="true"></span>
+  <span class="app-spinner__text">{{ params.text }}</span>
+</div>
+{% endmacro %}

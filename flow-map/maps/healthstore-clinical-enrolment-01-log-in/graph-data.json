@@ -1,0 +1,284 @@
+{
+  "nodes": [
+    {
+      "id": "/sign-in",
+      "label": "Log in – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/sign-in",
+      "filePath": "sign-in.html",
+      "screenshot": "screenshots/sign-in.png",
+      "type": "page",
+      "actualTitle": "Log in – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "01-log-in",
+      "screenshotAspectRatio": 0.92421875,
+      "visitOrder": 0,
+      "layoutRank": 0,
+      "isStartNode": true,
+      "staticEnriched": true
+    },
+    {
+      "id": "/sign-in/cis2",
+      "label": "Simulated CIS2 log in – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/sign-in/cis2",
+      "filePath": "sign-in/cis2.html",
+      "screenshot": "screenshots/sign-in-cis2.png",
+      "type": "form",
+      "actualTitle": "Simulated CIS2 log in – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "01-log-in",
+      "screenshotAspectRatio": 0.89296875,
+      "visitOrder": 1,
+      "layoutRank": 1,
+      "staticEnriched": true
+    },
+    {
+      "id": "/sign-in/select-organisation",
+      "label": "Lorem ipsum dolor sit amet (which organisation)? – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/sign-in/select-organisation",
+      "filePath": "sign-in/select-organisation.html",
+      "screenshot": "screenshots/sign-in-select-organisation.png",
+      "type": "form",
+      "actualTitle": "Lorem ipsum dolor sit amet (which organisation)? – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "01-log-in",
+      "screenshotAspectRatio": 0.69453125,
+      "visitOrder": 2,
+      "layoutRank": 2,
+      "staticEnriched": true
+    },
+    {
+      "id": "/enrolments",
+      "label": "Enrolments – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/enrolments",
+      "filePath": "enrolments/index.html",
+      "screenshot": "screenshots/enrolments.png",
+      "type": "form",
+      "actualTitle": "Enrolments – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "01-log-in",
+      "screenshotAspectRatio": 1.2,
+      "visitOrder": 3,
+      "layoutRank": 3,
+      "staticEnriched": true
+    },
+    {
+      "id": "/signed-out",
+      "label": "Lorem ipsum dolor sit amet (you have logged out) – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/signed-out",
+      "filePath": "signed-out.html",
+      "screenshot": "screenshots/signed-out.png",
+      "type": "page",
+      "actualTitle": "Lorem ipsum dolor sit amet (you have logged out) – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "01-log-in",
+      "screenshotAspectRatio": 0.52421875,
+      "visitOrder": 4,
+      "layoutRank": 4,
+      "staticEnriched": true
+    },
+    {
+      "id": "/sign-in/admin",
+      "label": "Lorem ipsum dolor (admin log in) – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/sign-in/admin",
+      "filePath": "sign-in/admin.html",
+      "screenshot": "screenshots/sign-in-admin.png",
+      "type": "form",
+      "actualTitle": "Lorem ipsum dolor (admin log in) – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "01-log-in",
+      "screenshotAspectRatio": 0.78203125,
+      "visitOrder": 5,
+      "layoutRank": 5,
+      "staticEnriched": true
+    },
+    {
+      "id": "/catalogue",
+      "label": "Product catalogue – HealthStore Clinical Enrolment Service – NHS",
+      "urlPath": "/catalogue",
+      "filePath": "catalogue/index.html",
+      "screenshot": "screenshots/catalogue.png",
+      "type": "page",
+      "actualTitle": "Product catalogue – HealthStore Clinical Enrolment Service – NHS",
+      "scenario": "01-log-in",
+      "screenshotAspectRatio": 0.75390625,
+      "visitOrder": 6,
+      "layoutRank": 6,
+      "staticEnriched": true
+    }
+  ],
+  "edges": [
+    {
+      "source": "/sign-in",
+      "target": "/sign-in/cis2",
+      "type": "link",
+      "label": "variant: \"login\",",
+      "method": "GET",
+      "provenance": "both",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/sign-in/cis2",
+      "target": "/sign-in/select-organisation",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/sign-in/select-organisation",
+      "target": "/enrolments",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrolments",
+      "target": "/signed-out",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/signed-out",
+      "target": "/sign-in/admin",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/sign-in/admin",
+      "target": "/catalogue",
+      "type": "link",
+      "label": "",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/sign-in",
+      "target": "/sign-in/cis2",
+      "type": "link",
+      "label": "Log in with my Care Identity",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/sign-in",
+      "target": "/sign-in/admin",
+      "type": "link",
+      "label": "Lorem ipsum dolor (log in with an admin account)",
+      "method": "GET",
+      "provenance": "both",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/sign-in/cis2",
+      "target": "/sign-in",
+      "type": "link",
+      "label": "Back",
+      "method": "GET",
+      "provenance": "both",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/sign-in/select-organisation",
+      "target": "/catalogue",
+      "type": "link",
+      "label": "NHS\n          \n        \n        HealthStore Clinical Enrolment Service",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": true
+    },
+    {
+      "source": "/sign-in/select-organisation",
+      "target": "/signed-out",
+      "type": "link",
+      "label": "Sign out",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/sign-in/select-organisation",
+      "target": "/enrolments",
+      "type": "link",
+      "label": "Enrolments",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": true
+    },
+    {
+      "source": "/enrolments",
+      "target": "/catalogue",
+      "type": "link",
+      "label": "NHS\n          \n        \n        HealthStore Clinical Enrolment Service",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": true
+    },
+    {
+      "source": "/enrolments",
+      "target": "/signed-out",
+      "type": "link",
+      "label": "Log out",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": true
+    },
+    {
+      "source": "/enrolments",
+      "target": "/sign-in",
+      "type": "link",
+      "label": "Change organisation",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/signed-out",
+      "target": "/sign-in",
+      "type": "link",
+      "label": "Lorem ipsum (log in again)",
+      "method": "GET",
+      "provenance": "both",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/sign-in/admin",
+      "target": "/sign-in",
+      "type": "link",
+      "label": "Back",
+      "method": "GET",
+      "provenance": "both",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/catalogue",
+      "target": "/signed-out",
+      "type": "link",
+      "label": "Sign out",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/catalogue",
+      "target": "/sign-in",
+      "type": "link",
+      "label": "Lorem ipsum (add a product)",
+      "method": "GET",
+      "provenance": "runtime",
+      "isGlobalNav": false
+    },
+    {
+      "source": "/enrolments",
+      "target": "/enrolments",
+      "type": "form",
+      "label": "Status",
+      "method": "GET",
+      "provenance": "both"
+    }
+  ]
+}

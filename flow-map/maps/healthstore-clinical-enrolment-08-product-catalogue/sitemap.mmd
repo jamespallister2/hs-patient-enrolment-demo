@@ -1,0 +1,40 @@
+flowchart TD
+  catalogue["Product catalogue – HealthStore Clinical Enrolment Service – NHS"]
+  catalogue_p1["DTx product A – HealthStore Clinical Enrolment Service – NHS"]
+  catalogue_p1_withdraw["Lorem ipsum dolor sit amet (confirm you want to withdraw DTx product A) – HealthStore Clinical Enrolment Service – NHS"]
+  catalogue_add_details["Lorem ipsum (product details) – HealthStore Clinical Enrolment Service – NHS"]
+  catalogue_add_condition["Lorem ipsum (add a condition) – HealthStore Clinical Enrolment Service – NHS"]
+  catalogue_add_conditions["You have added 1 condition – HealthStore Clinical Enrolment Service – NHS"]
+  catalogue_add_check["Lorem ipsum dolor sit amet (check the product details) – HealthStore Clinical Enrolment Service – NHS"]
+  catalogue_p5["DTx product E – HealthStore Clinical Enrolment Service – NHS"]
+
+  catalogue_p1 --> catalogue_p1_withdraw
+  catalogue_p1_withdraw --> catalogue_p1
+  catalogue_p1 --> catalogue_add_details
+  catalogue_add_details --> catalogue_add_condition
+  catalogue_add_condition --> catalogue_add_conditions
+  catalogue_add_conditions --> catalogue_add_check
+  catalogue_add_check --> catalogue_p5
+  catalogue --> catalogue_p1
+  catalogue_p1 --> catalogue
+  catalogue_p1 --> catalogue_p1_withdraw
+  catalogue_p1_withdraw --> catalogue
+  catalogue_p1_withdraw --> catalogue_p1
+  catalogue_add_details --> catalogue
+  catalogue_add_condition --> catalogue
+  catalogue_add_condition --> catalogue_add_details
+  catalogue_add_conditions --> catalogue
+  catalogue_add_conditions --> catalogue_add_details
+  catalogue_add_check --> catalogue
+  catalogue_add_check --> catalogue_add_conditions
+  catalogue_p5 --> catalogue
+  catalogue_add_details --> catalogue_add_check
+  catalogue_add_conditions --> catalogue_add_condition
+  catalogue_add_check --> catalogue_add_details
+  catalogue_add_check --> catalogue_add_condition
+
+  classDef start fill:#53d8fb,stroke:#0f3460,color:#000
+  classDef question fill:#e94560,stroke:#0f3460,color:#fff
+  classDef confirmation fill:#4ecca3,stroke:#0f3460,color:#000
+  classDef error fill:#ff6b6b,stroke:#0f3460,color:#fff
+  class catalogue start

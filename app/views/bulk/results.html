@@ -1,0 +1,133 @@
+{#
+  CES-012 – Validation results for an uploaded file
+  No NHS or X-GOV pattern covers per-row validation of an uploaded file, so this
+  page is assembled from components, as the backlog suggests:
+  NHS Notification banner (counts / problems); NHS Table with a Tag per row
+  (Valid, Error, Duplicate, No PDS match); NHS Details (explain each problem);
+  NHS Pagination; X-GOV MoJ Numeric data (summary counts, also used as filters);
+  MoJ Filter a list (show only rows with problems)
+#}
+{% extends "layout.html" %}
+
+{% set pageName = "Lorem ipsum dolor sit amet (check the results for your file)" %}
+
+{% block beforeContent %}
+  {{ backLink({
+    href: "/bulk/upload",
+    text: "Back"
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <span class="nhsuk-caption-l">{{ b.fileName }}</span>
+  <h1 class="nhsuk-heading-l">{{ pageName }}</h1>
+
+  {% if problemCount %}
+    {{ notificationBanner({
+      heading: {
+        text: "Lorem ipsum dolor sit amet (" + problemCount + " rows have problems)"
+      },
+      html: "<p class=\"nhsuk-body\">Lorem ipsum dolor sit amet, consectetur adipiscing elit (rows with problems will not be enrolled). <a class=\"nhsuk-notification-banner__link\" href=\"/bulk/upload\">Lorem ipsum (upload a corrected file)</a>.</p>"
+    }) }}
+  {% else %}
+    {{ notificationBanner({
+      variant: "success",
+      heading: {
+        text: "Lorem ipsum dolor sit amet (all " + counts.total + " rows can be enrolled)"
+      }
+    }) }}
+  {% endif %}
+
+  {% set base = "/bulk/" + b.id + "/results?_show=" %}
+  {{ appNumericData({
+    items: [
+      { label: "Lorem ipsum (rows in file)", value: counts.total, href: base + "all" },
+      { label: "Valid", value: counts.Valid, href: base + "Valid" },
+      { label: "Error", value: counts.Error, href: base + "Error" },
+      { label: "Duplicate", value: counts.Duplicate, href: base + "Duplicate" },
+      { label: "No PDS match", value: counts["No PDS match"], href: base + "No%20PDS%20match" }
+    ]
+  }) }}
+
+  <form method="get" action="/bulk/{{ b.id }}/results" class="nhsuk-u-margin-bottom-4" novalidate>
+    {{ radios({
+      name: "_show",
+      idPrefix: "show",
+      classes: "nhsuk-radios--inline nhsuk-radios--small",
+      fieldset: {
+        legend: {
+          text: "Lorem ipsum (show)",
+          size: "s"
+        }
+      },
+      value: show,
+      items: [
+        { value: "all", text: "Lorem ipsum (all rows)" },
+        { value: "problems", text: "Lorem ipsum (only rows with problems)" }
+      ],
+      formGroup: {
+        classes: "nhsuk-u-margin-bottom-2"
+      }
+    }) }}
+    {{ button({ text: "Apply", variant: "secondary", small: true }) }}
+  </form>
+
+  {% if paged.rows | length %}
+    {% set rows = [] %}
+    {% for r in paged.rows %}
+      {% set resultHtml %}
+        {{ tag({ text: r.result, colour: r.result | statusColour }) }}
+        {% if r.problem %}
+          {{ details({
+            summaryText: "Lorem ipsum (why)",
+            text: r.problem,
+            classes: "nhsuk-u-margin-top-2 nhsuk-u-margin-bottom-0"
+          }) }}
+        {% endif %}
+      {% endset %}
+      {% set rows = (rows.push([
+        { text: r.row, header: "Row", format: "numeric" },
+        { text: r.nhsNumber | formatNhsNumber, header: "NHS number" },
+        { text: r.patientName or "–", header: "Patient" },
+        { text: r.productName, header: "Product" },
+        { html: resultHtml, header: "Result" }
+      ]), rows) %}
+    {% endfor %}
+
+    {{ table({
+      caption: {
+        text: "Lorem ipsum (rows in your file)",
+        size: "m"
+      },
+      responsive: true,
+      head: [
+        { text: "Row", format: "numeric" },
+        { text: "NHS number" },
+        { text: "Patient" },
+        { text: "Product" },
+        { text: "Result" }
+      ],
+      rows: rows
+    }) }}
+
+    {% if paged.pageCount > 1 %}
+      {{ pagination({
+        previous: paged.previous,
+        next: paged.next,
+        items: paged.items
+      }) }}
+    {% endif %}
+  {% else %}
+    <p>Lorem ipsum dolor sit amet (no rows to show).</p>
+  {% endif %}
+
+  <div class="nhsuk-button-group">
+    {% if counts.Valid %}
+      {{ button({
+        text: "Continue",
+        href: "/bulk/" + b.id + "/check"
+      }) }}
+    {% endif %}
+    <a class="nhsuk-link" href="/bulk/upload">Lorem ipsum (upload a corrected file)</a>
+  </div>
+{% endblock %}

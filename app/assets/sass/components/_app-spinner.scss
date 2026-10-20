@@ -1,0 +1,31 @@
+// Spinner progress indicator – X-GOV: MoJ Spinner in NHS styling
+.app-spinner {
+  @include nhsuk-responsive-margin(6, "bottom");
+  display: flex;
+  align-items: center;
+  gap: nhsuk-spacing(3);
+}
+
+.app-spinner__icon {
+  flex-shrink: 0;
+  width: nhsuk-spacing(7);
+  height: nhsuk-spacing(7);
+  border: nhsuk-spacing(1) solid nhsuk-colour("grey-4");
+  border-top-color: nhsuk-colour("blue");
+  border-radius: 50%;
+  animation: app-spinner-rotate 1s linear infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation-duration: 3s;
+  }
+}
+
+.app-spinner__text {
+  @include nhsuk-font(22, $weight: bold);
+}
+
+@keyframes app-spinner-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}

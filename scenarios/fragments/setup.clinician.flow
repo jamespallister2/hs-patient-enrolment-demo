@@ -1,0 +1,3 @@
+# Log in as Dr Tom Hughes (clinician, one organisation)
+Goto /prototype/sign-in-as/clinician
+WaitForUrl /enrolments

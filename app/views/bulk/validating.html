@@ -1,0 +1,24 @@
+{#
+  CES-011 / CES-012 – File uploaded, checking each row
+  Pattern: X-GOV MoJ Spinner progress indicator (meta refresh, works without JavaScript)
+#}
+{% extends "layout.html" %}
+
+{% set pageName = "Lorem ipsum dolor (checking your file)" %}
+
+{% block pageHead %}
+  <meta http-equiv="refresh" content="3;url=/bulk/{{ b.id }}/results">
+{% endblock %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      <h1 class="nhsuk-heading-l">{{ pageName }}</h1>
+      <p>{{ b.fileName }}</p>
+      {{ appSpinner({
+        text: "Lorem ipsum dolor sit amet (checking " + (b.rows | length) + " rows)"
+      }) }}
+      <p><a class="nhsuk-link" href="/bulk/{{ b.id }}/results">Lorem ipsum (continue if this page does not update)</a></p>
+    </div>
+  </div>
+{% endblock %}

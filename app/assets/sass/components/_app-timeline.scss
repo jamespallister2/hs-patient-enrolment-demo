@@ -1,0 +1,57 @@
+// Timeline – X-GOV: MoJ Timeline in NHS styling (CES-015)
+.app-timeline {
+  @include nhsuk-responsive-margin(5, "bottom");
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: nhsuk-spacing(2);
+    bottom: 0;
+    left: 0;
+    width: nhsuk-spacing(1);
+    background-color: nhsuk-colour("blue");
+  }
+}
+
+.app-timeline__item {
+  position: relative;
+  padding-bottom: nhsuk-spacing(5);
+  padding-left: nhsuk-spacing(4);
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: nhsuk-spacing(2);
+    left: 0;
+    width: nhsuk-spacing(3);
+    height: nhsuk-spacing(1);
+    background-color: nhsuk-colour("blue");
+  }
+}
+
+.app-timeline__header {
+  margin-bottom: nhsuk-spacing(1);
+}
+
+.app-timeline__title {
+  @include nhsuk-font(19, $weight: bold);
+  display: inline;
+  margin: 0 nhsuk-spacing(1) 0 0;
+}
+
+.app-timeline__byline {
+  @include nhsuk-font(19);
+  display: inline;
+  margin: 0;
+  color: $nhsuk-secondary-text-colour;
+}
+
+.app-timeline__date {
+  @include nhsuk-font(16);
+  margin: 0 0 nhsuk-spacing(1);
+}
+
+.app-timeline__description {
+  @include nhsuk-font(16);
+}

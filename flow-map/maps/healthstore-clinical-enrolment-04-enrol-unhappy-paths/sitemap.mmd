@@ -1,0 +1,25 @@
+flowchart TD
+  enrol_nhs_number["Lorem ipsum dolor sit amet (what is the patient's NHS number)? – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_no_match["Lorem ipsum dolor sit amet (no patient found) – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_restricted["Lorem ipsum dolor sit amet (restricted record) – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_deceased["Lorem ipsum dolor sit amet (patient has died) – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_pds_unavailable["Sorry, there is a problem with the service – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_b_duplicate["Lorem ipsum dolor sit amet (patient may already be enrolled on this product) – HealthStore Clinical Enrolment Service – NHS"]
+  enrol_supplier_unavailable["Sorry, there is a problem with the service – HealthStore Clinical Enrolment Service – NHS"]
+
+  enrol_nhs_number --> enrol_no_match
+  enrol_no_match --> enrol_restricted
+  enrol_restricted --> enrol_deceased
+  enrol_deceased --> enrol_pds_unavailable
+  enrol_pds_unavailable --> enrol_b_duplicate
+  enrol_b_duplicate --> enrol_supplier_unavailable
+  enrol_no_match --> enrol_nhs_number
+  enrol_restricted --> enrol_nhs_number
+  enrol_deceased --> enrol_nhs_number
+  enrol_pds_unavailable --> enrol_nhs_number
+
+  classDef start fill:#53d8fb,stroke:#0f3460,color:#000
+  classDef question fill:#e94560,stroke:#0f3460,color:#fff
+  classDef confirmation fill:#4ecca3,stroke:#0f3460,color:#000
+  classDef error fill:#ff6b6b,stroke:#0f3460,color:#fff
+  class enrol_nhs_number start
