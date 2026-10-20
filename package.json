@@ -1,6 +1,6 @@
 {
-  "name": "your-service-name-goes-here",
-  "description": "Rapidly create HTML prototypes of NHS websites and services.",
+  "name": "healthstore-clinical-enrolment-prototype",
+  "description": "Prototype of the HealthStore Clinical Enrolment Service, built with the NHS prototype kit.",
   "main": "app.js",
   "scripts": {
     "start": "node .",
@@ -9,10 +9,9 @@
   "author": "https://github.com/nhsuk/",
   "license": "MIT",
   "dependencies": {
+    "accessible-autocomplete": "^3.0.1",
     "nhsuk-frontend": "^10.6.1",
     "nhsuk-prototype-kit": "^8.5.2"
-  },
-  "devDependencies": {
   },
   "engines": {
     "node": "^22.11.0 || ^24.11.0"
