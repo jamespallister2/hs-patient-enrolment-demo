@@ -18,5 +18,6 @@ require('./routes/enrolments')(router) // CES-010, CES-014, CES-015
 require('./routes/bulk')(router) //       CES-011, CES-012, CES-013
 require('./routes/catalogue')(router) //  CES-005
 require('./routes/versions')(router) // Prototype comparison – not part of the service
+require('./routes/proposed-enrol')(router) // Proposed interaction design screens
 
 module.exports = router
