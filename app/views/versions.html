@@ -1,0 +1,23 @@
+{# Prototype-only version selector; not part of the clinical service. #}
+{% extends "layout.html" %}
+{% set pageName = "Compare enrolment designs" %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      <span class="nhsuk-caption-l">Prototype – not part of the service</span>
+      <h1 class="nhsuk-heading-xl">Compare enrolment designs</h1>
+      <p class="nhsuk-lede-text">Review the original PES journey alongside proposed interaction design changes.</p>
+
+      <h2 class="nhsuk-heading-m">Current — Version 1</h2>
+      <p>James's original enrolment journey. No interaction design changes have been made to these pages.</p>
+      <p><a class="nhsuk-link" href="/prototype/sign-in-as/clinician?next=/enrol/start">Start the current enrolment journey</a></p>
+
+      <hr class="nhsuk-section-break nhsuk-section-break--l nhsuk-section-break--visible">
+
+      <h2 class="nhsuk-heading-m">Proposed — Version 2</h2>
+      <p>This is where we'll add alternative screens for interaction design testing. No proposed journey is published yet.</p>
+      {{ insetText({text: "In preparation — the original journey is still available above."}) }}
+    </div>
+  </div>
+{% endblock %}
