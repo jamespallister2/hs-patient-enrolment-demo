@@ -26,8 +26,10 @@
 }) }}
 {% else %}<p>No patients in this cohort yet.</p>{% endif %}
 {% if cohort.status == "Draft" %}
-{{ button({ text: "Add patients", href: "/proposed/cohort/add" }) }}
-<p><a href="/proposed/cohort/review">Check cohort before submission</a></p>
+<h2 class="nhsuk-heading-m">Ready to submit?</h2>
+<p>Review the cohort and check which patients are ready before submitting them for enrolment.</p>
+{{ button({ text: "Review and submit cohort", href: "/proposed/cohort/review" }) }}
+<p><a class="nhsuk-link" href="/proposed/cohort/add">Add more patients</a></p>
 {% else %}<p><a href="/proposed/cohort/outcome">View enrolment outcomes</a></p>{% endif %}
 </div></div>
 {% endblock %}
