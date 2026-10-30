@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% set pageName = "Choose a condition or pathway" %}
+{% block beforeContent %}{{ backLink({ href: "/proposed/enrol/existing-enrolments", text: "Back" }) }}{% endblock %}
+{% block content %}
+<div class="nhsuk-grid-row"><div class="nhsuk-grid-column-two-thirds">
+  <h1 class="nhsuk-heading-xl">Choose a condition or pathway</h1>
+  <p>Priya Patel</p>
+  <form action="/proposed/enrol/flow/choose" method="get">
+    {{ radios({
+      idPrefix: "condition",
+      name: "condition",
+      fieldset: { legend: { text: "Which condition or pathway is the patient being enrolled for?", size: "m" } },
+      items: [
+        { value: "copd", text: "COPD" },
+        { value: "asthma", text: "Asthma" }
+      ]
+    }) }}
+    {{ button({ text: "Continue" }) }}
+  </form>
+</div></div>
+{% endblock %}
