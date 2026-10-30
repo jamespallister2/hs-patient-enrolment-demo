@@ -46,6 +46,9 @@ module.exports = function (router) {
     if (!dtx) return next()
     res.render('proposed/enrol/patient-dtx', { dtx })
   })
+  router.get('/proposed/enrol/start', function (req, res) {
+    res.render('proposed/enrol/start')
+  })
   router.get('/proposed/enrol/flow', function (req, res) {
     res.render('proposed/enrol/flow-home')
   })
