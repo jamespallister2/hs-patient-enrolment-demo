@@ -71,6 +71,8 @@ module.exports = function (router) {
     const tag = (label, colour) => '<strong class="nhsuk-tag nhsuk-tag--' + colour + '">' + label + '</strong>'
     res.render('proposed/enrol/flow-confirm', {
       outcome,
+      selectedDtx: ['DTx product C', 'myCOPD', 'Asthma DTx product A', 'Asthma DTx product B'].includes(req.query.dtx) ? req.query.dtx : 'DTx product C',
+      selectedCondition: req.query.condition === 'asthma' ? 'Asthma' : 'COPD',
       processingTag: tag(outcome === 'processing' ? 'Processing' : 'Completed', outcome === 'processing' ? 'yellow' : 'green'),
       outcomeTag: tag(outcome === 'processing' ? 'Awaiting outcome' : outcome === 'accepted' ? 'Accepted' : 'Rejected', outcome === 'processing' ? 'grey' : outcome === 'accepted' ? 'green' : 'red')
     })
