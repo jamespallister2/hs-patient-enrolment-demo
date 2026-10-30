@@ -27,7 +27,9 @@
     {%- endif %}
   {% endset %}
 
-  {% if user %}
+  {% if currentPath == "/proposed/enrol/start" %}
+    {{ header({ service: { text: "Clinical Enrolment Service", href: "/proposed/enrol/start" } }) }}
+  {% elif user %}
     {{ header({
       service: {
         text: serviceName,
