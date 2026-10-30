@@ -2,7 +2,7 @@
 {% extends "layout.html" %}
 {% set pageName = "Check existing enrolments" %}
 {% block beforeContent %}
-  {{ backLink({ href: "/proposed/enrol/nhs-number", text: "Back" }) }}
+  {{ backLink({ href: "/proposed/enrol/flow/select", text: "Back" }) }}
 {% endblock %}
 {% block content %}
   <div class="nhsuk-grid-row">
@@ -37,7 +37,7 @@
       }) }}
       <p>Check the existing enrolments before continuing. An enrolment for the same DTx may not be allowed.</p>
       <div class="nhsuk-button-group">
-        {{ button({ text: "Continue to enrolment", href: "/enrol/b/organisation" }) }}
+        {{ button({ text: "Continue to enrolment", href: "/proposed/enrol/flow/choose" }) }}
         <a class="nhsuk-link" href="/enrolments">Cancel</a>
       </div>
     </div>
