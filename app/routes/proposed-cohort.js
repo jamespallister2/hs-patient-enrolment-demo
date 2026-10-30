@@ -43,12 +43,35 @@ module.exports = function (router) {
     if (p && !c.patients.some(x=>x.key===p.key) && !(p.key==='priya' && c.dtxLabel==='myCOPD')) c.patients.push({...p,issue:null})
     res.redirect('/proposed/cohort/detail')
   })
-  router.get('/proposed/cohort/upload', show('upload', req => ({ uploadError: req.query.error === 'missing' })))
+  const csvColumns = ['nhsNumber','patientGivenName','patientFamilyName','patientDateOfBirth','patientSex','contactEmail','contactPhone','practitionerIdValue','organisationOds','commissionerOds','coverageSiteOds']
+  router.get('/proposed/cohort/template.csv', function(req,res) {
+    res.type('text/csv').attachment('cohort-patients-template.csv')
+    res.send(csvColumns.join(',') + '\n')
+  })
+  router.get('/proposed/cohort/upload', show('upload', req => ({
+    uploadError: req.query.error === 'missing' ? 'Select a CSV file' : req.query.error === 'invalid' ? 'Choose a valid CSV file using the template' : null
+  })))
   router.post('/proposed/cohort/sample-upload', function(req,res) {
-    if (req.query.selected !== 'yes') return res.redirect('/proposed/cohort/upload?error=missing')
-    const c=cohort(req)
-    for (const p of [patients.amara,patients.wei,patients.priya]) {
-      if (!c.patients.some(x=>x.key===p.key)) c.patients.push({...p, issue:p.key==='priya' && c.dtxLabel==='myCOPD' ? 'Potential duplicate enrolment' : null})
+    const c = cohort(req)
+    if (c.status !== 'Draft') return res.redirect('/proposed/cohort/detail')
+    let rows
+    try { rows = JSON.parse(req.body.csvRows || 'null') } catch (e) {}
+    if (!Array.isArray(rows) || rows.length < 1 || rows.length > 100 || rows.some(r => !r || typeof r !== 'object' || csvColumns.some(col => typeof r[col] !== 'string'))) {
+      return res.redirect('/proposed/cohort/upload?error=invalid')
+    }
+    for (const row of rows) {
+      const number = row.nhsNumber.replace(/\s/g,'')
+      const existing = c.patients.some(p => p.nhsNumber.replace(/\s/g,'') === number)
+      const matched = Object.values(patients).find(p => p.nhsNumber.replace(/\s/g,'') === number)
+      const issue = existing ? 'Already in this cohort' :
+        !/^\d{10}$/.test(number) || !row.patientGivenName.trim() || !row.patientFamilyName.trim() || !/^\d{4}-\d{2}-\d{2}$/.test(row.patientDateOfBirth)
+          ? 'Check required patient details' :
+        (number === '9000000068' && c.dtxLabel === 'myCOPD') ? 'Potential duplicate enrolment' : null
+      if (!existing) c.patients.push({
+        key: 'csv-' + number, name: (row.patientGivenName + ' ' + row.patientFamilyName).trim(),
+        nhsNumber: number.replace(/^(\d{3})(\d{3})(\d{4})$/, '$1 $2 $3'),
+        dob: row.patientDateOfBirth, issue
+      })
     }
     res.redirect('/proposed/cohort/detail')
   })
