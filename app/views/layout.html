@@ -51,20 +51,30 @@
       navigation: {
         items: [
           {
+            href: "/proposed/enrol/flow",
+            text: "Patient enrolment",
+            active: true
+          } if currentPath | startsWith("/proposed/enrol"),
+          {
+            href: "/bulk",
+            text: "Cohort enrolment",
+            active: false
+          } if currentPath | startsWith("/proposed/enrol"),
+          {
             href: "/enrolments",
             text: "Enrolments",
             active: currentPath | startsWith("/enrolments") or currentPath | startsWith("/enrol/")
-          } if can("enrolments:view"),
+          } if can("enrolments:view") and not (currentPath | startsWith("/proposed/enrol")),
           {
             href: "/bulk",
             html: bulkNavHtml,
             active: currentPath | startsWith("/bulk")
-          } if can("bulk:upload"),
+          } if can("bulk:upload") and not (currentPath | startsWith("/proposed/enrol")),
           {
             href: "/catalogue",
             text: "Product catalogue",
             active: currentPath | startsWith("/catalogue")
-          } if can("catalogue:manage")
+          } if can("catalogue:manage") and not (currentPath | startsWith("/proposed/enrol"))
         ]
       }
     }) }}
