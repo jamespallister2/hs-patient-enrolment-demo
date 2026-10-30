@@ -1,0 +1,45 @@
+{# Isolated clinical interaction proposal with illustrative enrolments. #}
+{% extends "layout.html" %}
+{% set pageName = "Check existing enrolments" %}
+{% block beforeContent %}
+  {{ backLink({ href: "/proposed/enrol/nhs-number", text: "Back" }) }}
+{% endblock %}
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-full">
+      <h1 class="nhsuk-heading-xl">Check existing enrolments</h1>
+      <h2 class="nhsuk-heading-m">Priya Patel</h2>
+      {{ summaryList({ rows: [
+        { key: { text: "NHS number" }, value: { text: "900 000 0068" } },
+        { key: { text: "Date of birth" }, value: { text: "30 January 2001" } }
+      ] }) }}
+      <h2 class="nhsuk-heading-l">Existing DTx enrolments</h2>
+      <p>Check whether the patient is already enrolled on the digital therapeutic you want to prescribe.</p>
+      {{ table({
+        responsive: true,
+        head: [
+          { text: "DTx product" },
+          { text: "Condition / pathway" },
+          { text: "Outcome" }
+        ],
+        rows: [
+          [
+            { text: "myCOPD" },
+            { text: "COPD" },
+            { html: '<strong class="nhsuk-tag nhsuk-tag--green">Accepted</strong>' }
+          ],
+          [
+            { text: "DTx product B" },
+            { text: "Example condition" },
+            { html: '<strong class="nhsuk-tag nhsuk-tag--red">Rejected</strong>' }
+          ]
+        ]
+      }) }}
+      <p>Check the existing enrolments before continuing. An enrolment for the same DTx may not be allowed.</p>
+      <div class="nhsuk-button-group">
+        {{ button({ text: "Continue to enrolment", href: "/enrol/b/organisation" }) }}
+        <a class="nhsuk-link" href="/enrolments">Cancel</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}
