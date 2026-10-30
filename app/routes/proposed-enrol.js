@@ -55,8 +55,15 @@ module.exports = function (router) {
   router.get('/proposed/enrol/flow/select', function (req, res) {
     res.render('proposed/enrol/flow-select')
   })
+  router.get('/proposed/enrol/flow/condition', function (req, res) {
+    res.render('proposed/enrol/flow-condition')
+  })
   router.get('/proposed/enrol/flow/choose', function (req, res) {
-    res.render('proposed/enrol/flow-choose')
+    const condition = req.query.condition === 'asthma' ? 'asthma' : 'copd'
+    const choices = condition === 'copd'
+      ? [{ value: 'new', text: 'DTx product C' }, { value: 'mycopd', text: 'myCOPD (already accepted)' }]
+      : [{ value: 'asthma-a', text: 'Asthma DTx product A' }, { value: 'asthma-b', text: 'Asthma DTx product B' }]
+    res.render('proposed/enrol/flow-choose', { condition, conditionLabel: condition === 'copd' ? 'COPD' : 'Asthma', choices })
   })
   router.get('/proposed/enrol/flow/confirm', function (req, res) {
     // Demo only: no enrolment data is submitted.
@@ -69,7 +76,10 @@ module.exports = function (router) {
     })
   })
   router.get('/proposed/enrol/flow/review', function (req, res) {
-    res.render('proposed/enrol/flow-review', { duplicate: req.query.dtx === 'mycopd' })
+    const condition = req.query.condition === 'asthma' ? 'asthma' : 'copd'
+    const products = { new: 'DTx product C', mycopd: 'myCOPD', 'asthma-a': 'Asthma DTx product A', 'asthma-b': 'Asthma DTx product B' }
+    const dtx = products[req.query.dtx] || 'DTx product C'
+    res.render('proposed/enrol/flow-review', { duplicate: req.query.dtx === 'mycopd', condition, conditionLabel: condition === 'copd' ? 'COPD' : 'Asthma', dtx })
   })
   router.get('/proposed/enrol/existing-enrolments', function (req, res) {
     res.render('proposed/enrol/existing-enrolments')
