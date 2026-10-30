@@ -1,0 +1,48 @@
+{# Proposed demonstration; mock data only. Submission and viewing are separate experiences. #}
+{% extends "layout.html" %}
+{% set pageName = "Enrolment " + outcome %}
+{% block beforeContent %}
+  {{ backLink({ href: "/versions", text: "Back" }) }}
+{% endblock %}
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      <span class="nhsuk-caption-m">Proposed — Version 2</span>
+      {% if isConfirmation %}
+        {% if outcome == "accepted" %}
+          {{ panel({ heading: { text: "Enrolment accepted", size: "l" }, text: patientName + " has been sent to enrolment and accepted." }) }}
+        {% else %}
+          <h1 class="nhsuk-heading-xl">Enrolment rejected</h1>
+          <p>The enrolment for <strong>{{ patientName }}</strong> was sent but rejected.</p>
+          <p>An enrolment with this originating system reference already exists.</p>
+        {% endif %}
+        <h2 class="nhsuk-heading-m nhsuk-u-margin-top-6">What happens next</h2>
+        <p>You can view the enrolment details or return to patient enrolments.</p>
+      {% else %}
+        <h1 class="nhsuk-heading-xl">{{ patientName }}</h1>
+        <h2 class="nhsuk-heading-m">Enrolment details</h2>
+      {% endif %}
+
+      {{ summaryList({
+        rows: [
+          { key: { text: "NHS number" }, value: { text: nhsNumber } },
+          { key: { text: "Condition / pathway" }, value: { text: "COPD" } },
+          { key: { text: "DTx product" }, value: { text: "myCOPD" } },
+          { key: { text: "Processing status" }, value: { html: '<strong class="nhsuk-tag nhsuk-tag--green">Completed</strong>' } },
+          { key: { text: "Enrolment outcome" }, value: { html: '<strong class="nhsuk-tag nhsuk-tag--' + ('green' if outcome == 'accepted' else 'red') + '">' + ('Accepted' if outcome == 'accepted' else 'Rejected') + '</strong>' } }
+        ]
+      }) }}
+
+      {% if not isConfirmation and outcome == "rejected" %}
+        <h2 class="nhsuk-heading-m">Reason for rejection</h2>
+        <p>An enrolment with this originating system reference already exists.</p>
+      {% endif %}
+      {% if isConfirmation %}
+        <p><a class="nhsuk-link" href="/proposed/enrol/view-details?outcome={{ outcome }}">View enrolment details</a></p>
+      {% else %}
+        <p><a class="nhsuk-link" href="/proposed/enrol/submission-result?outcome={{ outcome }}">See the submission confirmation</a></p>
+      {% endif %}
+      <p><a class="nhsuk-link" href="/versions">Return to design comparisons</a></p>
+    </div>
+  </div>
+{% endblock %}
