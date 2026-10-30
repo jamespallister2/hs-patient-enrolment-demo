@@ -2,7 +2,7 @@
 {% extends "layout.html" %}
 {% set pageName = "No patient found" %}
 {% block beforeContent %}
-  {{ backLink({ href: "/enrol/nhs-number", text: "Back" }) }}
+  {{ backLink({ href: "/proposed/enrol/flow/find", text: "Back" }) }}
 {% endblock %}
 {% block content %}
   <div class="nhsuk-grid-row">
@@ -11,8 +11,8 @@
       <p>We could not find a patient with NHS number <strong>{{ enrol.nhsNumber | formatNhsNumber }}</strong>.</p>
       <p>Check the NHS number and try again.</p>
       <div class="nhsuk-button-group">
-        {{ button({ text: "Check NHS number", href: "/enrol/nhs-number" }) }}
-        <a class="nhsuk-link" href="/enrolments">Cancel</a>
+        {{ button({ text: "Check NHS number", href: "/proposed/enrol/flow/find" }) }}
+        <a class="nhsuk-link" href="/proposed/enrol/flow">Cancel</a>
       </div>
     </div>
   </div>
