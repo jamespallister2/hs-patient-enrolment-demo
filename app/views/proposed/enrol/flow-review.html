@@ -16,6 +16,6 @@
 { key: { text: "Condition / pathway" }, value: { text: conditionLabel } },
 { key: { text: "Digital therapeutic" }, value: { text: dtx } }
 ] }) }}
-{{ button({ text: "Confirm and send to enrolment", href: "/proposed/enrol/flow/confirm?outcome=accepted" }) }}
+{{ button({ text: "Confirm and send to enrolment", href: "/proposed/enrol/flow/confirm?outcome=accepted&condition=" + condition + "&dtx=" + (dtx | urlencode) }) }}
 {% endif %}
 </div></div>{% endblock %}
