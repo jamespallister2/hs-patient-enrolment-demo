@@ -61,6 +61,11 @@
             active: false
           } if currentPath | startsWith("/proposed/enrol"),
           {
+            href: "/catalogue",
+            text: "Product catalogue",
+            active: false
+          } if currentPath | startsWith("/proposed/enrol"),
+          {
             href: "/enrolments",
             text: "Enrolments",
             active: currentPath | startsWith("/enrolments") or currentPath | startsWith("/enrol/")
