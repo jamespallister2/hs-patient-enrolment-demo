@@ -9,39 +9,65 @@
     {% if uploadError %}
       {{ errorSummary({
         titleText: "There is a problem",
-        errorList: [{ text: "Select a CSV file", href: "#cohort-csv" }]
+        errorList: [{ text: uploadError, href: "#cohort-csv" }] 
       }) }}
     {% endif %}
     <h1 class="nhsuk-heading-xl">Import a CSV of patients</h1>
     <p>Upload a prepared CSV file of patients to add them to {{ cohort.name }}.</p>
-    <p><a class="nhsuk-link" href="/bulk/template.csv">Download the CSV template</a></p>
+    <p><a class="nhsuk-link" href="/proposed/cohort/template.csv">Download the CSV template</a></p>
 
     <form id="csv-upload-form" action="/proposed/cohort/sample-upload" method="post">
+      <input type="hidden" id="csv-rows" name="csvRows">
       {{ fileUpload({
         id: "cohort-csv",
         name: "cohortCsv",
         label: { text: "CSV file", classes: "nhsuk-label--m" },
         hint: { text: "Choose a CSV file containing patient details." },
         attributes: { accept: ".csv,text/csv" },
-        errorMessage: { text: "Select a CSV file" } if uploadError
+        errorMessage: { text: uploadError } if uploadError
       }) }}
       {{ button({ text: "Upload and check patients" }) }}
     </form>
-    <p class="nhsuk-body-s">In this prototype, uploading uses sample patient data. No file is sent or stored.</p>
+    <p class="nhsuk-body-s">Prototype only: CSV contents are read in your browser and used to simulate patient checks. No file is sent or stored.</p>
     <script>
-      document.getElementById('csv-upload-form').addEventListener('submit', function (event) {
-        var file = document.getElementById('cohort-csv')
-        if (!file || !file.files || file.files.length === 0) {
-          event.preventDefault()
-          window.location.href = '/proposed/cohort/upload?error=missing'
-          return
-        }
-        if (!/\.csv$/i.test(file.files[0].name)) {
-          event.preventDefault()
-          window.location.href = '/proposed/cohort/upload?error=missing'
-          return
-        }
-        this.action = '/proposed/cohort/sample-upload?selected=yes'
+      document.getElementById('csv-upload-form').addEventListener('submit', async function (event) {
+        event.preventDefault()
+        var fileInput = document.getElementById('cohort-csv')
+        var file = fileInput && fileInput.files && fileInput.files[0]
+        if (!file) { window.location.href = '/proposed/cohort/upload?error=missing'; return }
+        if (!/\.csv$/i.test(file.name)) { window.location.href = '/proposed/cohort/upload?error=invalid'; return }
+        try {
+          var text = await file.text()
+          // Parse standard CSV, including quoted values and escaped quotes.
+          var records = [], row = [], field = '', quoted = false
+          for (var i = 0; i < text.length; i++) {
+            var ch = text[i]
+            if (ch === '"') {
+              if (quoted && text[i + 1] === '"') { field += '"'; i++ }
+              else { quoted = !quoted }
+            } else if (ch === ',' && !quoted) { row.push(field); field = '' }
+            else if ((ch === '\n' || ch === '\r') && !quoted) {
+              if (ch === '\r' && text[i + 1] === '\n') i++
+              row.push(field); field = ''
+              if (row.some(function (v) { return v.trim() })) records.push(row)
+              row = []
+            } else { field += ch }
+          }
+          if (quoted) throw new Error('Unclosed quoted field')
+          row.push(field)
+          if (row.some(function (v) { return v.trim() })) records.push(row)
+          var expected = ['nhsNumber','patientGivenName','patientFamilyName','patientDateOfBirth','patientSex','contactEmail','contactPhone','practitionerIdValue','organisationOds','commissionerOds','coverageSiteOds']
+          var header = (records.shift() || []).map(function (v) { return v.replace(/^\uFEFF/, '').trim() })
+          if (expected.length !== header.length || expected.some(function (key, i) { return header[i] !== key }) || !records.length || records.length > 100) throw new Error('Unexpected CSV structure')
+          var rows = records.map(function (values) {
+            if (values.length !== header.length) throw new Error('Invalid CSV row')
+            var output = {}
+            header.forEach(function (name, i) { output[name] = values[i] })
+            return output
+          })
+          document.getElementById('csv-rows').value = JSON.stringify(rows)
+          this.submit()
+        } catch (error) { window.location.href = '/proposed/cohort/upload?error=invalid' }
       })
     </script>
   </div>
