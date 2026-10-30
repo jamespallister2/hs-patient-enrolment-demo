@@ -26,10 +26,16 @@
 }) }}
 {% else %}<p>No patients in this cohort yet.</p>{% endif %}
 {% if cohort.status == "Draft" %}
-<h2 class="nhsuk-heading-m">Ready to submit?</h2>
-<p>Review the cohort and check which patients are ready before submitting them for enrolment.</p>
-{{ button({ text: "Review and submit cohort", href: "/proposed/cohort/review" }) }}
-<p><a class="nhsuk-link" href="/proposed/cohort/add">Add more patients</a></p>
-{% else %}<p><a href="/proposed/cohort/outcome">View enrolment outcomes</a></p>{% endif %}
+  {% if cohort.patients.length == 0 %}
+    {{ button({ text: "Add patients", href: "/proposed/cohort/add" }) }}
+  {% else %}
+    <p><a class="nhsuk-link" href="/proposed/cohort/add">Add more patients</a></p>
+    <h2 class="nhsuk-heading-m nhsuk-u-margin-top-6">Ready to submit?</h2>
+    <p>Review the cohort and check which patients are ready before submitting them for enrolment.</p>
+    {{ button({ text: "Review and submit cohort", href: "/proposed/cohort/review" }) }}
+  {% endif %}
+{% else %}
+  <p><a href="/proposed/cohort/outcome">View enrolment outcomes</a></p>
+{% endif %}
 </div></div>
 {% endblock %}
