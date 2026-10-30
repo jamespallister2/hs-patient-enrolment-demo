@@ -32,9 +32,9 @@ module.exports = function (router) {
   })
   router.get('/proposed/enrol/patient-dtx/:id', function (req, res, next) {
     const records = {
-      mycopd: { name: 'myCOPD', condition: 'COPD', processing: 'Completed', outcome: 'Accepted' },
-      'product-b': { name: 'DTx product B', condition: 'Example condition', processing: 'Completed', outcome: 'Rejected', reason: 'An enrolment with this originating system reference already exists.' },
-      'product-c': { name: 'DTx product C', condition: 'Example condition', processing: 'Processing', outcome: 'Awaiting outcome' }
+      mycopd: { name: 'myCOPD', condition: 'COPD', processing: 'Completed', outcome: 'Accepted', submitted: '30 October 2026, 08:20', updated: '30 October 2026, 08:21', clinician: 'Dr Tom Hughes', reference: 'DEMO-001', historyEvent: 'Enrolment accepted' },
+      'product-b': { name: 'DTx product B', condition: 'Example condition', processing: 'Completed', outcome: 'Rejected', reason: 'An enrolment with this originating system reference already exists.', submitted: '29 October 2026, 09:10', updated: '29 October 2026, 09:11', clinician: 'Dr Tom Hughes', reference: 'DEMO-002', historyEvent: 'Enrolment rejected' },
+      'product-c': { name: 'DTx product C', condition: 'Example condition', processing: 'Processing', outcome: 'Awaiting outcome', submitted: '30 October 2026, 08:30', updated: '30 October 2026, 08:30', clinician: 'Dr Tom Hughes', reference: 'DEMO-003', historyEvent: 'Awaiting supplier outcome' }
     }
     const dtx = records[req.params.id]
     if (!dtx) return next()
