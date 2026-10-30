@@ -11,6 +11,11 @@
       { key: { text: "NHS number" }, value: { text: nhsNumber | default("900 000 0068") } }
     ] }) }}
     <h2 class="nhsuk-heading-l">Digital therapeutic enrolments</h2>
+    {% if patientKey == "amara" %}
+      <p>Three example enrolments are recorded for this patient. Detailed records are not included in this demonstration.</p>
+    {% elif patientKey == "wei" %}
+      <p>One example enrolment is recorded for this patient. Detailed records are not included in this demonstration.</p>
+    {% else %}
     {{ table({
       responsive: true,
       head: [ { text: "DTx product" }, { text: "Condition / pathway" }, { text: "Processing status" }, { text: "Enrolment outcome" }, { text: "Action" } ],
@@ -35,5 +40,6 @@
         ]
       ]
     }) }}
+    {% endif %}
   </div></div>
 {% endblock %}
