@@ -52,6 +52,10 @@ module.exports = function (router) {
   router.get('/proposed/enrol/flow/choose', function (req, res) {
     res.render('proposed/enrol/flow-choose')
   })
+  router.get('/proposed/enrol/flow/confirm', function (req, res) {
+    // Demo only: no enrolment data is submitted.
+    res.render('proposed/enrol/flow-confirm')
+  })
   router.get('/proposed/enrol/flow/review', function (req, res) {
     res.render('proposed/enrol/flow-review', { duplicate: req.query.dtx === 'mycopd' })
   })
