@@ -12,19 +12,20 @@
 {% block content %}
 <div class="nhsuk-grid-row"><div class="nhsuk-grid-column-full">
   {% if outcome == "accepted" %}
-    {{ panel({ heading: { text: "Enrolment accepted", size: "l" }, text: "Priya Patel's enrolment for DTx product C has been accepted." }) }}
+    {{ panel({ heading: { text: "Enrolment accepted", size: "l" }, text: "Priya Patel's enrolment for {{ selectedDtx }} has been accepted." }) }}
   {% elif outcome == "rejected" %}
     <h1 class="nhsuk-heading-xl">Enrolment rejected</h1>
-    <p>Priya Patel's enrolment for DTx product C was rejected.</p>
+    <p>Priya Patel's enrolment for {{ selectedDtx }} was rejected.</p>
     <p>An enrolment with this originating system reference already exists.</p>
   {% else %}
-    {{ panel({ heading: { text: "Enrolment submitted", size: "l" }, text: "Priya Patel's enrolment for DTx product C has been submitted." }) }}
+    {{ panel({ heading: { text: "Enrolment submitted", size: "l" }, text: "Priya Patel's enrolment for {{ selectedDtx }} has been submitted." }) }}
   {% endif %}
   <h2 class="nhsuk-heading-m">Enrolment details</h2>
   {{ summaryList({ rows: [
     { key: { text: "Patient" }, value: { text: "Priya Patel" } },
     { key: { text: "NHS number" }, value: { text: "900 000 0068" } },
-    { key: { text: "DTx product" }, value: { text: "DTx product C" } },
+    { key: { text: "Condition / pathway" }, value: { text: selectedCondition } },
+    { key: { text: "DTx product" }, value: { text: selectedDtx } },
     { key: { text: "Processing status" }, value: { html: processingTag } },
     { key: { text: "Enrolment outcome" }, value: { html: outcomeTag } }
   ] }) }}
