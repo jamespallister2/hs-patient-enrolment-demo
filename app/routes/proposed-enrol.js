@@ -40,6 +40,21 @@ module.exports = function (router) {
     if (!dtx) return next()
     res.render('proposed/enrol/patient-dtx', { dtx })
   })
+  router.get('/proposed/enrol/flow', function (req, res) {
+    res.render('proposed/enrol/flow-home')
+  })
+  router.get('/proposed/enrol/flow/find', function (req, res) {
+    res.render('proposed/enrol/flow-find')
+  })
+  router.get('/proposed/enrol/flow/select', function (req, res) {
+    res.render('proposed/enrol/flow-select')
+  })
+  router.get('/proposed/enrol/flow/choose', function (req, res) {
+    res.render('proposed/enrol/flow-choose')
+  })
+  router.get('/proposed/enrol/flow/review', function (req, res) {
+    res.render('proposed/enrol/flow-review', { duplicate: req.query.dtx === 'mycopd' })
+  })
   router.get('/proposed/enrol/existing-enrolments', function (req, res) {
     res.render('proposed/enrol/existing-enrolments')
   })
