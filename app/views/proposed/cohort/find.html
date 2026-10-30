@@ -1,0 +1,11 @@
+{% extends "layout.html" %}{% set pageName = "Find a patient" %}{% block beforeContent %}{{ backLink({href:"/proposed/cohort/add",text:"Back"}) }}{% endblock %}{% block content %}
+<div class="nhsuk-grid-row"><div class="nhsuk-grid-column-two-thirds"><h1 class="nhsuk-heading-xl">Find a patient</h1>
+<form action="/proposed/cohort/select" method="get">
+<h2 class="nhsuk-heading-m">Search by NHS number</h2>
+{{ input({id:"nhs-number",name:"nhsNumber",label:{text:"NHS number"},hint:{text:"For example, 900 000 0068"}}) }}
+<h2 class="nhsuk-heading-m">Or search by patient details</h2>
+{{ input({id:"family-name",name:"familyName",label:{text:"Family name"}}) }}
+{{ dateInput({id:"date-of-birth",namePrefix:"dob",fieldset:{legend:{text:"Date of birth"}}}) }}
+{{ input({id:"given-name",name:"givenName",label:{text:"Given name (optional)"}}) }}
+{{ input({id:"postcode",name:"postcode",label:{text:"Postcode (optional)"}}) }}
+{{ button({text:"Search PDS"}) }}</form></div></div>{% endblock %}
