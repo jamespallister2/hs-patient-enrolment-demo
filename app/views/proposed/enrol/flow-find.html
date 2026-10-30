@@ -4,49 +4,33 @@
 {% block content %}
 <div class="nhsuk-grid-row"><div class="nhsuk-grid-column-two-thirds">
   <h1 class="nhsuk-heading-xl">Find a patient</h1>
-  <p>Search for the patient using their NHS number or their details.</p>
-  <h2 class="nhsuk-heading-m">How do you want to search?</h2>
-  <ul class="nhsuk-list">
-    <li><a href="/proposed/enrol/flow/find?method=nhs">By NHS number</a></li>
-    <li><a href="/proposed/enrol/flow/find?method=details">By patient details</a></li>
-  </ul>
-  {% if method == "details" %}
-    <h2 class="nhsuk-heading-m">Search by patient details</h2>
-    <form action="/proposed/enrol/flow/select" method="get">
-      <input type="hidden" name="method" value="details">
-      {{ input({ id: "familyName", name: "familyName", label: { text: "Family name" } }) }}
-      {{ dateInput({
-        id: "dob",
-        namePrefix: "dob",
-        fieldset: { legend: { text: "Date of birth" } },
-        hint: { text: "For example, 30 1 2001" },
-        items: [
-          { name: "day", classes: "nhsuk-input--width-2" },
-          { name: "month", classes: "nhsuk-input--width-2" },
-          { name: "year", classes: "nhsuk-input--width-4" }
-        ]
-      }) }}
-      {{ input({ id: "givenName", name: "givenName", label: { text: "Given name (optional)" } }) }}
-      {{ select({ id: "gender", name: "gender", label: { text: "Gender (optional)" }, items: [
-        { value: "", text: "Select", selected: true },
-        { value: "female", text: "Female" },
-        { value: "male", text: "Male" },
-        { value: "other", text: "Other" }
-      ] }) }}
-      {{ input({ id: "postcode", name: "postcode", label: { text: "Postcode (optional)" }, classes: "nhsuk-input--width-10" }) }}
-      {{ button({ text: "Search PDS" }) }}
-    </form>
-  {% else %}
-    <h2 class="nhsuk-heading-m">Search by NHS number</h2>
-    <form action="/proposed/enrol/flow/select" method="get">
-      <input type="hidden" name="method" value="nhs">
-      {{ input({
-        id: "nhsNumber", name: "nhsNumber", inputmode: "numeric", spellcheck: false, width: 10,
-        label: { text: "NHS number" },
-        hint: { text: "Enter the patient's 10-digit NHS number. You can include spaces." }
-      }) }}
-      {{ button({ text: "Search PDS" }) }}
-    </form>
-  {% endif %}
+  <form action="/proposed/enrol/flow/select" method="get">
+    {{ input({
+      id: "nhsNumber", name: "nhsNumber", inputmode: "numeric", spellcheck: false, width: 10,
+      label: { text: "NHS number" },
+      hint: { text: "If you know it, enter it here and skip the fields below. You can include spaces." }
+    }) }}
+    <p>Or search using the patient's details:</p>
+    {{ input({ id: "familyName", name: "familyName", label: { text: "Family name" } }) }}
+    {{ dateInput({
+      id: "dob", namePrefix: "dob",
+      fieldset: { legend: { text: "Date of birth" } },
+      hint: { text: "For example, 30 1 2001" },
+      items: [
+        { name: "day", classes: "nhsuk-input--width-2" },
+        { name: "month", classes: "nhsuk-input--width-2" },
+        { name: "year", classes: "nhsuk-input--width-4" }
+      ]
+    }) }}
+    {{ input({ id: "givenName", name: "givenName", label: { text: "Given name (optional)" } }) }}
+    {{ select({ id: "gender", name: "gender", label: { text: "Gender (optional)" }, items: [
+      { value: "", text: "Select", selected: true },
+      { value: "female", text: "Female" },
+      { value: "male", text: "Male" },
+      { value: "other", text: "Other" }
+    ] }) }}
+    {{ input({ id: "postcode", name: "postcode", label: { text: "Postcode (optional)" }, classes: "nhsuk-input--width-10" }) }}
+    {{ button({ text: "Search PDS" }) }}
+  </form>
 </div></div>
 {% endblock %}
