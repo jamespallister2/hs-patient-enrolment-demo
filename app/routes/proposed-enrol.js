@@ -40,6 +40,9 @@ module.exports = function (router) {
     if (!dtx) return next()
     res.render('proposed/enrol/patient-dtx', { dtx })
   })
+  router.get('/proposed/enrol/existing-enrolments', function (req, res) {
+    res.render('proposed/enrol/existing-enrolments')
+  })
   router.get('/proposed/enrol/delete', function (req, res) {
     res.render('proposed/enrol/delete')
   })
