@@ -8,6 +8,9 @@ module.exports = function (router) {
     res.locals.enrol = Object.assign({ nhsNumber: '9000000009' }, enrol)
     res.render('proposed/enrol/no-match')
   })
+  router.get('/proposed/enrol/details-rejected', function (req, res) {
+    res.render('proposed/enrol/details-rejected')
+  })
   router.get('/proposed/enrol/delete', function (req, res) {
     res.render('proposed/enrol/delete')
   })
