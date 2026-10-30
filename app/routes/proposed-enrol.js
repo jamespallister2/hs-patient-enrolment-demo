@@ -50,7 +50,7 @@ module.exports = function (router) {
     res.render('proposed/enrol/flow-home')
   })
   router.get('/proposed/enrol/flow/find', function (req, res) {
-    res.render('proposed/enrol/flow-find')
+    res.render('proposed/enrol/flow-find', { method: req.query.method === 'details' ? 'details' : 'nhs' })
   })
   router.get('/proposed/enrol/flow/select', function (req, res) {
     res.render('proposed/enrol/flow-select')
