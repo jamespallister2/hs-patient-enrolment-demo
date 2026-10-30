@@ -1,7 +1,13 @@
-{% extends "layout.html" %}{% set pageName = "Add patients" %}{% block beforeContent %}{{ backLink({href:"/proposed/cohort/detail",text:"Back"}) }}{% endblock %}{% block content %}
+{% extends "layout.html" %}
+{% set pageName = "Add patients" %}
+{% block beforeContent %}{{ backLink({ href: "/proposed/cohort/detail", text: "Back" }) }}{% endblock %}
+{% block content %}
 <div class="nhsuk-grid-row"><div class="nhsuk-grid-column-two-thirds">
-<h1 class="nhsuk-heading-xl">Add patients</h1><p>Choose how to add patients to {{ cohort.name }}.</p>
+<h1 class="nhsuk-heading-xl">Add patients</h1>
+<p>Choose how to add patients to {{ cohort.name }}.</p>
 <h2 class="nhsuk-heading-m"><a href="/proposed/cohort/find">Find a patient</a></h2>
 <p>Search for a patient using their NHS number or personal details.</p>
 <h2 class="nhsuk-heading-m"><a href="/proposed/cohort/upload">Upload a CSV file</a></h2>
-<p>Upload a prepared list of patients and check any issues before submission.</p></div></div>{% endblock %}
+<p>Upload a prepared list of patients and check any issues before submission.</p>
+</div></div>
+{% endblock %}
