@@ -1,13 +1,24 @@
+{# Illustrative enrolment outcomes: no real enrolment is created. #}
 {% extends "layout.html" %}
-{% set pageName = "Enrolment submitted" %}
-{% block content %}<div class="nhsuk-grid-row"><div class="nhsuk-grid-column-two-thirds">
-{{ panel({ heading: { text: "Enrolment submitted", size: "l" }, text: "Priya Patel's enrolment request for DTx product C has been submitted." }) }}
-<h2 class="nhsuk-heading-m">Enrolment details</h2>
-{{ summaryList({ rows: [
-{ key: { text: "Patient" }, value: { text: "Priya Patel" } },
-{ key: { text: "DTx product" }, value: { text: "DTx product C" } },
-{ key: { text: "Processing status" }, value: { text: "Awaiting outcome" } }
-] }) }}
-<p><a class="nhsuk-link" href="/proposed/enrol/patient">View patient enrolments</a></p>
-<p><a class="nhsuk-link" href="/proposed/enrol/flow">Return to patient enrolment</a></p>
-</div></div>{% endblock %}
+{% set pageName = "Enrolment outcome" %}
+{% block content %}
+<div class="nhsuk-grid-row"><div class="nhsuk-grid-column-full">
+  {% if outcome == "accepted" %}
+    {{ panel({ heading: { text: "Enrolment accepted", size: "l" }, text: "Priya Patel's enrolment for DTx product C has been accepted." }) }}
+  {% elif outcome == "rejected" %}
+    <h1 class="nhsuk-heading-xl">Enrolment rejected</h1>
+    <p>Priya Patel's enrolment for DTx product C was rejected.</p>
+    <p>An enrolment with this originating system reference already exists.</p>
+  {% else %}
+    {{ panel({ heading: { text: "Enrolment submitted", size: "l" }, text: "Priya Patel's enrolment for DTx product C has been submitted." }) }}
+  {% endif %}
+  <h2 class="nhsuk-heading-m">Enrolment details</h2>
+  {{ summaryList({ rows: [
+    { key: { text: "Patient" }, value: { text: "Priya Patel" } },
+    { key: { text: "NHS number" }, value: { text: "900 000 0068" } },
+    { key: { text: "DTx product" }, value: { text: "DTx product C" } },
+    { key: { text: "Processing status" }, value: { html: processingTag } },
+    { key: { text: "Enrolment outcome" }, value: { html: outcomeTag } }
+  ] }) }}
+</div></div>
+{% endblock %}
