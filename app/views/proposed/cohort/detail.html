@@ -1,15 +1,33 @@
-{% extends "layout.html" %}{% set pageName = "Cohort details" %}{% block beforeContent %}{{ backLink({href:"/proposed/cohort",text:"Back to cohorts"}) }}{% endblock %}{% block content %}
+{% extends "layout.html" %}
+{% set pageName = "Cohort details" %}
+{% block beforeContent %}{{ backLink({ href: "/proposed/cohort", text: "Back to cohorts" }) }}{% endblock %}
+{% block content %}
 <div class="nhsuk-grid-row"><div class="nhsuk-grid-column-full">
 <h1 class="nhsuk-heading-xl">{{ cohort.name }} <strong class="nhsuk-tag nhsuk-tag--{% if cohort.status == 'Draft' %}grey{% else %}green{% endif %}">{{ cohort.status }}</strong></h1>
 <h2 class="nhsuk-heading-m">Cohort details</h2>
-{{ summaryList({rows:[{key:{text:"Condition / pathway"},value:{text:cohort.conditionLabel}},{key:{text:"Digital therapeutic"},value:{text:cohort.dtxLabel}}]}) }}
+{{ summaryList({ rows: [
+  { key: { text: "Condition / pathway" }, value: { text: cohort.conditionLabel } },
+  { key: { text: "Digital therapeutic" }, value: { text: cohort.dtxLabel } }
+] }) }}
 <h2 class="nhsuk-heading-m">Patients in this cohort</h2>
 {% if cohort.patients.length %}
-{% set rows=[] %}{% for p in cohort.patients %}{% set statusHtml %}<strong class="nhsuk-tag nhsuk-tag--{% if p.issue %}red{% else %}green{% endif %}">{% if p.issue %}Needs review{% else %}Ready{% endif %}</strong>{% endset %}{% set rows=(rows.push([{text:p.name},{text:p.nhsNumber},{html:statusHtml},{text:p.issue or "No issues identified"}]),rows) %}{% endfor %}
-{{ table({responsive:true,head:[{text:"Patient"},{text:"NHS number"},{text:"Status"},{text:"Issue"}],rows:rows}) }}
+{% set rows = [] %}
+{% for p in cohort.patients %}
+  {% set statusHtml %}<strong class="nhsuk-tag nhsuk-tag--{% if p.issue %}red{% else %}green{% endif %}">{% if p.issue %}Needs review{% else %}Ready{% endif %}</strong>{% endset %}
+  {% set rows = (rows.push([
+    { text: p.name }, { text: p.nhsNumber }, { html: statusHtml },
+    { text: p.issue or "No issues identified" }
+  ]), rows) %}
+{% endfor %}
+{{ table({
+  responsive: true,
+  head: [{ text: "Patient" }, { text: "NHS number" }, { text: "Status" }, { text: "Issue" }],
+  rows: rows
+}) }}
 {% else %}<p>No patients in this cohort yet.</p>{% endif %}
-{% if cohort.status == 'Draft' %}
-{{ button({text:"Add patients",href:"/proposed/cohort/add"}) }}
+{% if cohort.status == "Draft" %}
+{{ button({ text: "Add patients", href: "/proposed/cohort/add" }) }}
 <p><a href="/proposed/cohort/review">Check cohort before submission</a></p>
 {% else %}<p><a href="/proposed/cohort/outcome">View enrolment outcomes</a></p>{% endif %}
-</div></div>{% endblock %}
+</div></div>
+{% endblock %}
