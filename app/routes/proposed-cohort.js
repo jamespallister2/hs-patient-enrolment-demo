@@ -8,7 +8,7 @@ module.exports = function (router) {
   function cohort(req) { return req.session.data.proposedCohort }
   function show(view, extra) { return function (req, res) { res.render('proposed/cohort/' + view, Object.assign({cohort: cohort(req)}, typeof extra === 'function' ? extra(req) : {})) } }
   function guard(req, res, next) { if (!cohort(req)) return res.redirect('/proposed/cohort/new'); next() }
-  function counts(req) { const c = cohort(req); return {ready: c.patients.filter(p => !p.issue).length, issues: c.patients.filter(p => p.issue).length} }
+  function counts(req) { const patients = cohort(req).patients || []; return { cohortStats: { total: patients.length, ready: patients.filter(p => !p.issue).length, issues: patients.filter(p => p.issue).length } } }
   router.get('/proposed/cohort', show('index'))
   router.get('/proposed/cohort/new', show('new'))
   router.post('/proposed/cohort/create', function (req, res) {
