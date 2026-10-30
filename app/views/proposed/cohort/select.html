@@ -1,8 +1,25 @@
-{% extends "layout.html" %}{% set pageName = "Check and add patient" %}{% block beforeContent %}{{ backLink({href:"/proposed/cohort/find",text:"Back"}) }}{% endblock %}{% block content %}
+{% extends "layout.html" %}
+{% set pageName = "Check and add patient" %}
+{% block beforeContent %}{{ backLink({ href: "/proposed/cohort/find", text: "Back" }) }}{% endblock %}
+{% block content %}
 <div class="nhsuk-grid-row"><div class="nhsuk-grid-column-two-thirds">
 <h1 class="nhsuk-heading-xl">Check and add patient</h1>
-{{ summaryList({rows:[{key:{text:"Name"},value:{text:patient.name}},{key:{text:"Date of birth"},value:{text:patient.dob}},{key:{text:"NHS number"},value:{text:patient.nhsNumber}}]}) }}
-{% if duplicate %}<div class="nhsuk-warning-callout"><h2 class="nhsuk-warning-callout__label">Existing enrolment</h2><p>This patient already has an accepted enrolment for {{ cohort.dtxLabel }}. They cannot be added again to this demonstration cohort.</p></div>
+{{ summaryList({ rows: [
+  { key: { text: "Name" }, value: { text: patient.name } },
+  { key: { text: "Date of birth" }, value: { text: patient.dob } },
+  { key: { text: "NHS number" }, value: { text: patient.nhsNumber } }
+] }) }}
+{% if duplicate %}
+<div class="nhsuk-warning-callout">
+<h2 class="nhsuk-warning-callout__label">Existing enrolment</h2>
+<p>This patient may already have an enrolment for {{ cohort.dtxLabel }} or is already in this cohort. They cannot be added again in this demonstration.</p>
+</div>
 <p><a href="/proposed/cohort/find">Search for another patient</a></p>
-{% else %}<form action="/proposed/cohort/add-patient" method="post"><input type="hidden" name="patient" value="{{ patient.key }}">{{ button({text:"Add patient to cohort"}) }}</form>{% endif %}
-</div></div>{% endblock %}
+{% else %}
+<form action="/proposed/cohort/add-patient" method="post">
+<input type="hidden" name="patient" value="{{ patient.key }}">
+{{ button({ text: "Add patient to cohort" }) }}
+</form>
+{% endif %}
+</div></div>
+{% endblock %}
