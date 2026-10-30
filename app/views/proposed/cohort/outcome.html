@@ -1,9 +1,29 @@
-{% extends "layout.html" %}{% set pageName = "Cohort enrolment outcomes" %}{% block beforeContent %}{{ backLink({href:"/proposed/cohort",text:"Back to cohorts"}) }}{% endblock %}{% block content %}
+{% extends "layout.html" %}
+{% set pageName = "Cohort enrolment outcomes" %}
+{% block beforeContent %}{{ backLink({ href: "/proposed/cohort", text: "Back to cohorts" }) }}{% endblock %}
+{% block content %}
 <div class="nhsuk-grid-row"><div class="nhsuk-grid-column-full">
-{{ panel({heading:{text:"Cohort submitted",size:"l"},text:"This is a simulated submission. No real patients have been enrolled."}) }}
+{{ panel({ heading: { text: "Cohort submitted", size: "l" }, text: "This is a simulated submission. No real patients have been enrolled." }) }}
 <h1 class="nhsuk-heading-l">{{ cohort.name }} — enrolment outcomes</h1>
-{{ summaryList({rows:[{key:{text:"Condition / pathway"},value:{text:cohort.conditionLabel}},{key:{text:"Digital therapeutic"},value:{text:cohort.dtxLabel}},{key:{text:"Submitted"},value:{text:ready}},{key:{text:"Not submitted"},value:{text:issues}}]}) }}
+{{ summaryList({ rows: [
+  { key: { text: "Condition / pathway" }, value: { text: cohort.conditionLabel } },
+  { key: { text: "Digital therapeutic" }, value: { text: cohort.dtxLabel } },
+  { key: { text: "Submitted" }, value: { text: ready } },
+  { key: { text: "Not submitted" }, value: { text: issues } }
+] }) }}
 <h2 class="nhsuk-heading-m">Patient outcomes</h2>
-{% set rows=[] %}{% for p in cohort.patients %}{% set rows=(rows.push([{text:p.name},{text:p.nhsNumber},{text:"Demo: " + ("Excluded — potential duplicate" if p.issue else "Accepted")},{text:p.issue or "No issues identified"}]),rows) %}{% endfor %}
-{{ table({responsive:true,head:[{text:"Patient"},{text:"NHS number"},{text:"Outcome"},{text:"Details"}],rows:rows}) }}
-</div></div>{% endblock %}
+{% set rows = [] %}
+{% for p in cohort.patients %}
+{% set resultText = "Excluded — potential duplicate" if p.issue else "Accepted (demo)" %}
+{% set rows = (rows.push([
+  { text: p.name }, { text: p.nhsNumber },
+  { text: resultText }, { text: p.issue or "No issues identified" }
+]), rows) %}
+{% endfor %}
+{{ table({
+  responsive: true,
+  head: [{ text: "Patient" }, { text: "NHS number" }, { text: "Outcome" }, { text: "Details" }],
+  rows: rows
+}) }}
+</div></div>
+{% endblock %}
