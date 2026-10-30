@@ -27,6 +27,19 @@ module.exports = function (router) {
   router.get('/proposed/enrol/view-details', function (req, res) {
     showStatusComparison(req, res, false)
   })
+  router.get('/proposed/enrol/patient', function (req, res) {
+    res.render('proposed/enrol/patient')
+  })
+  router.get('/proposed/enrol/patient-dtx/:id', function (req, res, next) {
+    const records = {
+      mycopd: { name: 'myCOPD', condition: 'COPD', processing: 'Completed', outcome: 'Accepted' },
+      'product-b': { name: 'DTx product B', condition: 'Example condition', processing: 'Completed', outcome: 'Rejected', reason: 'An enrolment with this originating system reference already exists.' },
+      'product-c': { name: 'DTx product C', condition: 'Example condition', processing: 'Processing', outcome: 'Awaiting outcome' }
+    }
+    const dtx = records[req.params.id]
+    if (!dtx) return next()
+    res.render('proposed/enrol/patient-dtx', { dtx })
+  })
   router.get('/proposed/enrol/delete', function (req, res) {
     res.render('proposed/enrol/delete')
   })
