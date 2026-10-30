@@ -1,0 +1,28 @@
+{# Prototype-only proposed view of a rejected single-patient enrolment. #}
+{% extends "layout.html" %}
+{% set pageName = "Amara Okafor — enrolment rejected" %}
+{% block beforeContent %}
+  {{ backLink({ href: "/versions", text: "Back" }) }}
+{% endblock %}
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      <span class="nhsuk-caption-m">Proposed — Version 2</span>
+      <h1 class="nhsuk-heading-xl">Amara Okafor</h1>
+      {{ tag({ text: "Rejected", classes: "nhsuk-tag--red" }) }}
+
+      <h2 class="nhsuk-heading-m nhsuk-u-margin-top-6">Why the enrolment was rejected</h2>
+      <p>An enrolment with this originating system reference already exists.</p>
+
+      <h2 class="nhsuk-heading-m nhsuk-u-margin-top-6">Enrolment details</h2>
+      {{ summaryList({
+        rows: [
+          { key: { text: "NHS number" }, value: { text: "900 000 0033" } },
+          { key: { text: "Condition / pathway" }, value: { text: "COPD" } },
+          { key: { text: "DTx product" }, value: { text: "myCOPD" } },
+          { key: { text: "Outcome" }, value: { text: "Rejected" } }
+        ]
+      }) }}
+    </div>
+  </div>
+{% endblock %}
