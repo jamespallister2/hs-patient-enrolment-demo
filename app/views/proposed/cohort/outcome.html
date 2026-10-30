@@ -8,8 +8,8 @@
 {{ summaryList({ rows: [
   { key: { text: "Condition / pathway" }, value: { text: cohort.conditionLabel } },
   { key: { text: "Digital therapeutic" }, value: { text: cohort.dtxLabel } },
-  { key: { text: "Submitted" }, value: { text: ready } },
-  { key: { text: "Not submitted" }, value: { text: issues } }
+  { key: { text: "Submitted" }, value: { text: cohortStats.ready | string } },
+  { key: { text: "Not submitted" }, value: { text: cohortStats.issues | string } }
 ] }) }}
 <h2 class="nhsuk-heading-m">Patient outcomes</h2>
 {% set rows = [] %}
