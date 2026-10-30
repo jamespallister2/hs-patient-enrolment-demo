@@ -6,6 +6,12 @@
 {% block content %}
 <div class="nhsuk-grid-row">
   <div class="nhsuk-grid-column-two-thirds">
+    {% if uploadError %}
+      {{ errorSummary({
+        titleText: "There is a problem",
+        errorList: [{ text: "Select a CSV file", href: "#cohort-csv" }]
+      }) }}
+    {% endif %}
     <h1 class="nhsuk-heading-xl">Import a CSV of patients</h1>
     <p>Upload a prepared CSV file of patients to add them to {{ cohort.name }}.</p>
     <p><a class="nhsuk-link" href="/bulk/template.csv">Download the CSV template</a></p>
@@ -16,7 +22,8 @@
         name: "cohortCsv",
         label: { text: "CSV file", classes: "nhsuk-label--m" },
         hint: { text: "Choose a CSV file containing patient details." },
-        attributes: { accept: ".csv,text/csv" }
+        attributes: { accept: ".csv,text/csv" },
+        errorMessage: { text: "Select a CSV file" } if uploadError
       }) }}
       {{ button({ text: "Upload and check patients" }) }}
     </form>
