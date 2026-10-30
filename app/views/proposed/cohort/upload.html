@@ -1,12 +1,26 @@
 {% extends "layout.html" %}
-{% set pageName = "Upload a CSV file" %}
-{% block beforeContent %}{{ backLink({ href: "/proposed/cohort/add", text: "Back" }) }}{% endblock %}
+{% set pageName = "Import a CSV of patients" %}
+{% block beforeContent %}
+  {{ backLink({ href: "/proposed/cohort/add", text: "Back" }) }}
+{% endblock %}
 {% block content %}
-<div class="nhsuk-grid-row"><div class="nhsuk-grid-column-two-thirds">
-<h1 class="nhsuk-heading-xl">Upload a CSV file</h1>
-<p>Use the CSV template to prepare patients for {{ cohort.name }}.</p>
-<p><a href="/bulk/template.csv">Download CSV template</a></p>
-<p>For this prototype, use the sample upload to see how validation and duplicate checks might work. No file is uploaded.</p>
-<form method="post" action="/proposed/cohort/sample-upload">{{ button({ text: "Use sample CSV" }) }}</form>
-</div></div>
+<div class="nhsuk-grid-row">
+  <div class="nhsuk-grid-column-two-thirds">
+    <h1 class="nhsuk-heading-xl">Import a CSV of patients</h1>
+    <p>Upload a prepared CSV file of patients to add them to {{ cohort.name }}.</p>
+    <p><a class="nhsuk-link" href="/bulk/template.csv">Download the CSV template</a></p>
+
+    <form action="/proposed/cohort/sample-upload" method="post">
+      {{ fileUpload({
+        id: "cohort-csv",
+        name: "cohortCsv",
+        label: { text: "CSV file", classes: "nhsuk-label--m" },
+        hint: { text: "Choose a CSV file containing patient details." },
+        attributes: { accept: ".csv,text/csv" }
+      }) }}
+      {{ button({ text: "Upload and check patients" }) }}
+    </form>
+    <p class="nhsuk-body-s">In this prototype, uploading uses sample patient data. No file is sent or stored.</p>
+  </div>
+</div>
 {% endblock %}
