@@ -1,14 +1,20 @@
 {% extends "layout.html" %}
 {% set pageName = "Choose a digital therapeutic" %}
-{% block beforeContent %}{{ backLink({ href: "/proposed/enrol/existing-enrolments", text: "Back" }) }}{% endblock %}
-{% block content %}<div class="nhsuk-grid-row"><div class="nhsuk-grid-column-two-thirds">
-<h1 class="nhsuk-heading-xl">Choose a digital therapeutic</h1>
-<p>Priya Patel</p>
-<form action="/proposed/enrol/flow/review" method="get">
-{{ radios({ idPrefix: "dtx", name: "dtx", fieldset: { legend: { text: "Which digital therapeutic do you want to enrol the patient on?", size: "m" } }, items: [
-{ value: "new", text: "DTx product C" },
-{ value: "mycopd", text: "myCOPD (already accepted)" }
-] }) }}
-{{ button({ text: "Continue" }) }}
-</form>
-</div></div>{% endblock %}
+{% block beforeContent %}{{ backLink({ href: "/proposed/enrol/flow/condition", text: "Back" }) }}{% endblock %}
+{% block content %}
+<div class="nhsuk-grid-row"><div class="nhsuk-grid-column-two-thirds">
+  <h1 class="nhsuk-heading-xl">Choose a digital therapeutic</h1>
+  <p>Priya Patel</p>
+  <p><strong>Condition / pathway:</strong> {{ conditionLabel }}</p>
+  <form action="/proposed/enrol/flow/review" method="get">
+    <input type="hidden" name="condition" value="{{ condition }}">
+    {{ radios({
+      idPrefix: "dtx",
+      name: "dtx",
+      fieldset: { legend: { text: "Which digital therapeutic do you want to enrol the patient on?", size: "m" } },
+      items: choices
+    }) }}
+    {{ button({ text: "Continue" }) }}
+  </form>
+</div></div>
+{% endblock %}
