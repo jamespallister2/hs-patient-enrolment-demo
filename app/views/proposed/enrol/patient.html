@@ -6,9 +6,9 @@
 {% endblock %}
 {% block content %}
   <div class="nhsuk-grid-row"><div class="nhsuk-grid-column-full">
-    <h1 class="nhsuk-heading-xl">Priya Patel</h1>
+    <h1 class="nhsuk-heading-xl">{{ patientName | default("Priya Patel") }}</h1>
     {{ summaryList({ rows: [
-      { key: { text: "NHS number" }, value: { text: "900 000 0068" } }
+      { key: { text: "NHS number" }, value: { text: nhsNumber | default("900 000 0068") } }
     ] }) }}
     <h2 class="nhsuk-heading-l">Digital therapeutic enrolments</h2>
     {{ table({
