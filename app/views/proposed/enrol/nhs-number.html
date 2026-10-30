@@ -1,0 +1,27 @@
+{# Proposed V2 — NHS number question. Uses NHS.UK Frontend macros. #}
+{% extends "layout.html" %}
+{% set pageName = "What is the patient's NHS number?" %}
+
+{% block beforeContent %}
+  {{ backLink({ href: "/proposed/enrol/flow", text: "Back" }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      <form method="post" action="/enrol/nhs-number-answer" novalidate>
+        {{ input({
+          id: "proposedNhsNumber",
+          name: "_nhsNumber",
+          inputmode: "numeric",
+          spellcheck: false,
+          autocomplete: "off",
+          width: 10,
+          label: { text: pageName, size: "l", isPageHeading: true },
+          hint: { text: "Enter the patient's 10-digit NHS number. You can include spaces." },
+          value: enrol.nhsNumberEntered
+        }) }}
+        {{ button({ text: "Continue" }) }}
+      </form>    </div>
+  </div>
+{% endblock %}

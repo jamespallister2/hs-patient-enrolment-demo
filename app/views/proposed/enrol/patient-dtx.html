@@ -1,0 +1,37 @@
+{# Illustrative patient DTx enrolment details — read only. All data is sample data. #}
+{% extends "layout.html" %}
+{% set pageName = dtx.name + " enrolment" %}
+{% block beforeContent %}
+  {{ backLink({ href: "/proposed/enrol/patient", text: "Back to patient enrolments" }) }}
+{% endblock %}
+{% block content %}
+  <div class="nhsuk-grid-row"><div class="nhsuk-grid-column-full">
+    <h1 class="nhsuk-heading-xl">{{ dtx.name }}</h1>
+    <p class="nhsuk-body-l">Priya Patel</p>
+
+    <h2 class="nhsuk-heading-m">Enrolment details</h2>
+    {{ summaryList({ rows: [
+      { key: { text: "NHS number" }, value: { text: "900 000 0068" } },
+      { key: { text: "Condition / pathway" }, value: { text: dtx.condition } },
+      { key: { text: "Processing status" }, value: { text: dtx.processing } },
+      { key: { text: "Enrolment outcome" }, value: { text: dtx.outcome } },
+      { key: { text: "Date submitted" }, value: { text: dtx.submitted } },
+      { key: { text: "Submitted by" }, value: { text: dtx.clinician } },
+      { key: { text: "Organisation" }, value: { text: "Northfield NHS Foundation Trust" } },
+      { key: { text: "Enrolment reference" }, value: { text: dtx.reference } }
+    ] }) }}
+
+    {% if dtx.reason %}
+      <h2 class="nhsuk-heading-m">Reason for rejection</h2>
+      <p>{{ dtx.reason }}</p>
+    {% endif %}
+    <h2 class="nhsuk-heading-m">Status history</h2>
+    {{ table({
+      head: [ { text: "Date" }, { text: "Event" } ],
+      rows: [
+        [ { text: dtx.submitted }, { text: "Enrolment submitted" } ],
+        [ { text: dtx.updated }, { text: dtx.historyEvent } ]
+      ]
+    }) }}
+  </div></div>
+{% endblock %}

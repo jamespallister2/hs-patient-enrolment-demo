@@ -1,0 +1,42 @@
+{# Internal prototype index. Not part of the clinical service. #}
+{% extends "layout.html" %}
+{% set pageName = "Compare enrolment designs" %}
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      <span class="nhsuk-caption-l">Prototype – not part of the service</span>
+      <h1 class="nhsuk-heading-xl">Compare enrolment designs</h1>
+      <p>Use the connected proposed journey for reviews. The original journey is unchanged.</p>
+
+      <h2 class="nhsuk-heading-m">Current — Version 1</h2>
+      <p>James's original enrolment journey.</p>
+      <p><a class="nhsuk-link" href="/prototype/sign-in-as/clinician?next=/enrol/start">Start original journey</a></p>
+
+      <hr class="nhsuk-section-break nhsuk-section-break--l nhsuk-section-break--visible">
+
+      <h2 class="nhsuk-heading-m">Proposed — Version 2</h2>
+      <p>Our connected interaction design journey, using sample patient data.</p>
+      <p>{{ button({ text: "Start proposed enrolment journey", href: "/proposed/enrol/start" }) }}</p>
+
+      <h3 class="nhsuk-heading-s">Key screens</h3>
+      <ul class="nhsuk-list nhsuk-list--bullet">
+        <li><a class="nhsuk-link" href="/proposed/enrol/flow/find">Find a patient</a></li>
+        <li><a class="nhsuk-link" href="/proposed/enrol/existing-enrolments">Check existing enrolments</a></li>
+        <li><a class="nhsuk-link" href="/proposed/enrol/patient">Patient overview and individual DTx records</a></li>
+      </ul>
+
+      <h3 class="nhsuk-heading-s">Enrolment outcomes</h3>
+      <ul class="nhsuk-list nhsuk-list--bullet">
+        <li><a class="nhsuk-link" href="/proposed/enrol/flow/confirm?outcome=accepted">Accepted</a></li>
+        <li><a class="nhsuk-link" href="/proposed/enrol/flow/confirm?outcome=rejected">Rejected</a></li>
+        <li><a class="nhsuk-link" href="/proposed/enrol/flow/confirm?outcome=processing">Processing</a></li>
+      </ul>
+
+      <h3 class="nhsuk-heading-s">Other proposals</h3>
+      <ul class="nhsuk-list nhsuk-list--bullet">
+        <li><a class="nhsuk-link" href="/proposed/enrol/no-match">No patient found</a> — clearer result page</li>
+        <li><a class="nhsuk-link" href="/proposed/enrol/delete">Delete enrolment confirmation</a> — replaces browser popup; no records are deleted</li>
+      </ul>
+    </div>
+  </div>
+{% endblock %}

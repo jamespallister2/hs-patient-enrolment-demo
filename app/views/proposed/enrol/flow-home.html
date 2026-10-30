@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% set pageName = "Patient enrolment" %}
+{% block content %}
+<div class="nhsuk-grid-row"><div class="nhsuk-grid-column-full">
+  <h1 class="nhsuk-heading-xl">Patient enrolment</h1>
+  <p>Find a patient and enrol them on a digital therapeutic.</p>
+  {{ button({ text: "Enrol a patient", href: "/proposed/enrol/flow/find" }) }}
+  <h2 class="nhsuk-heading-m">Patient enrolments</h2>
+  {{ table({
+    responsive: true,
+    head: [
+      { text: "Patient" },
+      { text: "NHS number" },
+      { text: "Enrolments" },
+      { text: "Action" }
+    ],
+    rows: [
+      [
+        { text: "Priya Patel" },
+        { text: "900 000 0068" },
+        { text: "3" },
+        { html: '<a class="nhsuk-link" href="/proposed/enrol/patient">View enrolments</a>' }
+      ],
+      [
+        { text: "Amara Okafor" },
+        { text: "900 000 0033" },
+        { text: "3" },
+        { html: '<a class="nhsuk-link" href="/proposed/enrol/patient?patient=amara">View enrolments</a>' }
+      ],
+      [
+        { text: "Wei Chen" },
+        { text: "900 000 0041" },
+        { text: "1" },
+        { html: '<a class="nhsuk-link" href="/proposed/enrol/patient?patient=wei">View enrolments</a>' }
+      ]
+    ]
+  }) }}
+</div></div>
+{% endblock %}
