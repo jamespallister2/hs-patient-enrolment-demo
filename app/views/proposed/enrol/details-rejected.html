@@ -2,12 +2,11 @@
 {% extends "layout.html" %}
 {% set pageName = "Amara Okafor — enrolment rejected" %}
 {% block beforeContent %}
-  {{ backLink({ href: "/versions", text: "Back" }) }}
+  {{ backLink({ href: "/enrolments", text: "Back" }) }}
 {% endblock %}
 {% block content %}
   <div class="nhsuk-grid-row">
     <div class="nhsuk-grid-column-two-thirds">
-      <span class="nhsuk-caption-m">Proposed — Version 2</span>
       <h1 class="nhsuk-heading-xl">Amara Okafor</h1>
       {{ tag({ text: "Rejected", classes: "nhsuk-tag--red" }) }}
 
