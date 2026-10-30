@@ -1,20 +1,20 @@
 {% extends "layout.html" %}
 {% set pageName = "Check enrolment details" %}
-{% block beforeContent %}{{ backLink({ href: "/proposed/enrol/flow/choose", text: "Back" }) }}{% endblock %}
+{% block beforeContent %}{{ backLink({ href: "/proposed/enrol/flow/choose?condition=" + condition, text: "Back" }) }}{% endblock %}
 {% block content %}<div class="nhsuk-grid-row"><div class="nhsuk-grid-column-two-thirds">
 <h1 class="nhsuk-heading-xl">Check enrolment details</h1>
 {% if duplicate %}
 <h2 class="nhsuk-heading-m">Existing enrolment</h2>
 <p>Priya Patel already has an accepted enrolment for myCOPD. Check their existing enrolment before continuing.</p>
 <p><a class="nhsuk-link" href="/proposed/enrol/patient-dtx/mycopd">View existing enrolment</a></p>
-<p><a class="nhsuk-link" href="/proposed/enrol/flow/choose">Choose another digital therapeutic</a></p>
+<p><a class="nhsuk-link" href="/proposed/enrol/flow/choose?condition={{ condition }}">Choose another digital therapeutic</a></p>
 {% else %}
 {{ summaryList({ rows: [
 { key: { text: "Patient" }, value: { text: "Priya Patel" } },
 { key: { text: "NHS number" }, value: { text: "900 000 0068" } },
 { key: { text: "Date of birth" }, value: { text: "30 January 2001" } },
-{ key: { text: "Condition / pathway" }, value: { text: "Example condition" } },
-{ key: { text: "Digital therapeutic" }, value: { text: "DTx product C" } }
+{ key: { text: "Condition / pathway" }, value: { text: conditionLabel } },
+{ key: { text: "Digital therapeutic" }, value: { text: dtx } }
 ] }) }}
 {{ button({ text: "Confirm and send to enrolment", href: "/proposed/enrol/flow/confirm?outcome=accepted" }) }}
 {% endif %}
