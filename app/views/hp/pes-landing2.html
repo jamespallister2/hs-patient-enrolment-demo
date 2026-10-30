@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="format-detection" content="telephone=no">
+<title>Enrol a patient on a health app</title>
+<style>
+  /* Self-contained styles modelled on NHS.UK frontend. No external files needed. */
+  :root {
+    --nhs-blue: #005eb8; --nhs-dark-blue: #003087; --nhs-black: #212b32; --nhs-grey-1: #4c6272;
+    --nhs-grey-4: #d8dde0; --nhs-grey-5: #f0f4f5; --nhs-white: #ffffff; --nhs-green: #007f3b;
+    --nhs-dark-green: #00401e; --nhs-yellow: #ffeb3b; --focus: #ffeb3b;
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--nhs-grey-5); }
+  body { margin: 0; font-family: Frutiger W01, Arial, Helvetica, sans-serif; color: var(--nhs-black);
+         background: var(--nhs-grey-5); font-size: 19px; line-height: 1.47; -webkit-font-smoothing: antialiased; }
+  a { color: var(--nhs-blue); }
+  a:hover { color: #7c2855; }
+  a:focus, .button:focus { outline: 4px solid transparent; background: var(--focus); color: var(--nhs-black); box-shadow: 0 -2px var(--focus), 0 4px var(--nhs-black); text-decoration: none; }
+  p { margin: 0 0 24px; }
+  h1, h2, h3 { margin: 0 0 16px; line-height: 1.2; font-weight: 700; }
+  h1 { font-size: 40px; }
+  .heading-l { font-size: 32px; }
+  .heading-m { font-size: 24px; }
+  .heading-s { font-size: 19px; margin-bottom: 8px; }
+  .width-container { max-width: 960px; margin: 0 auto; padding: 0 16px; }
+  @media (min-width: 641px) { .width-container { padding: 0 32px; } }
+  @media (min-width: 1024px) { .width-container { padding: 0; } }
+  .main-wrapper { padding-top: 40px; padding-bottom: 40px; }
+  .row { display: flex; flex-wrap: wrap; margin: 0 -16px; }
+  .col-half, .col-third, .col-two-thirds, .col-full { padding: 0 16px; width: 100%; }
+  @media (min-width: 641px) {
+    .col-half { width: 50%; } .col-third { width: 33.333%; } .col-two-thirds { width: 66.666%; }
+  }
+  .skip-link { position: absolute; left: -9999px; top: 0; padding: 8px; background: var(--focus); color: var(--nhs-black); }
+  .skip-link:focus { left: 16px; z-index: 10; }
+
+  /* Header */
+  .header { background: var(--nhs-blue); color: var(--nhs-white); }
+  .header__container { display: flex; align-items: center; justify-content: space-between; padding-top: 16px; padding-bottom: 16px; gap: 16px; }
+  .header__service { display: flex; align-items: center; gap: 16px; color: var(--nhs-white); text-decoration: none; }
+  .header__logo { display: inline-block; background: var(--nhs-white); color: var(--nhs-blue); font-weight: 700; font-style: italic;
+                  font-size: 28px; line-height: 1; padding: 4px 8px; letter-spacing: -1px; }
+  .header__service-name { font-size: 19px; }
+  .header__account a { color: var(--nhs-white); background: var(--nhs-dark-blue); padding: 8px 12px; border-radius: 4px; font-size: 16px; }
+
+  /* Phase banner */
+  .phase-banner { background: var(--nhs-white); border-bottom: 1px solid var(--nhs-grey-4); padding: 8px 0; font-size: 14px; }
+  .phase-banner p { margin: 0; }
+  .tag { display: inline-block; border: 1px solid #005eb8; background: #e8f1f8; color: #002f5c; font-weight: 700;
+         padding: 2px 8px; margin-right: 8px; font-size: 16px; line-height: 1.25; }
+
+  /* Hero */
+  .hero { background: var(--nhs-blue); color: var(--nhs-white); }
+  .hero .main-wrapper { padding-top: 56px; padding-bottom: 56px; }
+  .hero a { color: var(--nhs-white); font-weight: 700; }
+  .button-group { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; }
+  .button { display: inline-block; font-weight: 700; font-size: 19px; line-height: 1; padding: 12px 16px; border-radius: 4px;
+            text-decoration: none; border: 2px solid transparent; cursor: pointer; }
+  .button--reverse { background: var(--nhs-white); color: var(--nhs-black); box-shadow: 0 4px 0 var(--nhs-black); }
+  .button--reverse:hover { background: #f2f2f2; color: var(--nhs-black); }
+  .hero a.button--reverse, .hero a.button--reverse:hover { color: var(--nhs-black); }
+  .hero-illustration { width: 100%; max-width: 400px; height: auto; }
+  @media (max-width: 640px) { .hide-on-mobile { display: none; } }
+
+  .section--white { background: var(--nhs-white); }
+
+  /* Numbered steps */
+  .numbered-heading { display: flex; align-items: center; gap: 16px; }
+  .numbered-heading__number { flex: 0 0 auto; width: 48px; height: 48px; border-radius: 50%; background: var(--nhs-blue); color: var(--nhs-white);
+                              display: flex; align-items: center; justify-content: center; font-size: 24px; }
+  .numbered-heading__content { padding-left: 64px; }
+  @media (max-width: 640px) { .numbered-heading__content { padding-left: 0; } }
+  .step { margin-bottom: 32px; }
+  .step-image { width: 100%; max-width: 378px; height: auto; display: block; }
+
+  /* Stats */
+  .stat { font-size: 19px; margin: 8px 0 16px; }
+  .stat strong { display: block; font-size: 36px; line-height: 1.2; }
+
+  /* Quote */
+  .quote-band { background: var(--nhs-blue); color: var(--nhs-white); }
+  .quote { display: flex; gap: 24px; align-items: center; }
+  .quote__avatar { flex: 0 0 auto; width: 100px; height: 100px; border-radius: 50%; background: #d8dde0; }
+  .quote blockquote { margin: 0; font-size: 24px; font-weight: 700; }
+  .quote cite { display: block; font-style: normal; font-weight: 400; font-size: 16px; margin-top: 8px; }
+
+
+  /* Footer */
+  .footer { background: var(--nhs-grey-4); border-top: 4px solid var(--nhs-blue); padding: 24px 0; font-size: 16px; }
+  .footer ul { list-style: none; padding: 0; margin: 0 0 24px; display: flex; flex-wrap: wrap; gap: 8px 32px; }
+  .footer p { margin: 0; color: var(--nhs-grey-1); }
+
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#maincontent">Skip to main content</a>
+
+<header class="header" role="banner">
+  <div class="width-container header__container">
+    <a class="header__service" href="#" aria-label="NHS Enrol a patient on a health app homepage">
+      <span class="header__logo" aria-hidden="true">NHS</span>
+      <span class="header__service-name">Enrol a patient on a health app</span>
+    </a>
+    <nav class="header__account" aria-label="Account"><a href="#">Log in</a></nav>
+  </div>
+</header>
+
+<div class="phase-banner">
+  <div class="width-container">
+    <p><strong class="tag">Beta</strong><span>This is a new service. Your <a href="#">feedback</a> will help us make it better.</span></p>
+  </div>
+</div>
+
+<main id="maincontent" role="main">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="width-container main-wrapper">
+      <div class="row">
+        <div class="col-half">
+          <h1>The simple way to enrol patients on health apps</h1>
+          <p>Sign a patient up to a health app in a few steps. For people working in teams participating in NHS HealthStore in primary and secondary care settings</p>
+          <p>An NHS <a href="https://healthstore-nhs.vercel.app/">HealthStore</a> service</p>
+          <div class="button-group">
+            <a class="button button--reverse" href="#" role="button">Log in with my Care Identity</a>
+          </div>
+        </div>
+        <div class="col-half hide-on-mobile">
+          <!-- Placeholder illustration: swap for your own image -->
+          <svg class="hero-illustration" viewBox="0 0 400 260" role="presentation" aria-hidden="true">
+            <rect x="110" y="70" width="230" height="150" rx="6" fill="#e8edee"/>
+            <rect x="122" y="82" width="206" height="120" fill="#fff"/>
+            <rect x="122" y="82" width="206" height="18" fill="#005eb8"/>
+            <circle cx="140" cy="122" r="6" fill="none" stroke="#4c6272" stroke-width="2"/>
+            <rect x="152" y="119" width="70" height="6" fill="#aeb7bd"/>
+            <circle cx="140" cy="142" r="6" fill="none" stroke="#4c6272" stroke-width="2"/>
+            <rect x="152" y="139" width="54" height="6" fill="#aeb7bd"/>
+            <rect x="132" y="162" width="44" height="14" fill="#007f3b"/>
+            <rect x="90" y="220" width="270" height="10" rx="3" fill="#e8edee"/>
+            <rect x="30" y="20" width="56" height="100" rx="10" fill="#fff"/>
+            <rect x="38" y="34" width="40" height="66" rx="3" fill="#e8f1f8"/>
+            <rect x="46" y="46" width="24" height="24" rx="4" fill="#005eb8"/>
+            <path d="M92 60 H 250 V 70" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="4 6"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Three key points -->
+  <div class="section--white">
+    <div class="width-container main-wrapper">
+      <div class="row">
+        <div class="col-third">
+          <h2 class="heading-s">Initiates NHS App invitation</h2>
+          <p>Go from clinical discussion to initiating the NHS App invite message in a few basic steps</p>
+        </div>
+        <div class="col-third">
+          <h2 class="heading-s">Integrated with PDS</h2>
+          <p>Finds patients using NHS records. Our service alerts the provider and sets up the patient's account</p>
+        </div>
+        <div class="col-third">
+          <h2 class="heading-s">Safety netting built in</h2>
+          <p>Checks what a patient is already on, so they are not enrolled twice.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- How it works -->
+  <div class="width-container main-wrapper">
+    <h2 class="heading-l">How it works</h2>
+
+    <div class="row step">
+      <div class="col-half">
+        <h3 class="heading-m numbered-heading"><span class="numbered-heading__number">1</span><span>Log in</span></h3>
+        <div class="numbered-heading__content"><p>Log in with your NHS smartcard or Care Identity.</p></div>
+      </div>
+      <div class="col-half"><svg class="step-image" viewBox="0 0 378 120" aria-hidden="true"><rect width="378" height="120" fill="#d8dde0"/><text x="189" y="66" text-anchor="middle" font-size="16" fill="#4c6272">Image</text></svg></div>
+    </div>
+
+    <div class="row step">
+      <div class="col-half">
+        <h3 class="heading-m numbered-heading"><span class="numbered-heading__number">2</span><span>Find the patient</span></h3>
+        <div class="numbered-heading__content"><p>Use their NHS number. Or use their name and date of birth.</p></div>
+      </div>
+      <div class="col-half"><svg class="step-image" viewBox="0 0 378 120" aria-hidden="true"><rect width="378" height="120" fill="#d8dde0"/><text x="189" y="66" text-anchor="middle" font-size="16" fill="#4c6272">Image</text></svg></div>
+    </div>
+
+    <div class="row step">
+      <div class="col-half">
+        <h3 class="heading-m numbered-heading"><span class="numbered-heading__number">3</span><span>Check what they are already on</span></h3>
+        <div class="numbered-heading__content"><p>See the health apps the patient already uses. A patient can only be on each app once.</p></div>
+      </div>
+      <div class="col-half"><svg class="step-image" viewBox="0 0 378 120" aria-hidden="true"><rect width="378" height="120" fill="#d8dde0"/><text x="189" y="66" text-anchor="middle" font-size="16" fill="#4c6272">Image</text></svg></div>
+    </div>
+
+  </div>
+
+  <!-- Stats -->
+  <div class="section--white">
+    <div class="width-container main-wrapper">
+      <div class="row">
+        <div class="col-third"><p class="stat"><span>More than</span><strong>[number]</strong><span>patients enrolled</span></p></div>
+        <div class="col-third"><p class="stat"><span>Over</span><strong>[number]</strong><span>users</span></p></div>
+        <div class="col-third"><p class="stat"><span>Works with</span><strong>[number]</strong><span>health apps</span></p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Who can use it -->
+  <div class="width-container main-wrapper">
+    <div class="row">
+      <div class="col-two-thirds">
+        <h2 class="heading-l">Who can use this service</h2>
+        <p>You can use this service if you work in an NHS team that is a participant in NHS HealthStore. This includes GP surgeries and NHS trusts.</p>
+        <p>You need an NHS smartcard or Care Identity to log in. If you do not have one, ask your local smartcard team.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quote -->
+  <div class="quote-band">
+    <div class="width-container main-wrapper">
+      <div class="quote">
+        <div class="quote__avatar" aria-hidden="true"></div>
+        <blockquote>
+          <p>[Add a quote from a user in research.]</p>
+          <cite>[Name, role, organisation]</cite>
+        </blockquote>
+      </div>
+    </div>
+  </div>
+
+
+</main>
+
+<footer class="footer" role="contentinfo">
+  <div class="width-container">
+    <h2 class="heading-s" style="position:absolute;left:-9999px">Support links</h2>
+    <ul>
+      <li><a href="#">Help and support</a></li>
+      <li><a href="#">User guide</a></li>
+      <li><a href="#">Cookies</a></li>
+      <li><a href="#">Accessibility statement</a></li>
+      <li><a href="#">Terms of use</a></li>
+    </ul>
+    <p>© NHS England</p>
+  </div>
+</footer>
+
+</body>
+</html>
