@@ -1,0 +1,42 @@
+{% extends "_layouts/form.njk" %}
+
+{% set type = download.type | lower %}
+{% set confirmButtonText = __("download.create.confirm", type) %}
+{% set title = __("download.create.title", type) %}
+
+{% block form %}
+  {{ heading({
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ __("download.create.description." + download.type) | nhsukMarkdown }}
+
+  {{ dateInput({
+    formGroup: {
+      classes: "nhsuk-u-margin-bottom-8"
+    },
+    fieldset: {
+      legend: {
+        text: __("download.startAt.title") + " (optional)",
+        size: "m"
+      }
+    },
+    hint: __("download.startAt.hint"),
+    decorate: "download.startAt_"
+  }) }}
+
+  {{ dateInput({
+    formGroup: {
+      classes: "nhsuk-u-margin-bottom-8"
+    },
+    fieldset: {
+      legend: {
+        text: __("download.endAt.title") + " (optional)",
+        size: "m"
+      }
+    },
+    hint: __("download.endAt.hint"),
+    decorate: "download.endAt_"
+  }) }}
+{% endblock %}

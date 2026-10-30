@@ -1,0 +1,232 @@
+{% from "upload/_patient-records.njk" import patientRecords with context %}
+
+{% extends "_layouts/form.njk" %}
+
+{% set gridColumns = "full" %}
+{% set hideConfirmButton = true %}
+{% set status = upload.statusFor(account) %}
+{% set title = upload.titleFor(account) %}
+
+{% block beforeContent %}
+  {{ breadcrumb({
+    items: [
+      {
+        text: __("home.show.title"),
+        href: "/"
+      },
+      {
+        text: __("upload.list.title"),
+        href: "/uploads"
+      }
+    ]
+  }) }}
+{% endblock %}
+
+{% block form %}
+  {{ super() }}
+
+  {{ heading({
+    text: title,
+    size: "l"
+  }) }}
+
+  {% if upload.needsReview %}
+  <div class="nhsuk-u-reading-width">
+    {{ __("upload.show.approve.description") | nhsukMarkdown }}
+  </div>
+  {% endif %}
+
+  {% set yearGroupChanges = [] %}
+  {% for change in upload.yearGroupChangeCounts %}
+    {% set yearGroupChanges = yearGroupChanges | push(__mf("upload.yearGroupChanges.count", {
+      count: change.count,
+      from: change.from | yearGroup,
+      to: change.to | yearGroup
+    })) %}
+  {% endfor %}
+
+  {{ summaryList({
+    card: {
+      heading: {
+        text: __("upload.show.summary"),
+        size: "m"
+      },
+      actions: [
+        {
+          text: __("upload.removeRelationships.label"),
+          href: upload.uri + "/bulk-remove-relationships"
+        }
+      ] if status == UploadStatus.Approved and upload.type != UploadType.Report
+    },
+    lastRowBorder: false,
+    rows: summaryRows(upload, {
+      requested: {},
+      assignees: {},
+      uploaded: {} if not upload.isPrivateToSchool else none,
+      fileName: {
+        changeText: __("actions.download"),
+        changeLabel: upload.fileName,
+        href: "#"
+      } if not upload.isPrivateToSchool else none,
+      format: {} if not upload.isPrivateToSchool else none,
+      school: {},
+      yearGroups: {},
+      patients: {} if not upload.isPrivateToSchool else none,
+      yearGroupChanges: {
+        value: yearGroupChanges | nhsukList
+      } if yearGroupChanges.length and not upload.isPrivateToSchool else none,
+      teamStatus: {},
+      submitted: {},
+      approved: {},
+      rejected: {},
+      rejectionReason: {}
+    })
+  }) }}
+
+  {% if status in [UploadStatus.Review, UploadStatus.Rejected] %}
+    {% if upload.pendingPatients.length %}
+      {% include "upload/_pending-records.njk" %}
+    {% endif %}
+
+    {% if upload.type != UploadType.Report and upload.moves.length %}
+      {% include "upload/_school-moves.njk" %}
+    {% endif %}
+
+    {% if upload.pendingContacts.length %}
+      {% include "upload/_contact-changes.njk" %}
+    {% endif %}
+
+    {{ patientRecords({
+      key: "new",
+      patients: upload.newPatients
+    }) }}
+
+    {{ patientRecords({
+      key: "matched",
+      patients: upload.matchedPatients
+    }) }}
+  {% elif status == UploadStatus.Approved %}
+    {% if upload.pendingPatients.length %}
+      {% include "upload/_pending-records.njk" %}
+    {% endif %}
+
+    {% if upload.type != UploadType.Report and upload.moves.length %}
+      {% include "upload/_school-moves.njk" %}
+    {% endif %}
+
+    {% if upload.pendingContacts.length %}
+      {% include "upload/_contact-changes.njk" %}
+    {% endif %}
+
+    {{ patientRecords({
+      key: "imported",
+      patients: upload.patients
+    }) }}
+  {% endif %}
+
+  {% if status == UploadStatus.Invalid %}
+    {% call card({
+      feature: true,
+      heading: {
+        text: __("upload.invalid.title"),
+        classes: "app-card__heading--red",
+        level: 2,
+        size: "m"
+      }
+    }) %}
+      <div class="nhsuk-u-reading-width">
+        {{ actionLink({
+          text: __("upload.edit.label"),
+          href: upload.uri + "/edit/file"
+        }) }}
+      </div>
+
+      {% for row, validations in upload.validations %}
+        {{ heading({
+          text: "Row " + row,
+          level: 3,
+          size: "s"
+        }) }}
+        <ul>
+        {% for key, message in validations %}
+          <li><code>{{ key }}</code> {{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endfor %}
+    {% endcall %}
+  {% elif status == UploadStatus.Failed %}
+    {% call card({
+      classes: "nhsuk-u-margin-bottom-6",
+      feature: true,
+      heading: {
+        text: __("upload.failed.title"),
+        classes: "app-card__heading--red",
+        level: 2,
+        size: "m"
+      }
+    }) %}
+      <div class="nhsuk-u-reading-width">
+        {{ __("upload.failed.description") | nhsukMarkdown }}
+      </div>
+
+      {{ actionLink({
+        text: __("upload.edit.label", upload.type | lower),
+        href: upload.uri + "/edit/file"
+      }) }}
+    {% endcall %}
+
+    {% include "upload/_failed-records.njk" %}
+  {% endif %}
+
+  {% if account.can("approve", upload) and account.can("delete", upload) %}
+    <hr class="nhsuk-section-break nhsuk-section-break--visible nhsuk-section-break--l">
+
+    {{ radios({
+      formGroup: {
+        classes: "nhsuk-u-width-two-thirds"
+      },
+      fieldset: {
+        legend: {
+          text: __("upload.show.decision.title"),
+          size: "m"
+        }
+      },
+      items: [
+        {
+          label: __("upload.show.decision.approve.label", upload.type | lower),
+          value: "approve"
+        } if account.can("approve", upload),
+        {
+          label: __("upload.show.decision.reject.label"),
+          value: "reject",
+          conditional: {
+            html: textarea({
+              label: __("upload.rejectionReason.title"),
+              hint: __("upload.rejectionReason.hint"),
+              decorate: "upload.rejectionReason"
+            })
+          }
+        } if account.can("reject", upload),
+        {
+          label: __("upload.show.decision.delete.label"),
+          value: "delete"
+        } if account.can("delete", upload)
+      ],
+      decorate: "decision"
+    }) }}
+
+    {{ button({
+      text: __("upload.show.decision.confirm")
+    }) }}
+  {% elif account.can("delete", upload) %}
+    <hr class="nhsuk-section-break nhsuk-section-break--visible nhsuk-section-break--l">
+
+    {{ button({
+      text: __("upload.delete.label"),
+      variant: "warning",
+      attributes: {
+        formaction: upload.uri + "/delete"
+      }
+    }) }}
+  {% endif %}
+{% endblock %}

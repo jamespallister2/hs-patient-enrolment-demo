@@ -1,0 +1,53 @@
+{% extends "_layouts/form.njk" %}
+
+{% if isParentFacing %}
+  {% set title = __("clinicBooking.contact.title.parent") %}
+{% else %}
+  {% if patient.contacts.length === 0 or booking.contact.uuid === 'new' %}
+    {% set title = __("clinicBooking.contact.title.team.new") %}
+  {% else %}
+    {% set title = __("clinicBooking.contact.title.team.existing") %}
+  {% endif %}
+{% endif %}
+{% set showContactDetails = true if not patient.isSensitive else false %}
+
+{% block form %}
+  {% call fieldset({
+    legend: {
+      caption: appointmentCaption,
+      heading: title,
+      size: "l"
+    }
+  }) %}
+
+    {{ input({
+      label: __("clinicBooking.contact.fullName.label"),
+      decorate: "booking.contact.fullName"
+    }) }}
+
+    {% include "book-into-a-clinic/form/_parental-relationship.njk" %}
+
+    {{ input({
+      label: __("clinicBooking.contact.email.label") + ("" if isParentFacing else " (optional)"),
+      hint: __("clinicBooking.contact.email.hint") if isParentFacing,
+      decorate: "booking.contact.email"
+    }) if showContactDetails }}
+
+    {{ input({
+      label: __("clinicBooking.contact.tel.label") + " (optional)",
+      hint: __("clinicBooking.contact.tel.hint") if isParentFacing,
+      decorate: "booking.contact.tel"
+    }) if showContactDetails }}
+
+    {{ checkboxes({
+      items: [
+        {
+          label: __("clinicBooking.contact.canSms.label", "you" if isParentFacing else "they"),
+          value: true
+        }
+      ],
+      decorate: "booking.contact.canSms"
+    }) if showContactDetails }}
+
+  {% endcall %}
+{% endblock %}

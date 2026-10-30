@@ -1,0 +1,67 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("patientSession.gillick." + type + ".title") %}
+{% set confirmButtonText = __("patientSession.gillick." + type + ".confirm") %}
+
+{% block form %}
+  {{ heading({
+    caption: patient.fullName,
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ insetText({
+    text: __("patientSession.gillick.text", { patient: patient })
+  }) }}
+
+  {{ radios({
+    fieldset: {
+      legend: __("patientSession.gillick.q1.label")
+    },
+    inline: true,
+    items: getBooleanItems(),
+    decorate: "patientSession.gillick.q1"
+  }) }}
+
+  {{ radios({
+    fieldset: {
+      legend: __("patientSession.gillick.q2.label")
+    },
+    inline: true,
+    items: getBooleanItems(),
+    decorate: "patientSession.gillick.q2"
+  }) }}
+
+  {{ radios({
+    fieldset: {
+      legend: __("patientSession.gillick.q3.label")
+    },
+    inline: true,
+    items: getBooleanItems(),
+    decorate: "patientSession.gillick.q3"
+  }) }}
+
+  {{ radios({
+    fieldset: {
+      legend: __("patientSession.gillick.q4.label")
+    },
+    inline: true,
+    items: getBooleanItems(),
+    decorate: "patientSession.gillick.q4"
+  }) }}
+
+  {{ radios({
+    fieldset: {
+      legend: __("patientSession.gillick.q5.label")
+    },
+    inline: true,
+    items: getBooleanItems(),
+    decorate: "patientSession.gillick.q5"
+  }) }}
+
+  {{ textarea({
+    label: __("patientSession.gillick.note.label") + " (optional)",
+    rows: 3,
+    decorate: "patientSession.gillick.note"
+  }) }}
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("reply.refusalReasonDetails.title." + reply.refusalReason) %}
+
+{% block form %}
+  {{ textarea({
+    label: {
+      caption: reply.patient.fullName,
+      heading: title,
+      size: "l"
+    },
+    decorate: "reply.refusalReasonDetails"
+  }) }}
+{% endblock %}

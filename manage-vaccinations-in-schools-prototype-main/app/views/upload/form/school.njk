@@ -1,0 +1,17 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("upload.school.titleSchoolUser") if account.isSchoolUser else __("upload.school.title") %}
+
+{% block form %}
+  {{ select({
+    label: {
+      heading: title,
+      size: "l"
+    },
+    items: locationItems(data.schools, upload.school_id),
+    decorate: "upload.school_id",
+    attributes: {
+      "data-module": "app-autocomplete"
+    }
+  }) }}
+{% endblock %}

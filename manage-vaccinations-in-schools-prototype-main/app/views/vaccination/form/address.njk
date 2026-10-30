@@ -1,0 +1,73 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("vaccination.address.title") %}
+
+{% block form %}
+  {% call fieldset({
+    legend: {
+      caption: vaccination.patient.fullName,
+      heading: title,
+      size: "l"
+    }
+  }) %}
+    {{ input({
+      label: __("location.name.label"),
+      decorate: "vaccination.locationName"
+    }) }}
+
+    {{ input({
+      label: __("location.addressLine1.label") + " (optional)",
+      autocomplete: "address-line1",
+      decorate: "vaccination.addressLine1"
+    }) }}
+
+    {{ input({
+      label: __("location.addressLine2.label") + " (optional)",
+      autocomplete: "address-line2",
+      decorate: "vaccination.addressLine2"
+    }) }}
+
+    {{ input({
+      classes: "nhsuk-u-width-two-thirds",
+      label: __("location.addressLevel1.label"),
+      autocomplete: "address-level1",
+      decorate: "vaccination.addressLevel1"
+    }) }}
+
+    {{ radios({
+      fieldset: {
+        legend: {
+          text: __("vaccination.country.title")
+        }
+      },
+      items: [
+        {
+          label: __("vaccination.country.england")
+        },
+        {
+          label: __("vaccination.country.scotland")
+        },
+        {
+          label: __("vaccination.country.wales")
+        },
+        {
+          label: __("vaccination.country.ni")
+        },
+        {
+          label: __("vaccination.country.other"),
+          conditional: {
+            html: select({
+              label: __("vaccination.countryOther.title"),
+              items: otherCountryItems(Country, vaccination.countryOther),
+              decorate: "vaccination.countryOther",
+              attributes: {
+                "data-module": "app-autocomplete"
+              }
+            })
+          }
+        }
+      ],
+      decorate: "vaccination.country"
+    }) }}
+  {% endcall %}
+{% endblock %}

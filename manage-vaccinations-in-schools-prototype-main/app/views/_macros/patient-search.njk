@@ -1,0 +1,329 @@
+{%- from "nhsuk/components/button/macro.njk" import button with context -%}
+{%- from "nhsuk/components/card/macro.njk" import card with context -%}
+{%- from "nhsuk/components/details/macro.njk" import details with context -%}
+{%- from "x-nhsuk/decorated/button/macro.njk" import button with context %}
+{%- from "x-nhsuk/decorated/checkboxes/macro.njk" import checkboxes with context %}
+{%- from "x-nhsuk/decorated/date-input/macro.njk" import dateInput with context %}
+{%- from "x-nhsuk/decorated/radios/macro.njk" import radios with context %}
+{%- from "x-nhsuk/decorated/search-input/macro.njk" import searchInput with context -%}
+{%- from "_macros/button-group.njk" import appButtonGroup with context -%}
+
+{% macro appPatientSearch(params) %}
+  {% if session %}
+    {% set showFluVaccineCriteria = session.programme_ids | includes("flu") and view != "record" %}
+    {% set showMMRVaccineCriteria = session.programme_ids | includes("mmr") and view != "record" %}
+  {% else %}
+    {% set showFluVaccineCriteria = data.programme_id | includes("flu") or not data.programme_id %}
+    {% set showMMRVaccineCriteria = data.programme_id | includes("mmr") or not data.programme_id %}
+  {% endif %}
+
+  {% set filterButtonGroup %}
+    {{ appButtonGroup({
+      buttons: [
+        {
+          text: __("search.confirm"),
+          small: true,
+          variant: "secondary",
+          attributes: {
+            formmethod: "post"
+          }
+        },
+        {
+          text: __("search.clear"),
+          href: params.clear or "/patients",
+          small: true,
+          variant: "secondary"
+        } if data.q or data.programme or data.yearGroup or data.dob or data.status or data.hasMissingNhsNumber or data.clinicStatus
+      ]
+    }) }}
+  {% endset %}
+
+  {% call card({
+    classes: "app-filters",
+    feature: true,
+    heading: {
+      text: __("patient.search.label"),
+      level: params.heading.level | default(2)
+    }
+  }) %}
+    {{ searchInput({
+      label: {
+        text: __("search.label"),
+        size: "s"
+      },
+      hint: __("search.hint.patient"),
+      attributes: {
+        formmethod: "post"
+      },
+      decorate: "q"
+    }) }}
+
+    {{ radios({
+      fieldset: {
+        legend: {
+          text: __("search.sort.label"),
+          size: "s"
+        }
+      },
+      small: true,
+      items: sortItems,
+      decorate: "sort"
+    }) if sortItems }}
+
+    {{ checkboxes({
+      fieldset: {
+        legend: {
+          text: __("programme.label"),
+          size: "s"
+        }
+      },
+      small: true,
+      items: programmeItems,
+      decorate: "programme_id"
+    }) if programmeItems }}
+
+    {{ radios({
+      fieldset: {
+        legend: {
+          text: "Clinic status",
+          size: "s"
+        }
+      },
+      small: true,
+      items: radioFilterItems(PatientClinicStatus, data["clinicStatus"], false),
+      decorate: "clinicStatus"
+    }) if not params.hideClinicStatuses }}
+
+    {{ checkboxes({
+      fieldset: {
+        legend: {
+          text: "Additional programmes",
+          size: "s"
+        }
+      },
+      small: true,
+      items: [
+      {
+        label: "Can be offered additional vaccinations",
+        value: true
+      }
+      ],
+      decorate: "canBeOfferedCatchUps"
+    }) if params.showAdditionalProgrammes }}
+
+    {% for name, enums in params.checkboxFilters %}
+      {{ checkboxes({
+        fieldset: {
+          legend: {
+            text: __("patientSession." + name + ".label"),
+            size: "s"
+          }
+        },
+        small: true,
+        items: checkboxFilterItems(enums, data[name]),
+        decorate: name
+      }) if enums }}
+    {% endfor %}
+
+    {% for name, enums in params.radioFilters %}
+      {{ radios({
+        fieldset: {
+          legend: {
+            text: __("patientSession." + name + ".label"),
+            size: "s"
+          }
+        },
+        small: true,
+        items: radioFilterItems(enums, data[name]),
+        decorate: name
+      }) if enums }}
+    {% endfor %}
+
+    {{ radios({
+      small: true,
+      fieldset: {
+        legend: {
+          text: __("patientSession.status.label"),
+          size: "s"
+        }
+      },
+      items: [
+        {
+          label: "Any",
+          value: "none",
+          checked: not data.status or data.status == "none"
+        },
+        {
+          label: PatientStatus.Ineligible,
+          conditional: {
+            html: checkboxes({
+              small: true,
+              items: enumItems(PatientIneligibleStatus),
+              decorate: "patientIneligible"
+            })
+          } if data.status == PatientStatus.Ineligible
+        } if not params.hidePatientIneligibleStatus,
+        {
+          label: PatientStatus.Consent,
+          conditional: {
+            html: checkboxes({
+              small: true,
+              items: enumItems(PatientConsentStatus),
+              decorate: "patientConsent"
+            })
+          } if data.status == PatientStatus.Consent
+        },
+        {
+          label: PatientStatus.Refused,
+          conditional: {
+            html: checkboxes({
+              small: true,
+              items: enumItems(PatientRefusedStatus),
+              decorate: "patientRefused"
+            })
+          } if data.status == PatientStatus.Refused
+        },
+        {
+          label: PatientStatus.Triage,
+          conditional: {
+            html: checkboxes({
+              small: true,
+              items: enumItems(PatientTriageStatus),
+              decorate: "patientTriage"
+            })
+          } if data.status == PatientStatus.Triage
+        },
+        {
+          label: PatientStatus.Due,
+          conditional: {
+            html: (checkboxes({
+              fieldset: {
+                legend: {
+                  text: ProgrammeType.Flu + " vaccine type",
+                  size: "s"
+                }
+              } if not session,
+              small: true,
+              items: [
+                {
+                  label: RecordVaccineCriteria.AlternativeFluInjectionOnly
+                },
+                {
+                  label: RecordVaccineCriteria.IntranasalOnly
+                },
+                {
+                  label: RecordVaccineCriteria.IntranasalPreferred
+                }
+              ],
+              decorate: "vaccineCriteria"
+            }) if showFluVaccineCriteria) + (checkboxes({
+              fieldset: {
+                legend: {
+                  text: ProgrammeType.MMR + " vaccine type",
+                  size: "s"
+                }
+              } if not session,
+              small: true,
+              items: [
+                {
+                  label: RecordVaccineCriteria.NoMMRPreference
+                },
+                {
+                  label: RecordVaccineCriteria.AlternativeMMRInjectionOnly
+                }
+              ],
+              decorate: "vaccineCriteria"
+            }) if showMMRVaccineCriteria)
+          } if data.status == PatientStatus.Due
+        },
+        {
+          label: PatientStatus.Deferred,
+          conditional: {
+            html: checkboxes({
+              small: true,
+              items: enumItems(PatientDeferredStatus),
+              decorate: "patientDeferred"
+            })
+          } if data.status == PatientStatus.Deferred
+        },
+        {
+          label: PatientStatus.PartiallyVaccinated
+        },
+        {
+          label: PatientStatus.Vaccinated,
+          conditional: {
+            html: checkboxes({
+              small: true,
+              items: enumItems(PatientVaccinatedStatus),
+              decorate: "patientVaccinated"
+            })
+          } if data.status == PatientStatus.Vaccinated
+        }
+      ],
+      decorate: "status"
+    }) if not params.hideProgrammeStatuses }}
+
+    {{ checkboxes({
+      fieldset: {
+        legend: {
+          text: __("patient.yearGroup.label"),
+          size: "s"
+        }
+      },
+      small: true,
+      items: yearGroupItems,
+      decorate: "yearGroup"
+    }) if yearGroupItems }}
+
+    {% set searchDetailsHtml %}
+      {{ dateInput({
+        fieldset: {
+          legend: {
+            text: __("patient.dob.label"),
+            size: "s"
+          }
+        },
+        decorate: "dob"
+      }) }}
+
+      {{ checkboxes({
+        fieldset: {
+          legend: {
+            text: __("patient.search.showOnly"),
+            size: "s"
+          }
+        },
+        small: true,
+        items: [
+          {
+            text: __("patient.search.isArchived"),
+            value: "isArchived"
+          },
+          {
+            text: __("patient.search.hasImpairment"),
+            value: "hasImpairment"
+          },
+          {
+            text: __("patient.search.hasAdjustment"),
+            value: "hasAdjustment"
+          },
+          {
+            html: __("patient.search.hasMissingNhsNumber"),
+            value: "hasMissingNhsNumber"
+          }
+        ],
+        decorate: "option"
+      }) }}
+
+      {{ filterButtonGroup | safe if not (programmeItems or statusItems) }}
+    {% endset %}
+
+    {{ details({
+      summary: __("search.advanced"),
+      open: true if data.option,
+      html: searchDetailsHtml
+    }) if not params.hideAdvancedFilters }}
+
+    {{ filterButtonGroup | safe if programmeItems or statusItems }}
+  {% endcall %}
+{% endmacro %}

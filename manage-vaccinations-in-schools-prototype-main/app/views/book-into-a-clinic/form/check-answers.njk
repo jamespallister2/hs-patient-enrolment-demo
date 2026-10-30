@@ -1,0 +1,135 @@
+{% extends "_layouts/form.njk" %}
+
+{% set audience = "parent" if isParentFacing else "team" %}
+{% set confirmButtonText = __("clinicBooking.check-answers.confirm." + audience) %}
+{% set title = __("clinicBooking.check-answers.title", firstName) %}
+{% set structuredNeeds = (additionalNeedsFeatureFlag === AdditionalNeeds.Structured) %}
+{% set canEditContactDetails = true if isParentFacing or not patient.isSensitive else false %}
+
+{% block form %}
+  {{ heading({
+    caption: {
+      text: "Check the appointment details before completing the booking.",
+      placement: "after"
+    },
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ summaryList({
+    card: {
+      heading: {
+        text: __("clinicBooking.check-answers.summary.child"),
+        size: "m"
+      }
+    },
+    lastRowBorder: false,
+    rows: summaryRows(appointment.child if isParentFacing else patient, {
+      fullName: {
+        value: appointment.child.fullFriendlyName if isParentFacing,
+        href: "child" if isParentFacing
+      },
+      preferredName: {
+        href: "child" if isParentFacing
+      },
+      dob: {
+        href: "dob" if isParentFacing
+      },
+      address: {
+        href: "address" if isParentFacing
+      },
+      additionalSupport: {
+        label: __("clinicAppointment.additionalSupport.label"),
+        value: appointment.formatted.additionalSupport,
+        href: "additional-support"
+      } if not structuredNeeds else none,
+      impairments: {
+        href: "impairments"
+      } if structuredNeeds else none,
+      adjustments: {
+        href: "adjustments"
+      } if structuredNeeds else none
+    })
+  }) }}
+
+  {{ summaryList({
+    card: {
+      heading: {
+        text: __("clinicBooking.check-answers.summary.appointment"),
+        size: "m"
+      }
+    },
+    lastRowBorder: false,
+    rows: summaryRows(appointment, {
+      vaccinations: {
+        href: "programmes"
+      },
+      fluVaccineType: {
+        href: "flu-choice"
+      },
+      mmrVaccineType: {
+        href: "mmr-alternative"
+      },
+      location: {
+        href: "clinic-location" if journeyData.journeyType !== ClinicBookingJourneyType.DataMigration
+      },
+      date: {
+        href: "clinic-date" if journeyData.journeyType !== ClinicBookingJourneyType.DataMigration
+      },
+      timeSlot: {
+        href: "appointment-time-range" if (journeyData.journeyType !== ClinicBookingJourneyType.DataMigration) and (not journeyData.preselectedSlot)
+      }
+    })
+  }) }}
+
+  {{ summaryList({
+    card: {
+      heading: {
+        text: __("clinicBooking.check-answers.summary.contact"),
+        size: "m"
+      }
+    },
+    lastRowBorder: false,
+    rows: summaryRows(booking.contact, {
+      fullName: {
+        href: "contact"
+      },
+      relationship: {
+        href: "contact",
+        value: appointment.formatted.parentalRelationship
+      },
+      hasParentalResponsibility: {
+        href: "contact",
+        value: appointment.parentHasParentalResponsibility
+      },
+      email: {
+        href: "contact" if canEditContactDetails
+      },
+      tel: {
+        href: "contact" if canEditContactDetails
+      },
+      canSms: {
+        href: "contact" if canEditContactDetails
+      },
+      communicationNeeds: {
+        href: "communication-needs" if canEditContactDetails
+      }
+    })
+  }) }}
+
+  {{ summaryList({
+    classes: "app-summary-list--full-width",
+    card: {
+      heading: {
+        text: __("clinicBooking.check-answers.summary.healthAnswers"),
+        size: "m"
+      }
+    },
+    rows: healthAnswerRows(
+      appointment.healthAnswers,
+      "health-question-{{key}}",
+      isParentFacing
+    )
+  }) if appointment.healthAnswers }}
+
+{% endblock %}

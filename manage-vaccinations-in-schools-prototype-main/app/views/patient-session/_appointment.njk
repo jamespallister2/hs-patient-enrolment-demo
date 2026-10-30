@@ -1,0 +1,103 @@
+{% set structuredNeeds = (additionalNeedsFeatureFlag === AdditionalNeeds.Structured) %}
+
+{% call card({
+  heading: {
+    text: __("patientSession.clinicAppointment.title"),
+    size: "m"
+  },
+  actions: {
+    items: [
+      {
+        text: __("patientSession.clinicAppointment.edit.label"),
+        href: clinicAppointment.uri.edit
+      },
+      {
+        text: __("patientSession.clinicAppointment.cancel.label"),
+        href: clinicAppointment.uri.cancel
+      }
+    ]
+  } if clinicAppointment and (session.isPlanned or session.isActive)
+}) %}
+
+  {% if patientSession.clinicAttendanceType === ClinicAttendanceType.Appointment %}
+    {# Pre-booked appointment #}
+    {{ summaryList({
+      lastRowBorder: false,
+      rows: summaryRows(clinicAppointment, {
+        child: {
+          value: patient.link.fullName
+        },
+        attendanceType: {
+          label: __("patientSession.clinicAttendanceType.label"),
+          value: patientSession.clinicAttendanceType
+        },
+        bookingReference: {
+          value: clinicAppointment.booking.formatted.bookingReference
+        },
+        date: {},
+        timeSlot: {},
+        programmeTags: {},
+        hasAllHealthAnswers: {
+          href: 'health-questions',
+          changeLabel: 'answers'
+        },
+        impairmentsUnlessNone: {
+          label: __("patient.impairments.label")
+        } if structuredNeeds else none,
+        adjustmentsUnlessNone: {
+          label: __("patient.adjustments.label")
+        } if structuredNeeds else none,
+        additionalSupport: {} if not structuredNeeds else none,
+        contactDetails: {}
+      })
+    }) }}
+  {% else %}
+    {# Drop-in #}
+    {% set programmeTagsHtml = '' %}
+    {% set hasHealthAnswersForAllProgrammes = true %}
+    {% set healthAnswersHtml = 'Answered' %}
+    {% for siblingPatientSession in patientSession.siblingPatientSessions %}
+      {% set programmeTagsHtml = programmeTagsHtml + siblingPatientSession.programme.nameTag + " " %}
+      {% if hasHealthAnswersForAllProgrammes %}
+        {% if (siblingPatientSession.patientProgramme.consentHealthAnswers | length) === 0 %}
+          {% set hasHealthAnswersForAllProgrammes = false %}
+          {% set healthAnswersHtml %}
+            <a href="health-questions">Add answers</a>
+          {% endset %}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+
+    {{ summaryList({
+      lastRowBorder: false,
+      rows: summaryRows(patient, {
+        child: {
+          label: __("clinicAppointment.child.label"),
+          value: patient.link.fullName
+        },
+        attendanceType: {
+          label: __("patientSession.clinicAttendanceType.label"),
+          value: patientSession.clinicAttendanceType
+        },
+        date: {
+          label: __("clinicAppointment.date.label"),
+          value: session.formatted.date
+        },
+        createdAt: {
+          label: __("clinicAppointment.arrivalTime.label"),
+          value: patientSession.formatted.creationTime
+        },
+        programmeTags: {
+          label: __("clinicAppointment.programmeTags.label"),
+          value: programmeTagsHtml
+        },
+        hasAllHealthAnswers: {
+          label: __("clinicAppointment.hasAllHealthAnswers.label"),
+          value: healthAnswersHtml
+        },
+        impairments: {},
+        adjustments: {}
+      })
+    }) }}
+  {% endif %}
+{% endcall %}

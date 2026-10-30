@@ -1,0 +1,23 @@
+{% extends "_layouts/form.njk" %}
+
+{% set confirmButtonText = __("reply.invalidate.confirm") %}
+{% set paths = { back: reply.uri } %}
+{% set title = __("reply.invalidate.title") %}
+
+{% block form %}
+  {{ heading({
+    caption: __("reply.invalidate.caption", { reply: reply }),
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ __("reply.invalidate.description") | nhsukMarkdown }}
+
+  {{ textarea({
+    label: {
+      text: __("reply.note.label"),
+      size: "m"
+    },
+    decorate: "reply.note"
+  }) }}
+{% endblock %}

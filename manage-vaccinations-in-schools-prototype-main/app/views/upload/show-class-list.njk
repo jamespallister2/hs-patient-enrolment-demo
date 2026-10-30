@@ -1,0 +1,180 @@
+{% from "upload/_class-list-records.njk" import classListRecords with context %}
+
+{% extends "_layouts/form.njk" %}
+
+{% set gridColumns = "full" %}
+{% set hideConfirmButton = true %}
+{% set title = upload.titleFor(account) %}
+
+{% block beforeContent %}
+  {{ breadcrumb({
+    items: [
+      {
+        text: __("home.show.title"),
+        href: "/"
+      },
+      {
+        text: __("upload.listSchoolUser.title"),
+        href: "/uploads"
+      }
+    ]
+  }) }}
+{% endblock %}
+
+{% block form %}
+  {{ super() }}
+
+  {{ heading({
+    text: title,
+    size: "l"
+  }) }}
+
+  {% if upload.needsChecking %}
+  <div class="nhsuk-u-reading-width">
+    {{ __("upload.show.submit.description") | nhsukMarkdown }}
+  </div>
+  {% endif %}
+
+  {{ summaryList({
+    card: {
+      heading: {
+        text: __("upload.show.summary"),
+        size: "m"
+      }
+    },
+    lastRowBorder: false,
+    rows: summaryRows(upload, {
+      uploaded: {},
+      fileName: {},
+      format: {},
+      school: {},
+      yearGroups: {},
+      patients: {},
+      schoolStatus: {},
+      submitted: {},
+      approved: {},
+      rejected: {},
+      rejectionReason: {}
+    })
+  }) }}
+
+  {% if upload.status == UploadStatus.Invalid %}
+    {% call card({
+      feature: true,
+      heading: {
+        text: __("upload.invalid.title"),
+        classes: "app-card__heading--red",
+        level: 2,
+        size: "m"
+      }
+    }) %}
+      <div class="nhsuk-u-reading-width">
+        {{ __("upload.invalid.description") | nhsukMarkdown }}
+
+        {{ actionLink({
+          text: __("upload.edit.label"),
+          href: upload.uri + "/edit/file"
+        }) }}
+      </div>
+
+      {% for row, validations in upload.validations %}
+        {{ heading({
+          text: "Row " + row,
+          level: 3,
+          size: "s"
+        }) }}
+        <ul>
+        {% for key, message in validations %}
+          <li><code>{{ key }}</code> {{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endfor %}
+    {% endcall %}
+  {% elif upload.status == UploadStatus.Failed %}
+    {% call card({
+      classes: "nhsuk-u-margin-bottom-6",
+      feature: true,
+      heading: {
+        text: __("upload.failed.title"),
+        classes: "app-card__heading--red",
+        level: 2,
+        size: "m"
+      }
+    }) %}
+      <div class="nhsuk-u-reading-width">
+        {{ __("upload.failed.description") | nhsukMarkdown }}
+      </div>
+
+      {{ actionLink({
+        text: __("upload.edit.label", upload.type | lower),
+        href: upload.uri + "/edit/file"
+      }) }}
+    {% endcall %}
+
+    {% include "upload/_failed-records.njk" %}
+  {% elif upload.status != UploadStatus.Processing %}
+    {% if upload.patientsMovingIn.length > 0 %}
+      {{ heading({
+        caption: {
+          text: "These pupils are in the spreadsheet but are not currently recorded as attending your school in Mavis.",
+          placement: "after"
+        },
+        text: "Pupils listed in your spreadsheet as joining the school",
+        level: 2,
+        size: "m"
+      }) }}
+
+      {{ classListRecords({ patients: upload.patientsMovingIn }) }}
+    {% endif %}
+
+    {% if upload.patientsMovingOut.length > 0 %}
+      {{ heading({
+        caption: {
+          text: "These pupils are recorded as attending your school in Mavis but are not in the spreadsheet.",
+          placement: "after"
+        },
+        text: "Pupils listed in your spreadsheet as no longer at the school",
+        level: 2,
+        size: "m"
+      }) }}
+
+      {{ classListRecords({ patients: upload.patientsMovingOut }) }}
+    {% endif %}
+  {% endif %}
+
+  {% if account.can("submit", upload) %}
+    <hr class="nhsuk-section-break nhsuk-section-break--visible nhsuk-section-break--l">
+
+    {{ appButtonGroup({
+      buttons: [
+        {
+          text: __("upload.submit.confirm"),
+          attributes: {
+            formaction: upload.uri + "/submit"
+          }
+        },
+        {
+          text: __("upload.delete.confirm"),
+          variant: "secondary",
+          attributes: {
+            formaction: upload.uri + "/delete"
+          }
+        } if account.can("delete", upload)
+      ]
+    }) }}
+  {% elif account.can("delete", upload) %}
+    <hr class="nhsuk-section-break nhsuk-section-break--visible nhsuk-section-break--l">
+
+    {{ appButtonGroup({
+      buttons: [
+        {
+          text: __("upload.delete.label"),
+          variant: "secondary",
+          attributes: {
+            formaction: upload.uri + "/delete"
+          }
+        }
+      ]
+    }) }}
+  {% endif %}
+{% endblock %}

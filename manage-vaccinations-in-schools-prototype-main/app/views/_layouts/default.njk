@@ -1,0 +1,123 @@
+{% extends "template.njk" %}
+
+{#- Components -#}
+{%- from "action-link/macro.njk" import actionLink %}
+{%- from "back-link/macro.njk" import backLink %}
+{%- from "breadcrumb/macro.njk" import breadcrumb %}
+{%- from "card/macro.njk" import card %}
+{%- from "code/macro.njk" import code -%}
+{%- from "contents-list/macro.njk" import contentsList %}
+{%- from "details/macro.njk" import details %}
+{%- from "environment-banner/macro.njk" import environmentBanner %}
+{%- from "error-message/macro.njk" import errorMessage %}
+{%- from "error-summary/macro.njk" import errorSummary %}
+{%- from "fieldset/macro.njk" import fieldset %}
+{%- from "footer/macro.njk" import footer %}
+{%- from "header/macro.njk" import header %}
+{%- from "heading/macro.njk" import heading %}
+{%- from "hero/macro.njk" import hero %}
+{%- from "hint/macro.njk" import hint %}
+{%- from "inset-text/macro.njk" import insetText %}
+{%- from "label/macro.njk" import label %}
+{%- from "link/macro.njk" import link %}
+{%- from "notification-banner/macro.njk" import notificationBanner %}
+{%- from "pagination/macro.njk" import pagination %}
+{%- from "panel/macro.njk" import panel with context %}
+{%- from "skip-link/macro.njk" import skipLink %}
+{%- from "summary-list/macro.njk" import summaryList %}
+{%- from "tables/macro.njk" import table %}
+{%- from "tabs/macro.njk" import tabs %}
+{%- from "tag/macro.njk" import tag %}
+{%- from "warning-callout/macro.njk" import warningCallout %}
+
+{#- Decorated components -#}
+{%- from "x-nhsuk/decorated/button/macro.njk" import button with context %}
+{%- from "x-nhsuk/decorated/character-count/macro.njk" import characterCount with context %}
+{%- from "x-nhsuk/decorated/checkboxes/macro.njk" import checkboxes with context %}
+{%- from "x-nhsuk/decorated/date-input/macro.njk" import dateInput with context %}
+{%- from "x-nhsuk/decorated/file-upload/macro.njk" import fileUpload with context %}
+{%- from "x-nhsuk/decorated/input/macro.njk" import input with context %}
+{%- from "x-nhsuk/decorated/password-input/macro.njk" import passwordInput with context %}
+{%- from "x-nhsuk/decorated/radios/macro.njk" import radios with context %}
+{%- from "x-nhsuk/decorated/search-input/macro.njk" import searchInput with context %}
+{%- from "x-nhsuk/decorated/select/macro.njk" import select with context %}
+{%- from "x-nhsuk/decorated/textarea/macro.njk" import textarea with context %}
+
+{#- Application macros -#}
+{%- from "_macros/action-list.njk" import appActionList %}
+{%- from "_macros/add-another.njk" import appAddAnother %}
+{%- from "_macros/badge.njk" import appBadge %}
+{%- from "_macros/button-group.njk" import appButtonGroup with context %}
+{%- from "_macros/data-card.njk" import appDataCard with context %}
+{%- from "_macros/event.njk" import appEvent %}
+{%- from "_macros/section-navigation.njk" import appSectionNavigation %}
+{%- from "_macros/status.njk" import appStatus %}
+{%- from "_macros/timeline.njk" import appTimeline with context %}
+
+{% set assetsName = assetsName | default("application") %}
+
+{% block pageTitle -%}
+  {%- if errors === true or (errors | length) %}Error: {% endif -%}
+  {%- if title %}{{ title }} – {% endif -%}
+  {{ serviceName }} – NHS
+{%- endblock %}
+
+{% block head %}
+  {# Prevent NHS numbers from being treated as phone numbers #}
+  <meta name="format-detection" content="telephone=no">
+
+  <link href="/assets/stylesheets/{{ assetsName }}.css" rel="stylesheet" media="all">
+  <script src="/assets/javascripts/{{ assetsName }}.js" type="module"></script>
+{% endblock %}
+
+{% block header %}
+  {{ environmentBanner(environment) if environment }}
+  {{ header(headerOptions if headerOptions else {
+    service: {
+      text: serviceName,
+      href: "/home"
+    },
+    navigation: {
+      items: navigation.primary
+    },
+    account: {
+      items: [
+        {
+          text: account.nameAndRole,
+          icon: true
+        },
+        {
+          href: "/account/change-role?referrer=" + navigation.referrer,
+          text: __("account.change-role.label")
+        },
+        {
+          href: "/account/sign-out",
+          text: __("account.sign-out.title")
+        }
+      ] if account.role else [
+        {
+          text: __("account.sign-in.title"),
+          href: "/"
+        }
+      ]
+    }
+  }) }}
+{% endblock %}
+
+{% block beforeContent %}
+  {{ backLink({ href: paths.back or back }) if paths.back or back }}
+{% endblock %}
+
+{% block content %}
+  {{ notificationBanner(success) if success }}
+  {{ notificationBanner(message) if message }}
+{% endblock %}
+
+{% block footer %}
+  {{ footer({
+    meta: {
+      text: "Today is " + today,
+      items: navigation.meta
+    }
+  }) }}
+{% endblock %}

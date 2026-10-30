@@ -1,0 +1,59 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("vaccination.decline.title", vaccination.programmeOrVariantNameSentenceCase) %}
+
+{% block form %}
+  {{ radios({
+    fieldset: {
+      legend: {
+        caption: vaccination.patient.fullName,
+        heading: title,
+        size: "l"
+      }
+    },
+    items: [
+      {
+        label: __("vaccination.outcome.absent"),
+        value: VaccinationOutcome.Absent
+      },
+      {
+        label: __("vaccination.outcome.refused"),
+        value: VaccinationOutcome.Refused
+      },
+      {
+        label: __("vaccination.outcome.unwell"),
+        value: VaccinationOutcome.Unwell
+      },
+      {
+        divider: "or"
+      },
+      {
+        label: __("vaccination.outcome.inviteToClinic"),
+        value: VaccinationOutcome.InvitedToClinic
+      },
+      {
+        label: __("vaccination.outcome.delayVaccination"),
+        value: VaccinationOutcome.DelayVaccination,
+        conditional: {
+          html: dateInput({
+            fieldset: {
+              legend: {
+                text: __("triage.statusInvalidAt.title", {
+                  patient: vaccination.patient
+                }),
+                size: "s"
+              }
+            },
+            hint: __("triage.statusInvalidAt.hint", { date: DelayDate }),
+            decorate: "triage.statusInvalidAt_"
+          })
+        }
+      },
+      {
+        label: __("vaccination.outcome.doNotVaccinate"),
+        value: VaccinationOutcome.DoNotVaccinate
+      }
+    ],
+    decorate: "vaccination.outcome"
+  }) }}
+{% endblock %}

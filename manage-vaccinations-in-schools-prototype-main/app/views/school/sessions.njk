@@ -1,0 +1,130 @@
+{% from "school/_navigation.njk" import schoolNavigation with context %}
+
+{% extends "_layouts/form.njk" %}
+
+{% set gridColumns = "full" %}
+{% set hideConfirmButton = true %}
+{% set title = school.name + " – " + __("school.sessions.title") %}
+
+{% set activeSession = sessions | selectattr("isActive") | first %}
+{% set completedSessions = sessions | selectattr("isCompleted") %}
+{% set plannedSessions = sessions | selectattr("isPlanned") %}
+
+{% macro sessionCard(session) %}
+  {% call card({
+    classes: "app-card--compact",
+    heading: {
+      text: session.formatted.date,
+      size: "s",
+      level: 4
+    },
+    href: session.uri
+  }) %}
+    {{ summaryList({
+      classes: "app-summary-list--full-width",
+      lastRowBorder: false,
+      rows: summaryRows(session, {
+        patients: {},
+        programmes: {},
+        yearGroups: {},
+        consentWindow: {}
+      })
+    }) }}
+
+    {{ appButtonGroup({
+      buttons: [
+        {
+          text: __("session.edit.title"),
+          href: session.uri + "/edit",
+          small: true,
+          variant: "secondary"
+        },
+        {
+          classes: "app-button--secondary-warning",
+          text: "Delete",
+          href: session.uri + "/delete",
+          small: true
+        } if session.consentWindow != ConsentWindow.Open
+      ]
+    }) if not session.isCompleted }}
+  {% endcall %}
+{% endmacro %}
+
+{% block beforeContent %}
+  {{ breadcrumb({
+    items: [
+      {
+        text: __("home.show.title"),
+        href: "/"
+      },
+      {
+        text: __("school.list.title"),
+        href: "/schools"
+      },
+      {
+        text: school.name,
+        href: school.uri
+      }
+    ]
+  }) }}
+{% endblock %}
+
+{% block form %}
+  {{ super() }}
+
+  {{ schoolNavigation({
+    school: school,
+    view: "sessions"
+  }) }}
+
+  {{ actionLink({
+    text: __("session.new.label"),
+    href: "/sessions/new"
+  }) if school.isOpen }}
+
+  {% if activeSession %}
+    {{ heading({
+      text: __("school.sessions.isActive"),
+      level: 3,
+      size: "m"
+    }) }}
+
+    <div class="nhsuk-grid-row nhsuk-card-group">
+      <div class="nhsuk-grid-column-one-third nhsuk-card-group__item">
+        {{ sessionCard(activeSession) if activeSession }}
+      </div>
+    </div>
+  {% endif %}
+
+  {% if plannedSessions.length %}
+    {{ heading({
+      text: __("school.sessions.isPlanned"),
+      level: 3,
+      size: "m"
+    }) }}
+
+    <div class="nhsuk-grid-row nhsuk-card-group">
+      {% for session in plannedSessions %}
+        <div class="nhsuk-grid-column-one-third nhsuk-card-group__item">
+          {{ sessionCard(session) }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% if completedSessions.length %}
+    {{ heading({
+      text: __("school.sessions.isCompleted"),
+      level: 3,
+      size: "m"
+    }) }}
+
+    <div class="nhsuk-grid-row nhsuk-card-group">
+      {% for session in completedSessions %}
+        <div class="nhsuk-grid-column-one-third nhsuk-card-group__item">
+          {{ sessionCard(session) }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock %}

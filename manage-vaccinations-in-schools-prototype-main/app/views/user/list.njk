@@ -1,0 +1,46 @@
+{% extends "_layouts/meta.njk" %}
+
+{% set title = __("user.list.title") %}
+
+{% block content %}
+  {{ super() }}
+
+  {{ heading({
+    caption: __("user.list.caption"),
+    text: title,
+    size: "l"
+  }) }}
+
+  {% for role, users in users | groupby("role") %}
+    {% set userRows = [] %}
+    {% for user in users | sort(false, false, "fullName") %}
+      {% set userRows = userRows | push([
+        {
+          html: user.link.fullName or "Not provided"
+        },
+        {
+          html: user.formatted.uid or "Not provided"
+        },
+        {
+          html: user.email or "Not provided"
+        }
+      ]) %}
+    {% endfor %}
+
+    {{ table({
+      classes: "nhsuk-u-margin-bottom-6",
+      id: "users",
+      caption: {
+        classes: "nhsuk-u-font-size-32",
+        text: role
+      },
+      responsive: true,
+      head: [
+        { text: __("user.fullName.label") },
+        { text: __("user.uid.label") },
+        { text: __("user.email.label") }
+      ],
+      rows: userRows
+    }) }}
+  {% endfor %}
+{% endblock %}

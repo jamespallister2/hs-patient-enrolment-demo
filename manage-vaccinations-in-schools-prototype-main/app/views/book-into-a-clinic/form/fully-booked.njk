@@ -1,0 +1,20 @@
+{% extends "_layouts/default.njk" %}
+
+{% set title = __("clinicBooking.fullyBooked.title") %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      {{ heading({
+        text: title,
+        size: "l"
+      }) }}
+
+      {% call insetText() %}
+        {{ __("clinicBooking.fullyBooked.problem", { programmes: programmeNames }) | nhsukMarkdown }}
+      {% endcall %}
+
+      {{ __("clinicBooking.fullyBooked.guidance", { team: team }) | nhsukMarkdown }}
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("appointments.add.title") %}
+{% set confirmButtonText = __("appointments.add.confirm") %}
+
+{% block form %}
+  {{ super() }}
+
+  {{ heading({
+    caption: __("appointments.add.caption", { contact: appointment.contact } ),
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ summaryList({
+    card: {
+      heading: {
+        text: __("patient.label"),
+        size: "m"
+      }
+    },
+    lastRowBorder: false,
+    rows: summaryRows(appointment.child, {
+      fullName: {},
+      preferredNames: {},
+      dob: {},
+      address: {}
+    })
+  }) }}
+
+  {{ summaryList({
+    card: {
+      heading: {
+        text: __("appointments.label"),
+        size: "m"
+      }
+    },
+    lastRowBorder: false,
+    rows: summaryRows(appointment, {
+      programmeTags: {},
+      fluVaccineType: {},
+      mmrVaccineType: {},
+      location: {},
+      date: {},
+      timeSlot: {}
+    })
+  }) }}
+{% endblock %}

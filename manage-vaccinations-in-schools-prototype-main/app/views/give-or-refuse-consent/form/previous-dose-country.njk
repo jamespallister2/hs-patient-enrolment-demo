@@ -1,0 +1,58 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("consent." + key + ".country.title") %}
+
+{% block form %}
+  {{ radios({
+    fieldset: {
+      legend: {
+        heading: title,
+        size: "l"
+      }
+    },
+    items: [
+      {
+        label: __("consent.previousDose.country.england")
+      },
+      {
+        label: __("consent.previousDose.country.scotland")
+      },
+      {
+        label: __("consent.previousDose.country.wales")
+      },
+      {
+        label: __("consent.previousDose.country.ni")
+      },
+      {
+        divider: "or"
+      },
+      {
+        label: __("consent.previousDose.country.other"),
+        value: "Other",
+        conditional: {
+          html: select({
+            label: __("consent.previousDose.countryOther.title"),
+            items: otherCountryItems(Country, consent.previousDose.countryOther),
+            decorate: ["consent", key, "countryOther"],
+            attributes: {
+              "data-module": "app-autocomplete"
+            }
+          })
+        }
+      }
+    ],
+    decorate: ["consent", key, "country"]
+  }) }}
+
+  {{ input({
+    type: "hidden",
+    value: VaccinationOutcome.AlreadyVaccinated,
+    decorate: ["consent", key, "outcome"]
+  }) }}
+
+  {{ input({
+    type: "hidden",
+    value: "1P" if key == "firstDose" else "2P",
+    decorate: ["consent", key, "sequence"]
+  }) }}
+{% endblock %}

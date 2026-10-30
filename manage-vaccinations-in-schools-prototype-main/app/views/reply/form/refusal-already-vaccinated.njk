@@ -1,0 +1,70 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("reply.alreadyVaccinated.title") %}
+
+{% block form %}
+  {{ heading({
+    caption: reply.patient.fullName,
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ dateInput({
+    fieldset: {
+      legend: {
+        text: __("vaccination.administeredAt_date.label"),
+        size: "m"
+      }
+    },
+    hint: __("vaccination.administeredAt_date.hint"),
+    decorate: "vaccination.administeredAt_"
+  }) }}
+
+  {{ radios({
+    fieldset: {
+      legend: {
+        text: __("vaccination.location.label"),
+        size: "m"
+      }
+    },
+    items: [
+      {
+        label: LocationType.Home
+      },
+      {
+        label: LocationType.Clinic,
+        conditional: {
+          html: select({
+            label: __("vaccination.clinic_id.title"),
+            items: locationItems(data.clinics, vaccination.clinic_id),
+            decorate: "vaccination.clinic_id",
+            attributes: {
+              "data-module": "app-autocomplete"
+            }
+          })
+        }
+      },
+      {
+        label: LocationType.School,
+        conditional: {
+          html: select({
+            label: __("vaccination.school_id.title"),
+            items: locationItems(data.schools, vaccination.school_id),
+            decorate: "vaccination.school_id",
+            attributes: {
+              "data-module": "app-autocomplete"
+            }
+          })
+        }
+      },
+      {
+        divider: "or"
+      },
+      {
+        label: LocationType.Other,
+        hint: __("vaccination.locationOther.hint")
+      }
+    ],
+    decorate: "vaccination.locationType"
+  }) }}
+{% endblock %}

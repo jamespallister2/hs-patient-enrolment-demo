@@ -1,0 +1,113 @@
+import path from 'node:path'
+
+import express from 'express'
+
+import { authentication } from './middleware/authentication.js'
+import { enumeration } from './middleware/enumeration.js'
+import { environment } from './middleware/environment.js'
+import { internationalisation } from './middleware/internationalisation.js'
+import { navigation } from './middleware/navigation.js'
+import { notification } from './middleware/notification.js'
+import { performance } from './middleware/performance.js'
+import { referrer } from './middleware/referrer.js'
+import { rollover } from './middleware/rollover.js'
+import { accountRoutes } from './routes/account.js'
+import { activityRoutes } from './routes/activity.js'
+import { bookIntoClinicRoutes } from './routes/book-into-a-clinic.js'
+import { clinicBookingRoutes } from './routes/clinic-booking.js'
+import { clinicRoutes } from './routes/clinic.js'
+import { consentRoutes } from './routes/consent.js'
+import { contactRoutes } from './routes/contact.js'
+import { defaultBatchRoutes } from './routes/default-batch.js'
+import { downloadRoutes } from './routes/download.js'
+import { giveOrRefuseConsentRoutes } from './routes/give-or-refuse-consent.js'
+import { homeRoutes } from './routes/home.js'
+import { moveRoutes } from './routes/move.js'
+import { noticeRoutes } from './routes/notice.js'
+import { patientProgrammeRoutes } from './routes/patient-programme.js'
+import { patientSessionRoutes } from './routes/patient-session.js'
+import { patientRoutes } from './routes/patient.js'
+import { pdsRecordRoutes } from './routes/pds-record.js'
+import { replyRoutes } from './routes/reply.js'
+import { reportRoutes } from './routes/report.js'
+import { reviewRoutes } from './routes/review.js'
+import { scenarioRoutes } from './routes/scenario.js'
+import { schoolRoutes } from './routes/school.js'
+import { sessionAppointmentRoutes } from './routes/session-appointment.js'
+import { sessionRoutes } from './routes/session.js'
+import { teamRoutes } from './routes/team.js'
+import { unmatchedAppointmentRoutes } from './routes/unmatched-appointment.js'
+import { uploadRoutes } from './routes/upload.js'
+import { userRoutes } from './routes/user.js'
+import { vaccinationRoutes } from './routes/vaccination.js'
+import { vaccineRoutes } from './routes/vaccine.js'
+
+const router = express.Router({ strict: true })
+
+// GOV.UK assets path
+router.use(
+  '/assets',
+  express.static(
+    path.join(
+      import.meta.dirname,
+      '../node_modules/govuk-frontend/dist/govuk/assets'
+    )
+  )
+)
+
+router.use(performance)
+router.use(enumeration)
+router.use(environment)
+router.use(internationalisation)
+router.use(authentication, navigation, notification, rollover)
+router.use(referrer)
+
+router.use('/', homeRoutes)
+router.use('/account', accountRoutes)
+router.use('/activity', activityRoutes)
+router.use('/unmatched-appointments', unmatchedAppointmentRoutes)
+router.use('/book-into-a-clinic', bookIntoClinicRoutes) // public-facing clinic booking journey
+router.use('/clinic-bookings', clinicBookingRoutes) // original explorations of clinic booking data
+router.use('/consents', consentRoutes)
+router.use('/downloads', downloadRoutes)
+router.use('/give-or-refuse-consent', giveOrRefuseConsentRoutes)
+router.use('/moves', moveRoutes)
+router.use('/notices', noticeRoutes)
+router.use('/teams', teamRoutes)
+router.use('/teams/:team_id/clinics', clinicRoutes)
+router.use('/contacts', contactRoutes)
+router.use('/patients/:patient_uuid/book-into-a-clinic', bookIntoClinicRoutes)
+router.use(
+  '/patients/:patient_uuid/programmes/:programme_id/replies',
+  replyRoutes
+)
+router.use('/patients/:patient_uuid/programmes', patientProgrammeRoutes)
+router.use('/patients', patientRoutes)
+
+router.use('/pds', pdsRecordRoutes)
+router.use('/reports', reportRoutes)
+router.use('/reports/:programme_id/vaccinations', vaccinationRoutes)
+router.use(
+  '/reports/:programme_id/vaccinations/:vaccination_uuid/patients',
+  patientRoutes
+)
+router.use('/reviews', reviewRoutes)
+router.use('/scenarios', scenarioRoutes)
+router.use('/schools', schoolRoutes)
+router.use('/sessions/:session_id/book-into-a-clinic', bookIntoClinicRoutes)
+router.use('/sessions/:session_id/appointments', sessionAppointmentRoutes)
+router.use(
+  '/sessions/:session_id/unmatched-appointments',
+  unmatchedAppointmentRoutes
+)
+router.use('/sessions/:session_id/consents', consentRoutes)
+router.use('/sessions/:session_id/default-batch', defaultBatchRoutes)
+router.use('/sessions/:session_id/patients', patientSessionRoutes)
+router.use('/sessions', sessionRoutes)
+router.use('/uploads', uploadRoutes)
+router.use('/uploads/:upload_id/vaccinations', vaccinationRoutes)
+router.use('/uploads/:upload_id/patients', patientRoutes)
+router.use('/users', userRoutes)
+router.use('/vaccines', vaccineRoutes)
+
+export default router

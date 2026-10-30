@@ -1,0 +1,70 @@
+{%- from "_macros/triage-form.njk" import appTriageForm with context %}
+{%- from "_macros/triage-notes.njk" import appTriageNotes with context %}
+
+{# Health answers #}
+{{ summaryList({
+  card: {
+    heading: {
+      text: __mf("healthAnswers.count", {
+        count: patientProgramme.answersNeedingTriageCount
+      }),
+      size: "m"
+    },
+    variant: "warning" if patientProgramme.answersNeedingTriageCount
+  },
+  classes: "app-summary-list--full-width",
+  rows: healthAnswerRows(patientProgramme.consentHealthAnswers)
+}) if patientProgramme.consentHealthAnswers }}
+
+{# Unanswered health questions #}
+{% if options.needsTriage and not patientProgramme.consentHealthAnswers %}
+  {% set warningHtml %}
+    {{ __("healthAnswers.unanswered.intro") | nhsukMarkdown }}
+
+    {{ patientProgramme.vaccine.formatted.healthQuestions | nhsukMarkdown }}
+  {% endset %}
+  {{ warningCallout({
+    heading: __("healthAnswers.unanswered.title"),
+    html: warningHtml
+  }) }}
+{% endif %}
+
+{# Triage #}
+{% call card({
+  heading: {
+    text: __("patientSession.screen.title", programme.nameSentenceCase),
+    size: "m"
+  }
+}) %}
+  {# Description #}
+  {{ patientProgramme.screenDescription | nhsukMarkdown }}
+
+  {# Actions #}
+  {{ actionLink({
+    text: __("triage.new.title"),
+    href: patientProgramme.uri + "/new/triage?referrer=" + referrer
+  }) if options.canTriage and not options.needsTriage and not patientProgramme.isVaccinated }}
+
+  {# Decision table #}
+  {{ appTriageNotes({
+    triageNotes: patientProgramme.triageNotes
+  }) }}
+
+  {% if options.needsTriage and not triageNoteRows.length %}
+    <hr class="nhsuk-section-break nhsuk-section-break--visible nhsuk-section-break--l">
+  {% endif %}
+
+  {% if options.canTriage and options.needsTriage %}
+    {{ appTriageForm({
+      context: patientProgramme,
+      size: "s"
+    }) }}
+
+    {{ button({
+      text: __("triage.confirm"),
+      attributes: {
+        formaction: patientProgramme.uri + "/new/triage?referrer=" + referrer
+      }
+    }) }}
+  {% endif %}
+{% endcall %}

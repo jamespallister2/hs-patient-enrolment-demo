@@ -1,0 +1,97 @@
+{% extends "_layouts/default.njk" %}
+
+{% set title = __("consent.show.title", consent.contact.formatted.fullName) %}
+
+{% block content %}
+  <div class="nhsuk-u-width-three-quarters">
+    {{ super() }}
+
+    {{ heading({
+      text: title,
+      size: "l"
+    }) }}
+
+    {{ appActionList({
+      items: [
+        {
+          text: __("consent.match.label"),
+          href: consentPath + "/match?referrer=" + consentPath
+        },
+        {
+          text: __("consent.add.label"),
+          href: consentPath + "/add?referrer=" + consentPath
+        },
+        {
+          text: __("consent.invalidate.label"),
+          href: consentPath + "/invalidate?referrer=" + consentPath
+        }
+      ]
+    }) }}
+
+    {{ summaryList({
+      card: {
+        heading: {
+          text: __("consent.label"),
+          size: "m"
+        }
+      },
+      lastRowBorder: false,
+      rows: summaryRows(consent, {
+        programme: {},
+        createdAt: {},
+        decisionStatus: {},
+        refusalReason: {},
+        refusalReasonDetails: {}
+      })
+    }) }}
+
+    {{ summaryList({
+      card: {
+        heading: {
+          text: __("contact.label"),
+          size: "m"
+        }
+      },
+      lastRowBorder: false,
+      rows: summaryRows(consent.contact, {
+        fullName: {},
+        relationship: {},
+        hasParentalResponsibility: {},
+        email: {},
+        tel: {},
+        communicationNeeds: {},
+        canSms: {}
+      })
+    }) if consent.contact }}
+
+    {{ summaryList({
+      card: {
+        heading: {
+          text: __("child.label"),
+          size: "m"
+        }
+      },
+      lastRowBorder: false,
+      rows: summaryRows(consent.child, {
+        fullName: {},
+        preferredFirstName: {},
+        preferredLastName: {},
+        dob: {},
+        address: {},
+        gpSurgery: {},
+        schoolName: {}
+      })
+    }) if consent.child }}
+
+    {{ summaryList({
+      classes: "app-summary-list--full-width",
+      card: {
+        heading: {
+          text: __("consent.healthAnswers.label"),
+          size: "m"
+        }
+      },
+      rows: healthAnswerRows(consent.healthAnswers)
+    }) if consent.healthAnswers }}
+  </div>
+{% endblock %}

@@ -1,0 +1,27 @@
+We wrote to you recently to let you know we’re coming to your child’s school on {{ session.formatted.nextDate }} to offer your child their {{ session.vaccinationNames.sentenceCase }}.
+
+> Do not reply to this email to tell us your decision. The link to the online consent form is below.
+
+If you’ve already responded to the consent request, you can ignore this message.
+
+{% for programme in session.programmes %}
+## About the {{ programme.vaccineName.sentenceCase }}
+
+{{ programme.information.description }}
+
+[Find out more about the {{ programme.vaccineName.sentenceCase }} on NHS.UK]({{ programme.information.url }})
+{% endfor %}
+
+{% if programme.type == ProgrammeType.Flu %}
+{% include "emails/consent/_about-the-nasal-spray.njk" %}
+{% endif %}
+
+{% if child.school.phase == SchoolPhase.Secondary %}
+{% include "emails/consent/_talk-to-your-child.njk" %}
+{% endif %}
+
+{% include "emails/consent/_how-to-respond.njk" %}
+
+{% include "emails/consent/_your-data.njk" %}
+
+{% include "emails/consent/_get-in-touch.njk" %}

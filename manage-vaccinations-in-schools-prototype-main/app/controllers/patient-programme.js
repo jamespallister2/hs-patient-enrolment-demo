@@ -1,0 +1,240 @@
+import { SessionType, VaccinationOutcome } from '../enums.js'
+import {
+  PatientProgramme,
+  Patient,
+  Vaccination,
+  PatientSession,
+  Session
+} from '../models.js'
+import { today } from '../utils/date.js'
+import { saveAndRedirect } from '../utils/redirect.js'
+
+export const patientProgrammeController = {
+  /**
+   * @type {RequestHandler<Record<string, string>>}
+   */
+  read(request, response, next) {
+    const { programme_id } = request.params
+    const { data } = request.session
+    const { patient } = response.locals
+
+    if (!programme_id) {
+      return saveAndRedirect(request, response, patient.uri)
+    }
+
+    const patientProgramme = new PatientProgramme(
+      patient.programmes[String(programme_id)],
+      data
+    )
+
+    response.locals.activeClinicsItems = patientProgramme.activeClinics.map(
+      (session) => ({
+        text: session.location.name,
+        hint: session.clinic.formatted.address,
+        value: session.id
+      })
+    )
+
+    response.locals.patientProgramme = patientProgramme
+
+    return next()
+  },
+
+  /**
+   * @type {RequestHandler<Record<string, string>>}
+   */
+  show(request, response) {
+    const view = request.params.view || 'show'
+
+    return response.render(`patient-programme/${view}`)
+  },
+
+  /**
+   * @type {RequestHandler<Record<string, string>>}
+   */
+  readForm(request, response, next) {
+    const { referrer } = request.session
+    const { patientProgramme } = response.locals
+
+    // Show back link to referring page, else patient programme page
+    response.locals.back = referrer || patientProgramme.uri
+
+    return next()
+  },
+
+  /**
+   * @param {string} type - Form type
+   * @returns {RequestHandler<Record<string, string>>} Request handler
+   */
+  showForm(type) {
+    return (request, response) => {
+      const { view } = request.params
+
+      response.render(`patient-programme/form/${view}`, { type })
+    }
+  },
+
+  /**
+   * @type {RequestHandler<Record<string, string>>}
+   */
+  addToSession(request, response) {
+    const { session_id } = request.body
+    const { programme_id } = request.params
+    const { data } = request.session
+    const { __, account, patient, patientProgramme } = response.locals
+
+    if (patientProgramme.activeClinicsCount === 0) {
+      return saveAndRedirect(request, response, `/sessions/new`)
+    }
+
+    // Get session
+    const session = Session.findOne(session_id, data)
+
+    // Create and add patient session
+    const patientSession = PatientSession.create(
+      {
+        createdBy_uid: account.uid,
+        patient_uuid: patient.uuid,
+        programme_id,
+        session_id
+      },
+      data
+    )
+
+    // Add to session
+    patient.addToSession(patientSession)
+
+    // Update session data
+    Patient.update(patient.uuid, patient, data)
+
+    request.flash(
+      'success',
+      __(`patientProgramme.addToSession.success`, { patient, session })
+    )
+
+    const returnUri = PatientSession.findOne(patientSession.uuid, data).uri
+    saveAndRedirect(request, response, returnUri)
+  },
+
+  /**
+   * @type {RequestHandler<Record<string, string>>}
+   */
+  newSession(request, response) {
+    const { homeVisit, date_ } = request.body
+    const { programme_id } = request.params
+    const { data } = request.session
+    const { __, account, patient } = response.locals
+
+    // Get session
+    const session = Session.create(
+      {
+        type: SessionType.Home,
+        hasRegistration: false,
+        presetOverrideProgramme_ids: [programme_id],
+        ...(homeVisit === 'today' ? { date: today() } : { date_ })
+      },
+      data
+    )
+
+    // Create and add patient session
+    const patientSession = PatientSession.create(
+      {
+        createdBy_uid: account.uid,
+        patient_uuid: patient.uuid,
+        programme_id,
+        session_id: session.id
+      },
+      data
+    )
+
+    // Add to session
+    patient.addToSession(patientSession)
+
+    // Update session data
+    Patient.update(patient.uuid, patient, data)
+
+    request.flash('success', __(`session.new.success`, { patient, session }))
+
+    const returnUri = PatientSession.findOne(patientSession.uuid, data).uri
+
+    return saveAndRedirect(request, response, returnUri)
+  },
+
+  /**
+   * @type {RequestHandler<Record<string, string>>}
+   */
+  triage(request, response) {
+    const { triage } = request.body
+    const { data, referrer } = request.session
+    const { __, account, patientProgramme } = response.locals
+
+    if (triage.psd) {
+      patientProgramme.giveInstruction({
+        createdBy_uid: account.uid,
+        programme_id: patientProgramme.programme.id
+      })
+    }
+
+    patientProgramme.recordTriage({
+      createdBy_uid: account.uid,
+      status: triage.status,
+      statusInvalidAt_: triage.statusInvalidAt_,
+      note: triage.note
+    })
+
+    // Clean up session data
+    delete data.triage
+
+    request.flash('success', __(`triage.new.success`, { patientProgramme }))
+
+    return saveAndRedirect(request, response, referrer || patientProgramme.uri)
+  },
+
+  /**
+   * @param {string} type - Form type
+   * @returns {RequestHandler<Record<string, string>>} Request handler
+   */
+  vaccinate(type) {
+    return (request, response) => {
+      const { programme_id } = request.params
+      const { data } = request.session
+      const { account, patient } = response.locals
+
+      const patientProgramme = new PatientProgramme(
+        patient.programmes[String(programme_id)],
+        data
+      )
+
+      // Vaccination
+      let vaccinationData = {
+        patient_uuid: patient.uuid,
+        createdBy_uid: account.uid
+      }
+
+      // Record as already vaccinated already provides a programme
+      if (type === 'previous') {
+        vaccinationData.programme_id = programme_id
+      }
+
+      // Record as already vaccinated
+      if (['previous', 'tetanus'].includes(type)) {
+        vaccinationData.outcome = VaccinationOutcome.AlreadyVaccinated
+      }
+
+      const vaccination = Vaccination.create(vaccinationData, data.wizard)
+
+      const startPage = !vaccination.programme_id ? 'programme' : 'vaccine'
+
+      saveAndRedirect(
+        request,
+        response,
+        `${patientProgramme.programme.uri}/vaccinations/${vaccination.uuid}/new/${startPage}?referrer=${patientProgramme.uri}`
+      )
+    }
+  }
+}
+
+/**
+ * @import { RequestHandler, RequestParamHandler } from 'express'
+ * @import { PatientFilterQuery } from '../../typings/index.d.ts'
+ */

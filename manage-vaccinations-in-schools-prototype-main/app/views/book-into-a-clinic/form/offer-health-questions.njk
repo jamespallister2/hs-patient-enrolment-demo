@@ -1,0 +1,34 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("clinicBooking.offerHealthQuestions.title") %}
+
+{% block form %}
+  {{ heading({
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ __("clinicBooking.offerHealthQuestions.bookingReference", booking.formatted.bookingReference) | nhsukMarkdown }}
+
+  {{ __("clinicBooking.offerHealthQuestions.beforeYouGo") | nhsukMarkdown }}
+
+  {{ radios({
+    fieldset: {
+      legend: {
+        text: __("clinicBooking.offerHealthQuestions.label"),
+        size: "m"
+      }
+    },
+    items: [
+      {
+        label: __('clinicBooking.offerHealthQuestions.yes'),
+        value: true
+      },
+      {
+        label: __('clinicBooking.offerHealthQuestions.no'),
+        value: false
+      }
+    ],
+    decorate: "journeyData.optedIntoHealthQuestions"
+  }) }}
+{% endblock %}

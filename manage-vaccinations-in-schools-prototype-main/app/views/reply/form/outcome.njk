@@ -1,0 +1,26 @@
+{% extends "_layouts/form.njk" %}
+
+{% set confirmButtonText = __("form.confirm") %}
+{% set title = __("reply.outcome.title") %}
+
+{% block form %}
+  {{ heading({
+    caption: __("reply.show.title", reply.fullName),
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ textarea({
+    label: __("reply.note.label"),
+    decorate: "reply.note"
+  }) }}
+
+  {{ radios({
+    fieldset: {
+      legend: __("reply.hasConfirmedRefusal.label")
+    },
+    inline: true,
+    items: getBooleanItems(),
+    decorate: "reply.hasConfirmedRefusal"
+  }) }}
+{% endblock %}

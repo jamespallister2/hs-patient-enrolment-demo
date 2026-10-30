@@ -1,0 +1,17 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("patient.gender.title") %}
+
+{% block form %}
+  {{ radios({
+    fieldset: {
+      legend: {
+        caption: patient.fullName,
+        heading: title,
+        size: "l"
+      }
+    },
+    items: enumItems(Gender),
+    decorate: "patient.gender"
+  }) }}
+{% endblock %}

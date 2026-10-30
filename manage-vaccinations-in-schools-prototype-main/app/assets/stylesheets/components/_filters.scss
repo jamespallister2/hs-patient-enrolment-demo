@@ -1,0 +1,66 @@
+@use "sass:color";
+@use "../vendor/nhsuk-frontend" as *;
+
+.app-filters {
+  &.nhsuk-card {
+    margin-top: nhsuk-spacing(3);
+    background-color: color.scale(nhsuk-colour("grey-4"), $alpha: -50%);
+
+    @include nhsuk-responsive-padding(4, "left");
+    @include nhsuk-responsive-padding(4, "right");
+    @include nhsuk-responsive-padding(2, "bottom");
+
+    .nhsuk-card__heading {
+      margin-left: #{nhsuk-spacing(-3) - 1px};
+      padding-left: nhsuk-spacing(3);
+      background-color: nhsuk-colour("grey-1");
+
+      // stylelint-disable-next-line max-nesting-depth
+      @include nhsuk-media-query($from: tablet) {
+        margin-left: #{nhsuk-spacing(-4) - 1px};
+        padding-left: nhsuk-spacing(4);
+      }
+    }
+  }
+
+  .nhsuk-radios__label,
+  .nhsuk-checkboxes__label {
+    padding-right: 0;
+  }
+
+  // Adjust design and spacing of details component
+  .nhsuk-details {
+    margin-right: nhsuk-spacing(-3);
+    margin-left: nhsuk-spacing(-3);
+
+    @include nhsuk-media-query($from: tablet) {
+      margin-right: nhsuk-spacing(-4);
+      margin-left: nhsuk-spacing(-4);
+    }
+
+    &[open] {
+      background-color: nhsuk-colour("grey-4");
+    }
+  }
+
+  .nhsuk-details__summary {
+    @include nhsuk-responsive-margin(4, "left");
+    @include nhsuk-responsive-margin(4, "right");
+  }
+
+  .nhsuk-details__text {
+    border-left: 0;
+
+    @include nhsuk-responsive-padding(5, "left");
+    @include nhsuk-responsive-padding(5, "right");
+  }
+
+  // Adjust margin around date inputs
+  & .nhsuk-date-input__item {
+    margin-right: nhsuk-spacing(3);
+  }
+
+  & .nhsuk-date-input__item:last-child {
+    margin-right: 0;
+  }
+}

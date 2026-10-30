@@ -1,0 +1,21 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("patient.fullName.title") %}
+
+{% block form %}
+  {{ heading({
+    caption: patient.fullName,
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ input({
+    label: __("patient.firstName.label"),
+    decorate: "patient.firstName"
+  }) }}
+
+  {{ input({
+    label: __("patient.lastName.label"),
+    decorate: "patient.lastName"
+  }) }}
+{% endblock %}

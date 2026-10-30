@@ -1,0 +1,38 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("upload.removeRelationships.title") %}
+{% set paths = { back: upload.uri } %}
+
+{% block form %}
+  {{ heading({
+    caption: __("upload.show.title", upload.formatted.createdAt),
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ __("upload.removeRelationships.description") | nhsukMarkdown }}
+
+  {{ radios({
+    items: [
+      { label: __("upload.removeRelationships.nonConsenting") },
+      { label: __("upload.removeRelationships.all") }
+    ],
+    decorate: "removeRelationships.type"
+  }) }}
+{% endblock %}
+
+{% block afterForm %}
+  {{ appButtonGroup({
+    buttons: [
+      {
+        text: __("upload.removeRelationships.confirm")
+      }
+    ],
+    links: [
+      {
+        text: __("upload.removeRelationships.cancel"),
+        href: upload.uri
+      }
+    ]
+  }) }}
+{% endblock %}

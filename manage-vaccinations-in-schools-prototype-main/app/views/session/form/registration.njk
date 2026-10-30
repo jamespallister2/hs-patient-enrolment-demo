@@ -1,0 +1,17 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("session.hasRegistration.title") %}
+
+{% block form %}
+  {{ radios({
+    fieldset: {
+      legend: {
+        caption: session.location.name if type == "edit",
+        heading: title,
+        size: "l"
+      }
+    },
+    items: getBooleanItems(),
+    decorate: "session.hasRegistration"
+  }) }}
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "_layouts/form.njk" %}
+
+{% set confirmButtonText = __("reply.withdraw.confirm") %}
+{% set paths = { back: reply.uri } %}
+{% set title = __("reply.withdraw.title") %}
+
+{% block form %}
+  {{ heading({
+    caption: __("reply.withdraw.caption", { reply: reply }),
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ radios({
+    fieldset: {
+      legend: {
+        text: __("reply.refusalReason.label"),
+        size: "m"
+      }
+    },
+    items: [
+      { label: ReplyRefusal.Gelatine } if programme.type == ProgrammeType.Flu,
+      { label: ReplyRefusal.GelatineMMR } if programme.type == ProgrammeType.MMR,
+      { label: ReplyRefusal.AlreadyVaccinated },
+      { label: ReplyRefusal.GettingElsewhere },
+      { label: ReplyRefusal.Medical },
+      { label: ReplyRefusal.Personal },
+      { divider: "or" },
+      {
+        label: ReplyRefusal.Other,
+        conditional: {
+          html: input({
+            label: __("reply.refusalReasonOther.label"),
+            decorate: "reply.refusalReasonOther"
+          })
+        }
+      }
+    ],
+    decorate: "reply.refusalReason"
+  }) }}
+
+  {{ textarea({
+    label: {
+      text: __("reply.note.label"),
+      size: "m"
+    },
+    decorate: "reply.note"
+  }) }}
+{% endblock %}

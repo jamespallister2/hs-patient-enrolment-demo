@@ -1,0 +1,62 @@
+{%- from "x-nhsuk/decorated/checkboxes/macro.njk" import checkboxes with context %}
+{%- from "x-nhsuk/decorated/radios/macro.njk" import radios with context %}
+{%- from "nhsuk/components/card/macro.njk" import card with context -%}
+{%- from "_macros/button-group.njk" import appButtonGroup with context -%}
+
+{% macro appReportSearch(params) %}
+  {% call card({
+    classes: "app-filters",
+    feature: true,
+    heading: {
+      text: __("report.search.label"),
+      level: 3
+    }
+  }) %}
+    {{ radios({
+      fieldset: {
+        legend: {
+          text: __("report.programme.label"),
+          size: "s"
+        }
+      },
+      small: true,
+      items: programmeItems,
+      decorate: "programme_id"
+    }) }}
+
+    {{ checkboxes({
+      fieldset: {
+        legend: {
+          text: __("report.gender.label"),
+          size: "s"
+        }
+      },
+      small: true,
+      items: checkboxFilterItems(Gender),
+      decorate: "gender"
+    }) }}
+
+    {{ checkboxes({
+      fieldset: {
+        legend: {
+          text: __("report.yearGroup.label"),
+          size: "s"
+        }
+      },
+      small: true,
+      items: yearGroupItems,
+      decorate: "yearGroup"
+    }) }}
+
+    {{ appButtonGroup({
+      buttons: [
+        {
+          text: __("search.clear"),
+          href: params.clear or "/reports",
+          small: true,
+          variant: "secondary"
+        } if data.programme_id or data.gender != "none" or data.yearGroup != "none"
+      ]
+    }) }}
+  {% endcall %}
+{% endmacro %}

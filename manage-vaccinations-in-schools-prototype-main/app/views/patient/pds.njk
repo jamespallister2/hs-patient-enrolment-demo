@@ -1,0 +1,81 @@
+{% extends "_layouts/default.njk" %}
+
+{% set title = __("patient.pds.title") %}
+
+{% block beforeContent %}
+  {{ breadcrumb({
+    items: [
+      {
+        text: __("home.show.title"),
+        href: "/"
+      },
+      {
+        text: __("patient.list.title"),
+        href: "/patients"
+      },
+      {
+        text: patient.fullName,
+        href: patient.uri
+      }
+    ]
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      {{ super() }}
+
+      {{ heading({
+        caption: patient.fullName,
+        text: title,
+        size: "l"
+      }) }}
+
+      {{ __("patient.pds.description") | nhsukMarkdown }}
+
+      {{ appTimeline({
+        items: [
+          {
+            isPastItem: true,
+            headingText: "Non-fuzzy search (with history)",
+            description: "No matches found."
+          },
+          {
+            isPastItem: true,
+            headingText: "Non-fuzzy search (with history and wildcard postcode)",
+            description: "Found " + patient.formatted.nhsn
+          },
+          {
+            isPastItem: true,
+            headingText: "Non-fuzzy search (with history, wildcard postcode and wildcard forename)",
+            description: "Found " + patient.formatted.nhsn | replace("999", "908")
+          },
+          {
+            isPastItem: true,
+            headingText: "Non-fuzzy search (with history, wildcard postcode and wildcard surname)",
+            description: "Found " + patient.formatted.nhsn
+          },
+          {
+            isPastItem: true,
+            headingText: "Fuzzy search (without history)",
+            description: "Found " + patient.formatted.nhsn
+          },
+          {
+            active: true,
+            headingText: "NHS number is " + patient.formatted.nhsn,
+            description: today
+          }
+        ]
+      }) }}
+
+      {{ heading({
+        text: "Expressions used in this lookup",
+        level: 2,
+        size: "m"
+      }) }}
+
+      {{ __("patient.pds.details") | nhsukMarkdown }}
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("session.school.title") %}
+
+{% block form %}
+  {{ heading({
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ select({
+    label: __("session.school_id.title"),
+    items: locationItems(schools, session.school_id),
+    decorate: "session.school_id",
+    attributes: {
+      "data-module": "app-autocomplete"
+    }
+  }) }}
+{% endblock %}

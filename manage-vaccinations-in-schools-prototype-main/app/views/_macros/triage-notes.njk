@@ -1,0 +1,38 @@
+{%- from "nhsuk/components/tables/macro.njk" import table with context -%}
+
+{% macro appTriageNotes(params) %}
+  {% set triageNoteRows = [] %}
+  {% for triageNote in params.triageNotes | reverse %}
+    {% set triageNoteRows = triageNoteRows | push([
+      {
+        html: triageNote.summary.createdAtAndBy
+      },
+      {
+        html: triageNote.note or "—" | nhsukMarkdown
+      },
+      {
+        html: triageNote.formatted.status
+      }
+    ]) %}
+  {% endfor %}
+
+  {% if triageNoteRows | length %}
+    {{ table({
+      id: "triage-notes",
+      caption: __("triage.note.label"),
+      responsive: true,
+      head: [
+        {
+          text: __("event.createdAt.label"),
+          width: "one-quarter"
+        },
+        { text: __("event.note.label") },
+        {
+          text: __("event.status.label"),
+          width: "one-quarter"
+        }
+      ],
+      rows: triageNoteRows
+    }) }}
+  {% endif %}
+{% endmacro %}

@@ -1,0 +1,113 @@
+{% extends "_layouts/form.njk" %}
+
+{% set gridColumns = "full" %}
+{% set hideConfirmButton = true %}
+{% set title = __("download.list.title") %}
+
+{% block form %}
+  {{ super() }}
+
+  {{ heading({
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ actionLink({
+    text: __("download.new.label"),
+    href: "/downloads/new"
+  }) }}
+
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-one-third">
+      {% call card({
+        classes: "app-filters",
+        feature: true,
+        heading: {
+          text: __("download.search.label"),
+          level: 2
+        }
+      }) %}
+        {{ radios({
+          fieldset: {
+            legend: {
+              text: __("download.type.label"),
+              size: "s"
+            }
+          },
+          small: true,
+          items: radioFilterItems(DownloadType),
+          decorate: "type"
+        }) }}
+
+        {{ appButtonGroup({
+          buttons: [
+            {
+              text: __("search.confirm"),
+              small: true,
+              variant: "secondary",
+              attributes: {
+                formmethod: "post"
+              }
+            },
+            {
+              text: __("search.clear"),
+              href: "/downloads",
+              small: true,
+              variant: "secondary"
+            } if data.type
+          ]
+        }) }}
+      {% endcall %}
+    </div>
+
+    <div class="nhsuk-grid-column-two-thirds">
+      {% if data.type and data.type != "none" %}
+        {% set title = data.type | replace("records", "record downloads") %}
+      {% else %}
+        {% set title = __("download.list.results") %}
+      {% endif %}
+
+      {{ heading({
+        caption: {
+          html: __mf("download.results", {
+            from: results.from,
+            to: results.to,
+            count: results.count
+          }),
+          placement: "after"
+        },
+        text: title,
+        level: 2,
+        size: "m"
+      }) }}
+      {% for download in results.page %}
+        {{ summaryList({
+          card: {
+            classes: "app-card--compact",
+            heading: {
+              text: download.name,
+              level: 3,
+              size: "s"
+            },
+            href: download.uri + "/download" if download.status == DownloadStatus.Ready,
+            clickable: true if download.status == DownloadStatus.Ready
+          },
+          lastRowBorder: false,
+          rows: summaryRows(download, {
+            createdAt: {},
+            createdBy: {},
+            type: {},
+            programme: {},
+            academicYear: {},
+            format: {},
+            canRecordOffline: {},
+            startEndAt: {},
+            status: {}
+          })
+        }) }}
+      {% endfor %}
+
+      {{ pagination(pages) }}
+    </div>
+  </div>
+{% endblock %}

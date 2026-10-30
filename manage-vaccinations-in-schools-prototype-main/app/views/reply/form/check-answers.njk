@@ -1,0 +1,136 @@
+{% extends "_layouts/form.njk" %}
+
+{% set confirmButtonText = __("form.confirm") %}
+{% set title = __("reply.new.check-answers.title") %}
+{% set refusalReasonHasDetails = reply.refusalReason != RefusalReason.PersonalChoice or reply.refusalReason != RefusalReason.Other %}
+
+{% block form %}
+  {{ heading({
+    caption: reply.patient.fullName,
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ summaryList({
+    card: {
+      heading: {
+        text: __("reply.label"),
+        size: "m"
+      }
+    },
+    lastRowBorder: false,
+    rows: summaryRows(reply, {
+      programme: {
+        href: reply.uri + "/new/programme" if isMultiProgrammeSession
+      },
+      method: {
+        href: reply.uri + "/new/method"
+      },
+      decision: {
+        href: reply.uri + "/new/decision"
+      },
+      hasConsentForAlternativeVaccine: {
+        href: reply.uri + "/new/decision"
+      },
+      canNotify: {
+        label: __("reply.contact.canNotify.label"),
+        value: reply.contact.canNotify,
+        href: reply.uri + "/new/can-notify"
+      } if reply.hasSelfConsent,
+      refusalReason: {
+        href: reply.uri + "/new/refusal-reason"
+      },
+      refusalReasonDetails: {
+        href: reply.uri + "/new/refusal-reason-details"
+      },
+      note: {
+        href: reply.uri + "/new/note"
+      },
+      createdBy: {}
+    })
+  }) }}
+
+  {{ summaryList({
+    card: {
+      heading: {
+        text: __("child.label"),
+        size: "m"
+      }
+    },
+    lastRowBorder: false,
+    rows: summaryRows(reply.child, {
+      fullName: {},
+      preferredFirstName: {},
+      preferredLastName: {},
+      dob: {},
+      gpSurgery: {},
+      schoolName: {}
+    })
+  }) if reply.child }}
+
+  {{ summaryList({
+    card: {
+      heading: {
+        text: __("contact.label"),
+        size: "m"
+      }
+    },
+    lastRowBorder: false,
+    rows: summaryRows(reply.contact, {
+      fullName: {
+        href: reply.uri + "/new/contact"
+      },
+      relationship: {
+        href: reply.uri + "/new/contact"
+      },
+      hasParentalResponsibility: {
+        href: reply.uri + "/new/contact"
+      },
+      email: {
+        href: reply.uri + "/new/contact"
+      },
+      tel: {
+        href: reply.uri + "/new/contact"
+      },
+      communicationNeeds: {
+        href: reply.uri + "/new/contact"
+      }
+    })
+  }) if not reply.hasSelfConsent }}
+
+  {{ summaryList({
+    classes: "app-summary-list--full-width",
+    card: {
+      heading: {
+        text: __("reply.healthAnswers.label"),
+        size: "m"
+      }
+    },
+    rows: healthAnswerRows(
+      reply.healthAnswers,
+      reply.uri + "/new/health-answers"
+    )
+  }) if reply.healthAnswers }}
+
+  {{ summaryList({
+    card: {
+      heading: {
+        text: __("triage.label", { patient: reply.patient }),
+        size: "m"
+      }
+    },
+    lastRowBorder: false,
+    rows: summaryRows(triage, {
+      status: {
+        label: __("triage.status.label"),
+        value: triage.status,
+        href: reply.uri + "/new/triage"
+      },
+      note: {
+        label: __("triage.note.label"),
+        value: triage.note,
+        href: reply.uri + "/new/triage"
+      }
+    })
+  }) if triage.status }}
+{% endblock %}

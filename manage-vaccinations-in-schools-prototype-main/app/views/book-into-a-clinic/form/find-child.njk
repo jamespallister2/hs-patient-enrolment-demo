@@ -1,0 +1,87 @@
+{% from "_macros/patient-search.njk" import appPatientSearch with context %}
+
+{% extends "_layouts/form.njk" %}
+
+{% set hideConfirmButton = true %}
+
+{% set title = __("clinicBooking.findChild.title") %}
+
+{% block form %}
+  {{ heading({
+    caption: appointmentCaption,
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ appPatientSearch({
+    hideProgrammeStatuses: true,
+    hideClinicStatuses: true,
+    hideAdvancedFilters: true,
+    clear: consentPath + "/match"
+  }) }}
+
+  {% if noFiltersApplied %}
+    {{ heading({
+      caption: {
+        text: __("search.initial.clinicBooking"),
+        placement: "after"
+      },
+      text: __("search.results"),
+      level: 2,
+      size: "m"
+    }) }}
+  {% else %}
+    {{ heading({
+      caption: {
+        html: __mf("patient.results.summary", {
+          from: results.from,
+          to: results.to,
+          count: results.count
+        }),
+        placement: "after"
+      },
+      text: __("search.results"),
+      level: 2,
+      size: "m"
+    }) }}
+
+    {% for patient in results.page %}
+      {% set clinicStatusHtml -%}
+        {%- for id, patientProgramme in patient.programmes -%}
+          {% set clinicStatus = patientProgramme.formatted.clinicStatus %}
+          {{ clinicStatus | nhsukMarkdown if clinicStatus }}
+        {%- endfor %}
+      {%- endset %}
+      {% set clinicStatusHtml = clinicStatusHtml | trim %}
+
+      {{ summaryList({
+        card: {
+          classes: "app-card--compact",
+          heading: {
+            text: patient.fullName | highlightQuery(data.q) | safe,
+            level: 3,
+            size: "s"
+          },
+          clickable: true,
+          href: newAppointmentPath + "/link-child?patient_uuid=" + patient.uuid
+        },
+        lastRowBorder: false,
+        rows: summaryRows(patient, {
+          dob: {},
+          postalCode: {
+            value: patient.postalCode | highlightQuery(data.q)
+          },
+          clinicStatus: {
+            label: "Clinic status",
+            value: clinicStatusHtml
+          } if clinicStatusHtml.length,
+          contacts: {
+            value: patient.formatted.contacts | highlightQuery(data.q)
+          }
+        })
+      }) }}
+    {% endfor %}
+
+    {{ pagination(pages) }}
+  {% endif %}
+{% endblock %}

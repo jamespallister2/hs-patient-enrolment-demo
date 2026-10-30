@@ -1,0 +1,85 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("consent.contact.title") %}
+{% set showContactDetails = true if not consent.patient.isSensitive else false %}
+
+{% block form %}
+  {{ heading({
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ input({
+    label: __("consent.contact.fullName.label"),
+    decorate: "consent.contact_.fullName"
+  }) }}
+
+  {%- set fosterCarerHtml = radios({
+    fieldset: {
+      legend: __("consent.contact.hasParentalResponsibility.delegatedLabel")
+    },
+    hint: __("consent.contact.hasParentalResponsibility.hint"),
+    items: getBooleanItems(),
+    decorate: "consent.contact_.hasParentalResponsibility"
+  }) %}
+
+  {%- set guardianHtml = radios({
+    fieldset: {
+      legend: __("consent.contact.hasParentalResponsibility.label")
+    },
+    hint: __("consent.contact.hasParentalResponsibility.hint"),
+    items: getBooleanItems(),
+    decorate: "consent.contact_.hasParentalResponsibility"
+  }) %}
+
+  {%- set otherHtml = input({
+    label: __("consent.contact.relationshipOther.label"),
+    decorate: "consent.contact_.relationshipOther"
+  }) + radios({
+    fieldset: {
+      legend: __("consent.contact.hasParentalResponsibility.label")
+    },
+    hint: __("consent.contact.hasParentalResponsibility.hint"),
+    items: getBooleanItems(),
+    decorate: "consent.contact_.hasParentalResponsibility"
+  }) %}
+
+  {# Add conditional html for ‘Foster carer’ option #}
+  {% set items = injectConditionalHtml(parentalRelationshipItems, RelationshipType.Fosterer, fosterCarerHtml) %}
+
+  {# Add conditional html for ‘Guardian’ option #}
+  {% set items = injectConditionalHtml(items, RelationshipType.Guardian, guardianHtml) %}
+
+  {# Add conditional html for ‘Other’ option #}
+  {% set items = injectConditionalHtml(items, RelationshipType.Other, otherHtml) %}
+
+  {{ radios({
+    fieldset: {
+      legend: __("consent.contact.relationship.label")
+    },
+    items: items,
+    decorate: "consent.contact_.relationship"
+  }) }}
+
+  {{ input({
+    label: __("consent.contact.email.label"),
+    hint: __("consent.contact.email.hint"),
+    decorate: "consent.contact_.email"
+  }) if showContactDetails }}
+
+  {{ input({
+    label: __("consent.contact.tel.label") + " (optional)",
+    hint: __("consent.contact.tel.hint"),
+    decorate: "consent.contact_.tel"
+  }) if showContactDetails }}
+
+  {{ checkboxes({
+    items: [
+      {
+        label: __("consent.contact.canSms.label"),
+        value: true
+      }
+    ],
+    decorate: "consent.contact_.canSms"
+  }) if showContactDetails }}
+{% endblock %}

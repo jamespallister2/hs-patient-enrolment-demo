@@ -1,0 +1,17 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("patient.nhsn.title") %}
+
+{% block form %}
+  {{ input({
+    label: {
+      caption: patient.fullName,
+      heading: title,
+      size: "l"
+    },
+    code: true,
+    width: 10,
+    value: "" if patient.hasMissingNhsNumber else patient.nhsn,
+    decorate: "patient.nhsn"
+  }) }}
+{% endblock %}

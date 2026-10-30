@@ -1,0 +1,37 @@
+{% extends "_layouts/session.njk" %}
+
+{% set title = patient.initials + " – " + session.shortName + " – " + __("patientSession.appointment.title") %}
+{% set headingText = patientSession.patient.fullName %}
+{% set stickyBanner = true %}
+{% set view = "appointment" %}
+
+{% block beforeContent %}
+  {{ breadcrumb({
+    variant: "reverse",
+    items: [
+      {
+        text: session.name,
+        href: session.uri
+      },
+      {
+        text: __("session.patients.title"),
+        href: session.uri + "/patients"
+      }
+    ]
+  }) }}
+{% endblock %}
+
+{% block content %}
+  {{ super() }}
+
+  {# Details of the appointment as it stands #}
+  {% include "patient-session/_appointment.njk" %}
+
+  {# Details of additional programmes that could be offered #}
+  {% include "patient-session/_catch-up.njk" %}
+
+  {# Registration #}
+  {% if options.canRegister %}
+    {% include "patient-session/_register.njk" %}
+  {% endif %}
+{% endblock %}

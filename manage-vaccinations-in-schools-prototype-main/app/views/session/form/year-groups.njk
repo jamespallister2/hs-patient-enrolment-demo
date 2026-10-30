@@ -1,0 +1,16 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("session.yearGroups.title") %}
+
+{% block form %}
+  {{ checkboxes({
+    fieldset: {
+      legend: {
+        text: title,
+        size: "l"
+      }
+    },
+    items: yearGroupItems,
+    decorate: "session.yearGroups"
+  }) }}
+{% endblock %}

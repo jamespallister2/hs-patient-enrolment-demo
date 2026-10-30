@@ -1,0 +1,45 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("school.site.title") %}
+
+{% block form %}
+  {% call fieldset({
+    legend: {
+      caption: school.name,
+      heading: title,
+      size: "l"
+    }
+  }) %}
+    {{ input({
+      label: __("location.name.label"),
+      hint: __("location.name.hint", originalSchool.name),
+      decorate: "school.name"
+    }) }}
+
+    {{ input({
+      label: __("location.addressLine1.label"),
+      autocomplete: "address-line1",
+      decorate: "school.addressLine1"
+    }) }}
+
+    {{ input({
+      label: __("location.addressLine2.label") + " (optional)",
+      autocomplete: "address-line2",
+      decorate: "school.addressLine2"
+    }) }}
+
+    {{ input({
+      classes: "nhsuk-u-width-two-thirds",
+      label: __("location.addressLevel1.label"),
+      autocomplete: "addressLevel1",
+      decorate: "school.addressLevel1"
+    }) }}
+
+    {{ input({
+      label: __("location.postalCode.label"),
+      autocomplete: "postal-code",
+      width: 10,
+      decorate: "school.postalCode"
+    }) }}
+  {% endcall %}
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("school.site-urn.title") %}
+
+{% block form %}
+  {{ heading({
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ select({
+    label: __("school.site-urn.label"),
+    items: locationItems(data.schools, school.id),
+    decorate: "school.id",
+    attributes: {
+      "data-module": "app-autocomplete"
+    }
+  }) }}
+{% endblock %}

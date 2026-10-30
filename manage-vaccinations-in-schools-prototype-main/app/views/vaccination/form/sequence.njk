@@ -1,0 +1,17 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("vaccination.sequence.title", vaccination.programmeOrVariantNameSentenceCase) %}
+
+{% block form %}
+  {{ radios({
+    fieldset: {
+      legend: {
+        caption: vaccination.patient.fullName,
+        heading: title,
+        size: "l"
+      }
+    },
+    items: sequenceItems,
+    decorate: "vaccination.sequence"
+  }) }}
+{% endblock %}

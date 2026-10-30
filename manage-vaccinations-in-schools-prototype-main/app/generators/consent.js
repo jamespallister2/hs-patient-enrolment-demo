@@ -1,0 +1,184 @@
+import { fakerEN_GB as faker } from '@faker-js/faker'
+
+import { healthConditions } from '../datasets/health-conditions.js'
+import {
+  ProgrammeType,
+  ReplyDecision,
+  ReplyMethod,
+  ReplyRefusal,
+  VaccineCriteria
+} from '../enums.js'
+import { Consent } from '../models.js'
+import { today } from '../utils/date.js'
+import {
+  getHealthAnswers,
+  getHealthConditionsNeedingTriage,
+  getRefusalReason,
+  getTriageNote
+} from '../utils/reply.js'
+
+/**
+ * Generate fake consent
+ *
+ * @param {PatientSession} patientSession - Patient session
+ * @param {Contact} contact - Contact
+ * @param {Date} [lastConsentCreatedAt] - Date previous consent response created
+ * @param {object} [overrides] - Choices to make instead of leaving them to chance
+ * @param {ReplyDecision} [overrides.decision] - Decision
+ * @param {boolean} [overrides.hasConsentForAlternativeVaccine] - Also gives
+ *   consent for the alternative (injected) vaccine, if the decision is to give consent
+ * @param {boolean} [overrides.needsTriage] - Answers to health questions do (or
+ *   do not) need triage
+ * @returns {Consent|undefined} Consent
+ */
+export function generateConsent(
+  patientSession,
+  contact,
+  lastConsentCreatedAt,
+  overrides = {}
+) {
+  const child = patientSession.patient
+  const programme = patientSession.programme
+  const session = patientSession.session
+
+  // Can’t create a consent response if no contact associated with child
+  if (!contact) {
+    return
+  }
+
+  // Can’t create a consent response if no contact details
+  if (!contact.hasContactDetails) {
+    return
+  }
+
+  // Decision
+  const decision =
+    overrides.decision ??
+    faker.helpers.weightedArrayElement([
+      { value: ReplyDecision.Given, weight: 80 },
+      { value: ReplyDecision.Declined, weight: 8 },
+      { value: ReplyDecision.Refused, weight: 8 },
+      ...(ProgrammeType.Flu === programme.type
+        ? [{ value: ReplyDecision.OnlyAlternativeInjection, weight: 4 }]
+        : []),
+      ...(ProgrammeType.MMR === programme.type
+        ? [{ value: ReplyDecision.OnlyAlternativeInjection, weight: 8 }]
+        : [])
+    ])
+
+  const isFluProgramme = programme.type === ProgrammeType.Flu
+
+  // Has the contact given consent for alternative injected vaccine?
+  const hasConsentForAlternativeVaccine =
+    isFluProgramme && decision === ReplyDecision.Given
+      ? (overrides.hasConsentForAlternativeVaccine ??
+        faker.datatype.boolean(0.75))
+      : false
+
+  // Reply method
+  const method = faker.helpers.weightedArrayElement([
+    { value: ReplyMethod.Website, weight: 8 },
+    { value: ReplyMethod.Phone, weight: 1 },
+    { value: ReplyMethod.Paper, weight: 1 }
+  ])
+
+  let vaccineCriteria = VaccineCriteria.Injection
+  if (isFluProgramme && decision !== ReplyDecision.OnlyAlternativeInjection) {
+    vaccineCriteria = VaccineCriteria.Intranasal
+  }
+
+  const vaccine = programme.vaccines.find(
+    ({ method }) => method === vaccineCriteria
+  )
+
+  // Without a health condition, every health question is answered ‘No’
+  let healthCondition
+  if (overrides.needsTriage === undefined) {
+    healthCondition = faker.helpers.objectKey(healthConditions)
+  } else if (overrides.needsTriage) {
+    healthCondition = faker.helpers.arrayElement(
+      getHealthConditionsNeedingTriage(vaccine)
+    )
+  }
+
+  const healthAnswers = getHealthAnswers(vaccine, healthCondition)
+  const triageNote = getTriageNote(healthAnswers, healthCondition)
+  const refusalReason = getRefusalReason(programme.type, decision)
+
+  // If decision is declined then a follow-up consultation was requested
+  const hasRequestedConsultation =
+    decision === ReplyDecision.Declined &&
+    [
+      ReplyRefusal.Medical,
+      ReplyRefusal.Other,
+      ReplyRefusal.OutsideSchool,
+      ReplyRefusal.Personal
+    ].includes(refusalReason)
+
+  const nowAt = today()
+  const sessionClosedBeforeToday =
+    session.consentCloseAt.valueOf() < nowAt.valueOf()
+  const consentWindowOpensAfterToday =
+    session.consentOpenAt.valueOf() > nowAt.valueOf()
+
+  // If session hasn’t opened yet, don’t generate a consent
+  if (consentWindowOpensAfterToday) {
+    return
+  }
+
+  return new Consent({
+    createdAt:
+      lastConsentCreatedAt ||
+      faker.date.between({
+        from: session.consentOpenAt,
+        to: sessionClosedBeforeToday ? session.consentCloseAt : nowAt
+      }),
+    child,
+    decision,
+    method,
+    ...(decision === ReplyDecision.Given && {
+      hasConsentForAlternativeVaccine
+    }),
+    ...([
+      ReplyDecision.Given,
+      ReplyDecision.OnlyAlternativeInjection,
+      ReplyDecision.OnlyMenACWY,
+      ReplyDecision.OnlyTdIPV
+    ].includes(decision) && { healthAnswers, triageNote }),
+    // Consent for only one of two vaccines also gives a reason for not wanting the other
+    ...([
+      ReplyDecision.Declined,
+      ReplyDecision.Refused,
+      ReplyDecision.OnlyMenACWY,
+      ReplyDecision.OnlyTdIPV
+    ].includes(decision) && {
+      refusalReason,
+      ...(refusalReason === ReplyRefusal.AlreadyVaccinated && {
+        refusalReasonDetails: 'My child had the vaccination at our GP surgery.'
+      }),
+      ...(refusalReason === ReplyRefusal.GettingElsewhere && {
+        refusalReasonDetails:
+          'My child is getting the vaccination at our GP surgery.'
+      }),
+      ...(refusalReason === ReplyRefusal.Medical && {
+        refusalReasonDetails:
+          'My child has recently had chemotherapy and her immune system needs time to recover.'
+      }),
+      ...(refusalReason === ReplyRefusal.OutsideSchool && {
+        refusalReasonDetails:
+          'My child gets anxious in situations where there are a lot of people.'
+      }),
+      ...(refusalReason === ReplyRefusal.Other && {
+        refusalReasonOther: 'My family rejects vaccinations on principle.'
+      }),
+      hasRequestedConsultation
+    }),
+    contact_uuid: contact.uuid,
+    programme_id: programme.id,
+    session_id: session.id
+  })
+}
+
+/**
+ * @import { Contact, PatientSession } from '../models.js'
+ */

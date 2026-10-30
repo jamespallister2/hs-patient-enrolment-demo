@@ -1,0 +1,27 @@
+{% extends "_layouts/form.njk" %}
+
+{% set programme_id = "flu" if "Flu" in session.presetNames else "mmr" %}
+{% set title = __("consent.hasConsentForAlternativeVaccine." + programme_id + ".title") %}
+
+{% block form %}
+  {{ radios({
+    fieldset: {
+      legend: {
+        heading: title,
+        size: "l"
+      }
+    },
+    hint: __("consent.hasConsentForAlternativeVaccine." + programme_id + ".hint"),
+    items: [
+      {
+        label: __("consent.hasConsentForAlternativeVaccine." + programme_id + ".yes.label"),
+        value: true
+      },
+      {
+        label: __("consent.hasConsentForAlternativeVaccine." + programme_id + ".no.label"),
+        value: false
+      }
+    ],
+    decorate: "consent.hasConsentForAlternativeVaccine"
+  }) }}
+{% endblock %}

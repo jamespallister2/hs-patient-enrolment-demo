@@ -1,0 +1,134 @@
+{% extends "_layouts/default.njk" %}
+
+{% set title = __("reply.show.title", reply.fullName) %}
+{% set showContactDetails = true if not reply.patient.isSensitive else false %}
+
+{% block beforeContent %}
+  {{ breadcrumb({
+    items: [
+      {
+        text: __("home.show.title"),
+        href: "/"
+      },
+      {
+        text: __("session.list.title"),
+        href: "/sessions"
+      },
+      {
+        text: reply.session.location.name,
+        href: reply.session.uri
+      },
+      {
+        text: reply.patient.fullName,
+        href: reply.session.uri + "/patients/" + reply.patient.nhsn + "/" + reply.programme.id
+      }
+    ]
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="nhsuk-u-width-three-quarters">
+    {{ super() }}
+
+    {{ heading({
+      text: title,
+      size: "l"
+    }) }}
+
+    {{ appActionList({
+      items: [
+        {
+          text: __("reply.withdraw.label"),
+          href: reply.uri + "/edit/withdraw"
+        } if reply.hasGivenConsent,
+        {
+          text: __("reply.follow-up.label"),
+          href: reply.uri + "/edit/follow-up"
+        } if not reply.hasConfirmedRefusal and not reply.hasGivenConsent,
+        {
+          text: __("reply.invalidate.label"),
+          href: reply.uri + "/edit/invalidate"
+        }
+      ]
+    }) if reply.isValid }}
+
+    {{ summaryList({
+      card: {
+        heading: {
+          text: __("reply.label"),
+          size: "m"
+        }
+      },
+      lastRowBorder: false,
+      rows: summaryRows(reply, {
+        programme: {},
+        createdAt: {},
+        method: {},
+        decisionStatus: {},
+        vaccineCriteria: {},
+        refusalReason: {},
+        refusalReasonDetails: {},
+        note: {
+          href: reply.uri + "/edit/note"
+        }
+      })
+    }) }}
+
+    {{ summaryList({
+      card: {
+        heading: {
+          text: __("contact.label"),
+          size: "m"
+        }
+      },
+      lastRowBorder: false,
+      rows: summaryRows(reply.contact, {
+        fullName: {
+          href: reply.uri + "/edit/contact"
+        },
+        relationship: {
+          href: reply.uri + "/edit/contact"
+        },
+        hasParentalResponsibility: {},
+        email: {
+          href: reply.uri + "/edit/contact" if showContactDetails
+        },
+        tel: {
+          href: reply.uri + "/edit/contact" if showContactDetails
+        },
+        canSms: {},
+        communicationNeeds: {}
+      })
+    }) if reply.contact }}
+
+    {{ summaryList({
+      card: {
+        heading: {
+          text: __("child.label"),
+          size: "m"
+        }
+      },
+      lastRowBorder: false,
+      rows: summaryRows(reply.child, {
+        fullName: {},
+        preferredFirstName: {},
+        preferredLastName: {},
+        dob: {},
+        address: {},
+        gpSurgery: {},
+        schoolName: {}
+      })
+    }) if reply.child }}
+
+    {{ summaryList({
+      classes: "app-summary-list--full-width",
+      card: {
+        heading: {
+          text: __("reply.healthAnswers.label"),
+          size: "m"
+        }
+      },
+      rows: healthAnswerRows(reply.healthAnswers)
+    }) if reply.healthAnswers }}
+  </div>
+{% endblock %}

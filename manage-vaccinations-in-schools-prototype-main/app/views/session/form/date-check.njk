@@ -1,0 +1,31 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("session.date.check.title", session.programmeNames.sentenceCase) %}
+{% set hideConfirmButton = true %}
+
+
+{% block form %}
+  {% call panel({
+    classes: "nhsuk-panel--interruption",
+    heading: title
+  }) %}
+    {{ __("session.date.check.description", {
+      date: session.formatted.date,
+      yearGroups: session.formatted.yearGroups
+    }) | nhsukMarkdown }}
+
+    {{ appButtonGroup({
+      buttons: [
+        {
+          text: __("session.date.check.confirm"),
+          variant: "reverse"
+        }
+      ],
+      links: [
+        {
+          text: __("session.date.check.cancel")
+        }
+      ]
+    }) }}
+  {% endcall %}
+{% endblock %}

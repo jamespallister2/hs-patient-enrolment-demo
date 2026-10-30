@@ -1,0 +1,91 @@
+{% from "review/_navigation.njk" import reviewNavigation with context %}
+
+{% extends "_layouts/default.njk" %}
+
+{% set title = __("consent.list.title") %}
+
+{% block beforeContent %}
+  {{ breadcrumb({
+    items: [
+      {
+        text: __("home.show.title"),
+        href: "/"
+      },
+      {
+        text: __("session.list.title"),
+        href: "/sessions"
+      },
+      {
+        text: session.location.name,
+        href: session.uri
+      }
+    ]
+  }) if session }}
+{% endblock %}
+
+{% block content %}
+  {{ super() }}
+
+  {{ reviewNavigation({
+    view: "consent"
+  }) }}
+
+  {% set consentRows = [] %}
+  {% for consent in results.page %}
+    {% set consentRows = consentRows | push([
+      {
+        html: consent.link.summary | replace("/consents", consentsPath)
+      },
+      {
+        text: consent.formatted.createdAt
+      },
+      {
+        text: consent.decision
+      },
+      {
+        html: appActionList({
+          items: [
+            {
+              text: __("consent.match.label"),
+              href: consentsPath + "/" + consent.uuid + "/match?referrer=" + consentsPath
+            },
+            {
+              text: __("consent.invalidate.label"),
+              href: consentsPath + "/" + consent.uuid + "/invalidate?referrer=" + consentsPath
+            }
+          ]
+        })
+      }
+    ]) %}
+  {% endfor %}
+
+  {% if consents.length %}
+    {{ table({
+      id: "consents",
+      responsive: true,
+      card: {
+        heading: {
+          text: __mf("consent.count", { count: consents.length }),
+          level: 3
+        }
+      },
+      head: [
+        { text: __("consent.summary.label") },
+        { text: __("consent.createdAt.label") },
+        { text: __("consent.decision.label") },
+        { text: __("actions.label") }
+      ],
+      rows: consentRows
+    }) }}
+
+    {{ pagination(pages) }}
+
+    {{ __mf("consent.results", {
+      from: results.from,
+      to: results.to,
+      count: results.count
+    }) | nhsukMarkdown }}
+  {% else %}
+    {{ __mf("consent.count", { count: 0 }) | nhsukMarkdown }}
+  {% endif %}
+{% endblock %}

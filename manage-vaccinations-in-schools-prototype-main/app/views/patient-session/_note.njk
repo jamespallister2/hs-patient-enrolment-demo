@@ -1,0 +1,61 @@
+{% call details({
+  classes: "nhsuk-expander",
+  summary: __("patientSession.notes.new.title")
+}) %}
+  {{ textarea({
+    label: {
+      text: __("event.note.label"),
+      size: "s"
+    },
+    hint: __("event.note.hint"),
+    rows: 5,
+    decorate: "note"
+  }) }}
+
+  {{ radios({
+    fieldset: {
+      legend: {
+        text: "What do you want to add this note to?",
+        size: "s"
+      }
+    },
+    items: [
+      {
+        label: "Session",
+        value: AuditEventType.SessionNote,
+        hint: __("patientSession.sessionNote.hint")
+      },
+      {
+        label: "Programme",
+        value: AuditEventType.ProgrammeNote,
+        conditional: {
+          html: checkboxes({
+            items: programmeItems,
+            decorate: "programme_ids"
+          })
+        }
+      } if session.programmes.length > 1 else {
+        label: session.programmeNames.titleCase + " programme",
+        value: AuditEventType.ProgrammeNote
+      },
+      {
+        label: "Child record",
+        value: AuditEventType.RecordNote
+      }
+    ],
+    decorate: "type"
+  }) }}
+
+  {{ input({
+    type: "hidden",
+    value: session.programme_ids[0],
+    decorate: "programme_ids"
+  }) if session.programmes.length == 1 }}
+
+  {{ button({
+    text: __("patientSession.notes.new.confirm"),
+    attributes: {
+      formaction: patientSession.uri + "/new/note?referrer=" + patientSession.uri + "/events"
+    }
+  }) }}
+{% endcall %}

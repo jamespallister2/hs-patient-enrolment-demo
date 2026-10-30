@@ -1,0 +1,69 @@
+{%- from "_macros/change.njk" import appChange with context -%}
+
+{% set moveRows = [] %}
+{% for move in upload.moves %}
+  {% set moveRadios = radios({
+    formGroup: {
+      classes: "nhsuk-u-margin-bottom-2"
+    },
+    fieldset: {
+      legend: {
+        classes: "nhsuk-u-visually-hidden",
+        text: __("upload.show.moves.decision.title", { patient: move.patient })
+      }
+    },
+    small: true,
+    items: [
+      {
+        label: __("upload.show.moves.decision.accept.label"),
+        value: "restore"
+      },
+      {
+        label: __("upload.show.moves.decision.ignore.label"),
+        value: "ignore"
+      }
+    ],
+    decorate: "school-move-" + loop.index0
+  }) %}
+  {% set moveDecision = __("upload.show.moves.decision.accept.label") %}
+
+  {% set moveRows = moveRows | push([
+    {
+      html: move.patient.formatted.fullNameAndNhsn
+    },
+    {
+      html: appChange(move.formatted.from_urn, move.formatted.to_urn, true)
+    },
+    {
+      html: moveRadios if upload.needsReview else moveDecision
+    }
+  ]) %}
+{% endfor %}
+
+{{ heading({
+  caption: {
+    text: __("upload.show.moves.summary") if upload.needsReview,
+    placement: "after"
+  },
+  text: __("upload.show.moves.title") if upload.needsReview else __("upload.show.moves.label"),
+  level: 2,
+  size: "m"
+}) }}
+
+{{ table({
+  classes: "app-table--review",
+  responsive: true,
+  card: {
+    heading: {
+      text: __mf("upload.show.moves.count", { count: moveRows.length }),
+      level: 3,
+      size: "s"
+    }
+  },
+  head: [
+    { text: __("patient.fullNameAndNhsn.label") },
+    { text: __("move.label") },
+    { html: __("upload.show.moves.decision.label") }
+  ],
+  rows: moveRows
+}) }}

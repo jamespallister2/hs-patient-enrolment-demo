@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "noEmit": true,
+    "paths": {
+      "/nhsuk-frontend/nhsuk-frontend.min.js": [
+        "./node_modules/nhsuk-frontend"
+      ],
+      "/nhsuk-prototype-kit/javascripts/send-unchecked-checkboxes.js": [
+        "./node_modules/nhsuk-prototype-kit/lib/javascripts/send-unchecked-checkboxes.js"
+      ],
+      "accessible-autocomplete": [
+        "./node_modules/accessible-autocomplete/src/wrapper.js"
+      ]
+    },
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "target": "ESNext",
+    "types": []
+  },
+  "exclude": ["./node_modules", "./public"],
+  "typeAcquisition": {
+    "enable": false
+  }
+}

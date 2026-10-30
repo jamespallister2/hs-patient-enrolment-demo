@@ -1,0 +1,183 @@
+{%- from "nhsuk/components/tabs/macro.njk" import tabs -%}
+
+{% macro programmeHtml(programme) %}
+  {% set columnWidth = "quarter" if session.canOfferAlternativeVaccine or programme.type == ProgrammeType.MMR else "third" %}
+
+  {{ heading({
+    caption: {
+      text: __mf("session.eligible.count", { count: session.patients.length }),
+      placement: "after"
+    },
+    text: programme.name,
+    level: 2,
+    size: "m"
+  }) }}
+
+  <div class="nhsuk-grid-row nhsuk-card-group">
+    {% if session.type == SessionType.School %}
+    <div class="nhsuk-grid-column-one-{{ columnWidth }} nhsuk-card-group__item">
+      {{ appDataCard({
+        heading: {
+          text: PatientStatus.Consent,
+          level: 3
+        },
+        colour: "blue",
+        compact: true,
+        data: session.tally(programme.id, PatientStatus.Consent),
+        href: session.uri + "/patients?status=" + PatientStatus.Consent + "&programme_id=" + programme.id
+      }) }}
+    </div>
+    {% endif %}
+    <div class="nhsuk-grid-column-one-{{ columnWidth }} nhsuk-card-group__item">
+      {{ appDataCard({
+        heading: {
+          text: PatientStatus.Triage,
+          level: 3
+        },
+        colour: "blue",
+        compact: true,
+        data: session.tally(programme.id, PatientStatus.Triage),
+        href: session.uri + "/patients?status=" + PatientStatus.Triage + "&programme_id=" + programme.id
+      }) }}
+    </div>
+  {% if programme.type == ProgrammeType.Flu %}
+    <div class="nhsuk-grid-column-one-{{ columnWidth }} nhsuk-card-group__item">
+      {{ appDataCard({
+        heading: {
+          text: __("session.tally.dueForVaccineCriteria.label", {
+            vaccineCriteria: programme.standardVaccine.criteria | lower
+          }),
+          level: 3
+        },
+        colour: "green",
+        compact: true,
+        data: session.tally(programme.id, PatientStatus.Due, RecordVaccineCriteria.IntranasalOnly) + session.tally(programme.id, PatientStatus.Due, RecordVaccineCriteria.IntranasalPreferred),
+        href: session.uri + "/patients?status=" + PatientStatus.Due + "&programme_id=" + programme.id + "&vaccineCriteria=" + RecordVaccineCriteria.IntranasalOnly + "&vaccineCriteria=" + RecordVaccineCriteria.IntranasalPreferred
+      }) }}
+    </div>
+  {% elif programme.type == ProgrammeType.MMR %}
+    <div class="nhsuk-grid-column-one-{{ columnWidth }} nhsuk-card-group__item">
+      {{ appDataCard({
+        heading: {
+          text: __("session.tally.dueForVaccineCriteria.label", {
+            vaccineCriteria: "vaccination (no preference)"
+          }),
+          level: 3
+        },
+        colour: "green",
+        compact: true,
+        data: session.tally(programme.id, PatientStatus.Due, RecordVaccineCriteria.NoMMRPreference),
+        href: session.uri + "/patients?status=" + PatientStatus.Due + "&programme_id=" + programme.id + "&vaccineCriteria=" + RecordVaccineCriteria.NoMMRPreference
+      }) }}
+    </div>
+  {% else %}
+    <div class="nhsuk-grid-column-one-{{ columnWidth }} nhsuk-card-group__item">
+      {{ appDataCard({
+        heading: {
+          text: PatientStatus.Due,
+          level: 3
+        },
+        colour: "green",
+        compact: true,
+        data: session.tally(programme.id, PatientStatus.Due),
+        href: session.uri + "/patients?status=" + PatientStatus.Due + "&programme_id=" + programme.id
+      }) }}
+    </div>
+  {% endif %}
+  {% if programme.alternativeVaccine %}
+    {% set vaccineCriteria = RecordVaccineCriteria.AlternativeFluInjectionOnly if programme.type == ProgrammeType.Flu else RecordVaccineCriteria.AlternativeMMRInjectionOnly %}
+    <div class="nhsuk-grid-column-one-{{ columnWidth }} nhsuk-card-group__item">
+      {{ appDataCard({
+        heading: {
+          text: __("session.tally.dueForVaccineCriteria.label", {
+            vaccineCriteria: vaccineCriteria | lower
+          }),
+          level: 3
+        },
+        colour: "green",
+        compact: true,
+        data: session.tally(programme.id, PatientStatus.Due, vaccineCriteria),
+        href: session.uri + "/patients?status=" + PatientStatus.Due + "&programme_id=" + programme.id + "&vaccineCriteria=" + vaccineCriteria
+      }) }}
+    </div>
+  {% endif %}
+    <div class="nhsuk-grid-column-one-{{ columnWidth }} nhsuk-card-group__item">
+      {{ appDataCard({
+        heading: {
+          text: PatientStatus.Refused,
+          level: 3
+        },
+        colour: "orange",
+        compact: true,
+        data: session.tally(programme.id, PatientStatus.Refused),
+        href: session.uri + "/patients?status=" + PatientStatus.Refused + "&programme_id=" + programme.id
+      }) }}
+    </div>
+    <div class="nhsuk-grid-column-one-{{ columnWidth }} nhsuk-card-group__item">
+      {{ appDataCard({
+        heading: {
+          text: PatientStatus.Deferred,
+          level: 3
+        },
+        colour: "red",
+        compact: true,
+        data: session.tally(programme.id, PatientStatus.Deferred),
+        href: session.uri + "/patients?status=" + PatientStatus.Deferred + "&programme_id=" + programme.id
+      }) }}
+    </div>
+  {% if programme.type == ProgrammeType.MMR or programme.type == ProgrammeType.Flu %}
+    <div class="nhsuk-grid-column-one-{{ columnWidth }} nhsuk-card-group__item">
+      {{ appDataCard({
+        heading: {
+          text: PatientStatus.PartiallyVaccinated,
+          level: 3
+        },
+        compact: true,
+        data: session.tally(programme.id, PatientStatus.PartiallyVaccinated),
+        href: session.uri + "/patients?status=" + PatientStatus.PartiallyVaccinated + "&programme_id=" + programme.id
+      }) }}
+    </div>
+  {% endif %}
+    <div class="nhsuk-grid-column-one-{{ columnWidth }} nhsuk-card-group__item">
+      {{ appDataCard({
+        heading: {
+          text: PatientStatus.Vaccinated,
+          level: 3
+        },
+        compact: true,
+        data: session.tally(programme.id, PatientStatus.Vaccinated),
+        href: session.uri + "/patients?status=" + PatientStatus.Vaccinated + "&programme_id=" + programme.id
+      }) }}
+    </div>
+  </div>
+{% endmacro %}
+
+{% set tabItems = [] %}
+
+{% if session.type === SessionType.Clinic %}
+  {% set planningHtml %}
+    {% include "session/_session-clinic-summary.njk" %}
+  {% endset %}
+  {% set tabItems = tabItems | push({
+    label: __("session.tally.appointments.label"),
+    id: "clinic-details",
+    panel: {
+      html: planningHtml
+    }
+  }) %}
+{% endif %}
+
+{% set programmesToAdminister = session.bookedProgrammes if session.type === SessionType.Clinic else session.programmes %}
+{% for programme in programmesToAdminister %}
+  {% set tabItems = tabItems | push({
+    label: programme.name,
+    id: programme.id,
+    panel: {
+      html: programmeHtml(programme)
+    }
+  }) %}
+{% endfor %}
+
+{{ tabs({
+  items: tabItems
+}) if session.type === SessionType.Clinic or session.programmes.length > 1 else programmeHtml(session.programmes[0]) }}

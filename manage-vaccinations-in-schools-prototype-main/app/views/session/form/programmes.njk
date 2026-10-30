@@ -1,0 +1,27 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("session.programmes.title") %}
+
+{% block form %}
+  {% set presetNameItems = [] %}
+  {% for preset in SessionPresets %}
+    {% if not preset.clinicOnly %}
+      {% set presetNameItems = presetNameItems | push({
+        text: preset.programmeTypes | formatList,
+        value: preset.name
+      }) %}
+    {% endif %}
+  {% endfor %}
+
+  {{ checkboxes({
+    fieldset: {
+      legend: {
+        caption: session.location.name if type == "edit",
+        heading: title,
+        size: "l"
+      }
+    },
+    items: presetNameItems,
+    decorate: "session.presetNames"
+  }) }}
+{% endblock %}

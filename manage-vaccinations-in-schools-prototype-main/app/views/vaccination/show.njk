@@ -1,0 +1,75 @@
+{% extends "_layouts/default.njk" %}
+
+{% set title = vaccination.patient.fullName %}
+
+{% block beforeContent %}
+  {{ breadcrumb({
+    items: [
+      {
+        text: __("home.show.title"),
+        href: "/"
+      },
+      {
+        text: __("patient.list.title"),
+        href: "/patients"
+      },
+      {
+        text: vaccination.patient.fullName,
+        href: vaccination.patient.uri
+      },
+      {
+        text: vaccination.patient.programmes[vaccination.programme_id].programme.name,
+        href: vaccination.patient.programmes[vaccination.programme_id].uri
+      }
+    ]
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="nhsuk-u-width-three-quarters">
+    {{ super() }}
+
+    {{ heading({
+      text: title,
+      size: "l"
+    }) }}
+
+    {{ summaryList({
+      card: {
+        heading: {
+          text: __("vaccination.show.summary"),
+          size: "m"
+        },
+        actions: [
+          {
+            text: __("vaccination.edit.title"),
+            href: vaccination.uri + "/edit"
+          }
+        ]
+      },
+      lastRowBorder: false,
+      rows: summaryRows(vaccination, {
+        programme: {},
+        outcome: {},
+        vaccine: {},
+        method: {},
+        site: {},
+        dose: {},
+        sequence: {},
+        batch: {},
+        identifiedBy: {},
+        assessedBy: {},
+        administeredBy: {},
+        administeredAt: {},
+        updatedAt: {},
+        location: {},
+        protocol: {},
+        note: {},
+        source: {},
+        createdBy: {},
+        createdAt: {},
+        syncStatus: {}
+      })
+    }) }}
+  </div>
+{% endblock %}

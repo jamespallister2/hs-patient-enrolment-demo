@@ -1,0 +1,61 @@
+{% extends "_layouts/form.njk" %}
+
+{% block form %}
+  {% set conditionalHtml = {
+    html: input({
+      label: __("consent.child.ethnicBackgroundOther.label"),
+      decorate: "consent.child.ethnicBackgroundOther"
+    })
+  } %}
+
+  {% if consent.child.ethnicGroup == EthnicGroup.White %}
+    {% set items = [
+      { text: EthnicBackgroundWhite.British },
+      { text: EthnicBackgroundWhite.Irish },
+      { text: EthnicBackgroundWhite.GRT },
+      { text: EthnicBackgroundWhite.Other, conditional: conditionalHtml }
+    ] %}
+  {% elif consent.child.ethnicGroup == EthnicGroup.Mixed %}
+    {% set items = [
+      { text: EthnicBackgroundMixed.WhiteBlack },
+      { text: EthnicBackgroundMixed.WhiteAfrican },
+      { text: EthnicBackgroundMixed.WhiteAsian },
+      { text: EthnicBackgroundMixed.Other, conditional: conditionalHtml }
+    ] %}
+  {% elif consent.child.ethnicGroup == EthnicGroup.Asian %}
+    {% set items = [
+      { text: EthnicBackgroundAsian.Indian },
+      { text: EthnicBackgroundAsian.Pakistani },
+      { text: EthnicBackgroundAsian.Bangladeshi },
+      { text: EthnicBackgroundAsian.Chinese },
+      { text: EthnicBackgroundAsian.Other, conditional: conditionalHtml }
+    ] %}
+  {% elif consent.child.ethnicGroup == EthnicGroup.Black %}
+    {% set items = [
+      { text: EthnicBackgroundBlack.African },
+      { text: EthnicBackgroundBlack.Caribbean },
+      { text: EthnicBackgroundBlack.Other, conditional: conditionalHtml }
+    ] %}
+  {% else %}
+    {% set items = [
+      { text: EthnicBackgroundOther.Arab },
+      { text: EthnicBackgroundOther.Other, conditional: conditionalHtml }
+    ] %}
+  {% endif %}
+
+  {{ radios({
+    fieldset: {
+      legend: {
+        heading: __("consent.child.ethnicBackground.title", consent.child.ethnicGroup) | replace("Mixed", "mixed") | replace(EthnicGroup.Other, ""),
+        size: "l"
+      }
+    },
+    items: items | push({
+      divider: "or"
+    }) | push({
+      text: __("consent.child.ethnicBackground.preferNotToSay"),
+      value: false
+    }),
+    decorate: "consent.child.ethnicBackground"
+  }) }}
+{% endblock %}

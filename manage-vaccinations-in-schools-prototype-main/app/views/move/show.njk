@@ -1,0 +1,130 @@
+{% extends "_layouts/form.njk" %}
+
+{% set gridColumns = "full" %}
+{% set title = __("move.show.title") %}
+{% set confirmButtonText = __("move.show.confirm") %}
+
+{% block beforeContent %}
+  {{ breadcrumb({
+    items: [
+      {
+        text: __("home.show.title"),
+        href: "/"
+      },
+      {
+        text: __("move.list.title"),
+        href: "/moves"
+      }
+    ]
+  }) }}
+{% endblock %}
+
+{% block form %}
+  {{ super() }}
+
+  {{ heading({
+    caption: move.patient.fullName,
+    text: title,
+    size: "l"
+  }) }}
+
+  <div class="nhsuk-grid-row nhsuk-card-group">
+    <div class="nhsuk-grid-column-one-half nhsuk-card-group__item">
+      {% call card({
+        feature: true,
+        heading: {
+          text: move.source,
+          size: "m"
+        }
+      }) %}
+        {{ appStatus({
+          text: __("move.team_id.description", { move: move }),
+          icon: "warning",
+          colour: "blue"
+        }) if move.team_id }}
+
+        {{ summaryList({
+          lastRowBorder: false,
+          rows: summaryRows(move.patient, {
+            nhsn: {},
+            fullName: {},
+            dob: {},
+            gender: {},
+            postalCode: {},
+            schoolName: {
+              value: move.formatted.to_urn | highlightDifference(move.formatted.from_urn)
+            }
+          })
+        }) }}
+      {% endcall %}
+    </div>
+    <div class="nhsuk-grid-column-one-half nhsuk-card-group__item">
+      {{ summaryList({
+        card: {
+          feature: true,
+          heading: {
+            text: __("patient.label"),
+            size: "m"
+          }
+        },
+        lastRowBorder: false,
+        rows: summaryRows(move.patient, {
+          nhsn: {},
+          fullName: {},
+          dob: {},
+          gender: {},
+          postalCode: {},
+          schoolName: {}
+        })
+      }) }}
+    </div>
+  </div>
+
+  {{ radios({
+    formGroup: {
+      classes: "nhsuk-u-width-two-thirds"
+    },
+    fieldset: {
+      legend: {
+        text: __("move.show.decision.label"),
+        size: "m"
+      }
+    },
+    items: [
+      {
+        label: __("move.show.decision.switch"),
+        value: "switch",
+        conditional: {
+          html: radios({
+            fieldset: {
+              legend: __("move.show.session.label", {
+                firstName: move.patient.firstName
+              })
+            },
+            hint: __("move.show.session.hint", {
+              school: move.formatted.to,
+              dates: "Wednesday 6 March 2025 and Thursday 7 March 2025"
+            }),
+            items: [
+              {
+                label: __("move.show.session.clinic"),
+                value: "clinic",
+                checked: true
+              },
+              {
+                label: __("move.show.session.school"),
+                value: "school"
+              }
+            ],
+            decorate: "session"
+          })
+        } if move.from_urn == "888888" or move.from_urn == "999999"
+      },
+      {
+        label: __("move.show.decision.ignore"),
+        value: "ignore"
+      }
+    ],
+    decorate: "decision"
+  }) }}
+{% endblock %}

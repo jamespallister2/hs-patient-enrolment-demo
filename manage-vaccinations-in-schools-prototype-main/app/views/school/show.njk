@@ -1,0 +1,119 @@
+{% from "school/_navigation.njk" import schoolNavigation with context %}
+{% from "_macros/patient-search.njk" import appPatientSearch with context %}
+
+{% extends "_layouts/form.njk" %}
+
+{% set gridColumns = "full" %}
+{% set hideConfirmButton = true %}
+{% set title = school.name + " – " + __("school.patients.title") %}
+
+{% block beforeContent %}
+  {{ breadcrumb({
+    items: [
+      {
+        text: __("home.show.title"),
+        href: "/"
+      },
+      {
+        text: __("school.list.title"),
+        href: "/schools"
+      }
+    ]
+  }) }}
+{% endblock %}
+
+{% block form %}
+  {{ super() }}
+
+  {{ schoolNavigation({
+    school: school,
+    view: "show"
+  }) }}
+
+  {{ actionLink({
+    href: school.uri + "/invite-to-clinic",
+    text: __("session.inviteToClinic.label")
+  }) if school.isOpen }}
+
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-one-third">
+      {{ appPatientSearch({
+        clear: school.uri
+      }) }}
+    </div>
+
+    <div class="nhsuk-grid-column-two-thirds">
+      {{ warningCallout({
+        classes: "nhsuk-u-margin-top-3",
+        heading: __("school.patientsMissingNhsNumber.title"),
+        text: link({
+          text: __mf("school.patientsMissingNhsNumber.count", {
+            count: school.patientsMissingNhsNumber.length
+          }),
+          href: school.uri + "?option=hasMissingNhsNumber"
+        })
+      }) if school.patientsMissingNhsNumber.length }}
+
+      {{ heading({
+        caption: {
+          html: __mf("patient.results.summary", {
+            from: results.from,
+            to: results.to,
+            count: results.count
+          }),
+          placement: "after"
+        },
+        text: __("search.results"),
+        level: 3,
+        size: "m"
+      }) }}
+
+      {{ actionLink({
+        text: __("school.download.label"),
+        href: school.uri + "/download?referrer=" + school.uri
+      }) if data.wasInvitedToClinic and results.count > 0 }}
+
+      {% for patient in results.page %}
+        {% set statusHtml -%}
+          {%- if data.programme_id %}
+            {%- for id, patientProgramme in patient.programmes -%}
+              {%- if data.programme_id | includes(id) -%}
+                {{ patientProgramme.formatted.programmeStatus | nhsukMarkdown }}
+              {%- endif -%}
+            {%- endfor %}
+          {% else %}
+            {%- for id, patientProgramme in patient.programmes -%}
+              {{ patientProgramme.formatted.programmeStatus | nhsukMarkdown }}
+            {%- endfor %}
+          {% endif %}
+        {%- endset %}
+
+        {{ summaryList({
+          card: {
+            classes: "app-card--compact",
+            heading: {
+              text: patient.fullAndPreferredNames | highlightQuery(data.q) | safe,
+              size: "s",
+              level: 4
+            },
+            href: patient.uri,
+            clickable: true
+          },
+          lastRowBorder: false,
+          rows: summaryRows(patient, {
+            nhsn: {},
+            dob: {},
+            yearGroup: {},
+            clinicProgramme_ids: {},
+            status: {
+              label: __("patientSession.status.label"),
+              value: statusHtml
+            }
+          })
+        }) }}
+      {% endfor %}
+
+      {{ pagination(pages) }}
+    </div>
+  </div>
+{% endblock %}

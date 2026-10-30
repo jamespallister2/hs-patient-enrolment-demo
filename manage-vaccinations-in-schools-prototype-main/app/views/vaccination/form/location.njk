@@ -1,0 +1,54 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("vaccination.locationType.title", vaccination.programmeOrVariantNameSentenceCase) %}
+
+{% block form %}
+  {{ radios({
+    fieldset: {
+      legend: {
+        caption: vaccination.patient.fullName,
+        heading: title,
+        size: "l"
+      }
+    },
+    items: [
+      {
+        text: LocationType.Home
+      },
+      {
+        text: LocationType.Clinic,
+        conditional: {
+          html: select({
+            label: __("vaccination.clinic_id.title"),
+            items: locationItems(data.clinics, vaccination.clinic_id),
+            decorate: "vaccination.clinic_id",
+            attributes: {
+              "data-module": "app-autocomplete"
+            }
+          })
+        }
+      },
+      {
+        text: LocationType.School,
+        conditional: {
+          html: select({
+            label: __("vaccination.school_id.title"),
+            items: locationItems(data.schools, vaccination.school_id),
+            decorate: "vaccination.school_id",
+            attributes: {
+              "data-module": "app-autocomplete"
+            }
+          })
+        }
+      },
+      {
+        divider: "or"
+      },
+      {
+        text: LocationType.Other,
+        hint: __("vaccination.locationOther.hint")
+      }
+    ],
+    decorate: "vaccination.locationType"
+  }) }}
+{% endblock %}

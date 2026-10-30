@@ -1,0 +1,32 @@
+{% extends "_layouts/session.njk" %}
+
+{% set title = patient.initials + " – " + session.shortName + " – " + __("patientSession.events.title") %}
+{% set headingText = patientSession.patient.fullName %}
+{% set stickyBanner = true %}
+{% set view = "events" %}
+
+{% block beforeContent %}
+  {{ breadcrumb({
+    variant: "reverse",
+    items: [
+      {
+        text: session.name,
+        href: session.uri
+      },
+      {
+        text: __("session.patients.title"),
+        href: session.uri + "/patients"
+      }
+    ]
+  }) }}
+{% endblock %}
+
+{% block content %}
+  {{ super() }}
+
+  {% include "patient-session/_note.njk" %}
+
+  {{ appTimeline({
+    items: timelineItems(patientSession.auditEventLog)
+  }) }}
+{% endblock %}

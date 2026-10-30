@@ -1,0 +1,172 @@
+{% from "patient/_navigation.njk" import patientNavigation with context %}
+
+{% extends "_layouts/form.njk" %}
+
+{% set gridColumns = "full" %}
+{% set hideConfirmButton = true %}
+{% set title = patient.initials %}
+
+{% block beforeContent %}
+  {{ breadcrumb({
+    items: [
+      {
+        text: __("home.show.title"),
+        href: "/"
+      },
+      {
+        text: __("patient.list.title"),
+        href: "/patients"
+      }
+    ]
+  }) }}
+{% endblock %}
+
+{% block form %}
+  {{ super() }}
+
+  {{ patientNavigation({
+    patient: patient,
+    view: "show"
+  }) }}
+
+  {% call card({
+    heading: {
+      text: recordTitle,
+      level: 3
+    },
+    actions: {
+      items: [
+        {
+          text: __("patient.edit.label"),
+          href: patient.uri + "/edit"
+        },
+        {
+          text: __("patient.archive.label"),
+          href: patient.uri + "/archive"
+        } if not patient.isArchived and not account.isSchoolUser
+      ]
+    }
+  }) %}
+    {{ appStatus({
+      text: patient.notice.name,
+      icon: "warning",
+      colour: "blue"
+    }) if patient.notice }}
+
+    {{ appStatus({
+      text: __("patient.hasAgedOutOfProgrammes.status", { patient: patient }),
+      icon: "warning",
+      colour: "blue"
+    }) if patient.hasAgedOutOfProgrammes }}
+
+    {{ summaryList({
+      lastRowBorder: false,
+      rows: summaryRows(patient, {
+        nhsn: {
+          changeLabel: "the child’s NHS number",
+          href: patient.uri + "/edit/nhsn"
+        } if patient.hasMissingNhsNumber,
+        nhsn: {
+          changeText: "PDS history",
+          href: patient.uri + "/pds"
+        } if not patient.hasMissingNhsNumber and not account.isSchoolUser,
+        archiveReason: {
+          other: archiveReasonOther
+        },
+        fullName: {},
+        preferredNames: {},
+        dob: { value: patient.dobWithAge },
+        dod: {},
+        gender: {},
+        impairments: {},
+        adjustments: {},
+        address: {},
+        schoolName: {},
+        yearGroupWithRegistration: {},
+        gpSurgery: {}
+      })
+    }) }}
+  {% endcall %}
+
+  {# Vaccination programmes card #}
+  {% set patientProgrammeRows = [] %}
+  {% set canInviteToClinic = false %}
+  {% set canBookIntoClinic = false %}
+  {% for id, patientProgramme in patient.programmes %}
+    {% if patientProgramme.isActive and account.isSchoolUser %}
+      {% set patientProgrammeRows = patientProgrammeRows | push([
+        {
+          html: patientProgramme.name
+        },
+        {
+          html: patientProgramme.formatted.consentStatus
+        }
+      ]) %}
+    {% elif patientProgramme.isActive %}
+      {% set patientProgrammeRows = patientProgrammeRows | push([
+        {
+          html: link(patientProgramme.uri, patientProgramme.name)
+        },
+        {
+          html: patientProgramme.formatted.status
+        },
+        {
+          html: patientProgramme.statusNotes
+        }
+      ]) %}
+    {% endif %}
+    {% set canInviteToClinic = canInviteToClinic or patientProgramme.clinicStatus === PatientClinicStatus.Ready %}
+    {% set canBookIntoClinic = canBookIntoClinic or canInviteToClinic or patientProgramme.clinicStatus === PatientClinicStatus.Invited %}
+  {% endfor %}
+
+  {% call card({
+    heading: {
+      text: __("patient.programmes.label"),
+      level: 3
+    },
+    actions: {
+      items: [
+        {
+          text: "Invite to clinic",
+          href: patient.uri + "/invite-to-clinic"
+        } if not patient.isArchived and canInviteToClinic,
+        {
+          text: "Book into a clinic",
+          href: patient.uri + "/book-into-a-clinic/"
+        } if not patient.isArchived and canBookIntoClinic,
+        {
+          text: __("patient.homeVisit.label"),
+          href: patient.uri + "/home-visit"
+        } if not patient.isArchived
+      ]
+    } if not account.isSchoolUser
+  }) %}
+    {{ table({
+      id: "programmes",
+      responsive: true,
+      head: [
+        { text: __("patientProgramme.name.label") },
+        { text: __("patientProgramme.consent.label") if account.isSchoolUser else __("patientProgramme.status.label") },
+        { text: __("patientProgramme.statusNotes.label") if not account.isSchoolUser }
+      ],
+      rows: patientProgrammeRows
+    }) }}
+  {% endcall %}
+
+  {# Activity log card #}
+  {{ card({
+    heading: {
+      text: __("patient.auditEvents.label"),
+      level: 3
+    },
+    description: {
+      html: appTimeline({
+        items: timelineItems(patient.auditEvents)
+      })
+    }
+  }) if patient.auditEvents.length and not account.isSchoolUser }}
+
+  {% if not account.isSchoolUser %}
+    {% include "patient/_note.njk" %}
+  {% endif %}
+{% endblock %}

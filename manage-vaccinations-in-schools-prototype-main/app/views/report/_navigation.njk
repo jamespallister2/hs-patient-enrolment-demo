@@ -1,0 +1,44 @@
+{%- from "nhsuk/components/heading/macro.njk" import heading %}
+{%- from "_macros/section-navigation.njk" import appSectionNavigation %}
+
+{% macro reportNavigation(params) %}
+  {{ heading({
+    caption: {
+      text: __("report.list.summary"),
+      placement: "after"
+    },
+    text: __("report.list.title"),
+    size: "l"
+  }) }}
+
+  {{ appSectionNavigation({
+    items: [
+      {
+        text: __("report.vaccinations.label"),
+        href: "/reports/vaccinations",
+        current: params.view == "vaccinations"
+      },
+      {
+        text: __("report.consent.label"),
+        href: "/reports/consent",
+        current: params.view == "consent"
+      },
+      {
+        text: __("report.schools.label"),
+        href: "/reports/schools",
+        current: params.view == "schools"
+      },
+      {
+        text: __("report.local-authorities.label"),
+        href: "/reports/local-authorities",
+        current: params.view == "local-authorities"
+      }
+    ]
+  }) }}
+
+  {{ heading({
+    classes: "nhsuk-u-visually-hidden",
+    text: __("report." + params.view + ".title"),
+    level: 2
+  }) }}
+{% endmacro %}

@@ -1,0 +1,26 @@
+{% extends "_layouts/default.njk" %}
+
+{% set paths = { back: false } %}
+{% set title = __("clinicBooking.confirmation.title") %}
+{% set subtitle = __("clinicBooking.confirmation.subtitle", booking.formatted.bookingReference) %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      {{ panel({
+        heading: title,
+        html: subtitle | safe
+      }) }}
+
+      {% call insetText() %}
+        {{ __("clinicBooking.confirmation.makeANote") | nhsukMarkdown }}
+      {% endcall %}
+
+      <h2 class="nhsuk-heading-l">
+        {{ __("clinicBooking.confirmation.whatNext.title") }}
+      </h2>
+
+      {{ __("clinicBooking.confirmation.whatNext.description") | nhsukMarkdown }}
+    </div>
+  </div>
+{% endblock %}

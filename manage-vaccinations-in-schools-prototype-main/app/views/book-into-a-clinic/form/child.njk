@@ -1,0 +1,55 @@
+{% extends "_layouts/form.njk" %}
+
+{% if childNumber < 2 %}
+  {% set title = __("clinicBooking.child.title.first") %}
+{% else %}
+  {% set title = __("clinicBooking.child.title.next") %}
+{% endif %}
+
+{% block form %}
+  {{ heading({
+    caption: __("clinicBooking.child.caption", childNumber | ordinal) if childCount > 1,
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ __("clinicBooking.child.description") | nhsukMarkdown }}
+
+  {{ input({
+    label: __("clinicBooking.child.firstName.label"),
+    hint: __("clinicBooking.child.firstName.hint"),
+    decorate: "appointment.child.firstName"
+  }) }}
+
+  {{ input({
+    label: __("clinicBooking.child.lastName.label"),
+    hint: __("clinicBooking.child.lastName.hint"),
+    decorate: "appointment.child.lastName"
+  }) }}
+
+  {{ radios({
+    fieldset: {
+      legend: __("clinicBooking.child.hasPreferredName.label")
+    },
+    items: [
+      {
+        label: __("clinicBooking.child.hasPreferredName.yes"),
+        value: true,
+        conditional: {
+          html: input({
+            label: __("clinicBooking.child.preferredFirstName.label") + " (optional)",
+            decorate: "appointment.child.preferredFirstName"
+          }) + input({
+            label: __("clinicBooking.child.preferredLastName.label") + " (optional)",
+            decorate: "appointment.child.preferredLastName"
+          })
+        }
+      },
+      {
+        label: __("clinicBooking.child.hasPreferredName.no"),
+        value: false
+      }
+    ],
+    decorate: "journeyData.preferredNameChoice"
+  }) }}
+{% endblock %}

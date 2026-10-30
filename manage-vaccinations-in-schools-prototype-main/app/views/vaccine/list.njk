@@ -1,0 +1,75 @@
+{% extends "_layouts/default.njk" %}
+
+{% set title = __("vaccine.list.title") %}
+
+{% block content %}
+  {{ super() }}
+
+  {{ heading({
+    text: title,
+    size: "l"
+  }) }}
+
+  {% for vaccine in vaccines %}
+    {% call card({
+      heading: {
+        text: vaccine.brandWithType,
+        size: "m"
+      },
+      href: vaccine.uri
+    }) %}
+      {{ summaryList({
+        lastRowBorder: false,
+        rows: summaryRows(vaccine, {
+          manufacturer: {},
+          snomed: {}
+        })
+      }) }}
+
+      {{ actionLink({
+        text: __("batch.new.label"),
+        href: vaccine.uri + "/batches/new",
+        attributes: {
+          "aria-label": __("batch.new.ariaLabel", vaccine.brandWithType)
+        }
+      }) }}
+
+      {% set batchRows = [] %}
+      {% for batch in vaccine.batches | rejectattr("archivedAt") %}
+        {% set batchRows = batchRows | push([
+          {
+            html: batch.formatted.id
+          },
+          {
+            html: batch.formatted.createdAt or "Not provided"
+          },
+          {
+            html: batch.formatted.expiry or "Not provided"
+          },
+          {
+            html: appActionList({
+              items: [
+                {
+                  text: __("actions.archive"),
+                  href: batch.uri + "/archive"
+                }
+              ]
+            })
+          }
+        ]) %}
+      {% endfor %}
+
+      {{ table({
+        id: "vaccines",
+        responsive: true,
+        head: [
+          { text: __("batch.id.label") },
+          { text: __("batch.createdAt.label") },
+          { text: __("batch.expiry.label") },
+          { text: __("actions.label") }
+        ],
+        rows: batchRows
+      }) if batchRows.length }}
+    {% endcall %}
+  {% endfor %}
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "_layouts/meta.njk" %}
+
+{% set template = data.template or defaultTemplate %}
+{% set title = title or "Text messages" %}
+
+{% set navigationItems = [] %}
+{% for theme, items in templates %}
+  {% for item in items %}
+    {% if item != "" %}
+      {% set navigationItems = navigationItems | push({
+        text: __("texts." + dir + "." + item + ".label"),
+        href: "?template=" + item,
+        current: template === item,
+        theme: theme
+      }) %}
+    {% endif %}
+  {% endfor %}
+{% endfor %}
+
+{% block content %}
+  {{ heading({
+    caption: {
+      text: caption,
+      placement: "before"
+    },
+    text: title,
+    size: "l"
+  }) }}
+
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-one-third">
+      {% for theme, items in navigationItems | groupby("theme") %}
+        {{ heading({
+          classes: "nhsuk-u-margin-bottom-2",
+          text: theme,
+          level: 3,
+          size: "xs"
+        }) }}
+        {{ appSectionNavigation({
+          small: true,
+          vertical: true,
+          items: items
+        }) }}
+      {% endfor %}
+    </div>
+
+    <div class="nhsuk-grid-column-two-thirds">
+      {% call card({
+        heading: {
+          text: __("texts." + dir + "." + template + ".name"),
+          size: "s"
+        }
+      }) %}
+        <article class="prototype-text">
+          {{ __("texts." + dir + "." + template + ".text", placeholders) | nhsukMarkdown }}
+        </article>
+      {% endcall %}
+    <div>
+  </div>
+{% endblock %}

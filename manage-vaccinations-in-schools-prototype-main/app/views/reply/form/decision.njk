@@ -1,0 +1,61 @@
+{% extends "_layouts/form.njk" %}
+
+{% if reply.hasSelfConsent %}
+  {% set title = __("reply.decision.title.Child", {
+    programme: reply.programme
+  }) %}
+{% else %}
+  {% set title = __("reply.decision.title.Contact", {
+    programme: reply.programme,
+    patient: reply.patient
+  }) %}
+{% endif %}
+
+{% block form %}
+  {{ radios({
+    fieldset: {
+      legend: {
+        caption: reply.patient.fullName,
+        heading: title,
+        size: "l"
+      }
+    },
+    items: [
+      {
+        label: __('reply.decision.nasal.label') if programme.alternativeVaccine else __('reply.decision.yes.label'),
+        value: ReplyDecision.Given,
+        conditional: {
+          html: radios({
+            fieldset: {
+              legend: __("reply.hasConsentForAlternativeVaccine.title")
+            },
+            items: getBooleanItems(),
+            decorate: "reply.hasConsentForAlternativeVaccine"
+          })
+        } if programme.alternativeVaccine
+      },
+      {
+        label: __('reply.decision.injection.label'),
+        value: ReplyDecision.OnlyAlternativeInjection
+      } if programme.alternativeVaccine,
+      {
+        label: __('reply.decision.no.label'),
+        value: ReplyDecision.Refused
+      },
+      {
+        divider: "or"
+      },
+      {
+        label: __('reply.decision.noResponse.label'),
+        value: ReplyDecision.NoResponse
+      }
+    ],
+    decorate: "reply.decision"
+  }) }}
+
+  {{ input({
+    type: "hidden",
+    value: programme.id,
+    decorate: "reply.programme_id"
+  }) if not isMultiProgrammeSession }}
+{% endblock %}

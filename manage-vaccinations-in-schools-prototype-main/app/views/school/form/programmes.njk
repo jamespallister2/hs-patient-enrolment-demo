@@ -1,0 +1,25 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("school.programmes.title") %}
+
+{% block form %}
+  {% set presetNameItems = [] %}
+  {% for preset in SessionPresets %}
+    {% set presetNameItems = presetNameItems | push({
+      text: preset.programmeTypes | formatList,
+      value: preset.name
+    }) %}
+  {% endfor %}
+
+  {{ checkboxes({
+    fieldset: {
+      legend: {
+        caption: school.name,
+        heading: title,
+        size: "l"
+      }
+    },
+    items: presetNameItems,
+    decorate: "school.presetNames"
+  }) }}
+{% endblock %}

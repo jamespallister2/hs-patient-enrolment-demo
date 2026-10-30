@@ -1,0 +1,38 @@
+import '/nhsuk-prototype-kit/javascripts/send-unchecked-checkboxes.js'
+
+import {
+  createAll,
+  Button,
+  Checkboxes,
+  Code,
+  ErrorSummary,
+  FileUpload,
+  Header,
+  NotificationBanner,
+  Radios,
+  SkipLink,
+  Tabs
+} from '/nhsuk-frontend/nhsuk-frontend.min.js'
+
+import { Autocomplete } from './components/autocomplete.js'
+import { Sticky } from './components/sticky.js'
+import { AddAnotherComponent } from './custom-elements/add-another.js'
+
+// Register custom elements
+customElements.define('app-add-another', AddAnotherComponent)
+
+// Initiate NHS.UK frontend components on page load
+document.addEventListener('DOMContentLoaded', () => {
+  createAll(Autocomplete)
+  createAll(Button, { preventDoubleClick: true })
+  createAll(Checkboxes)
+  createAll(Code)
+  createAll(ErrorSummary)
+  createAll(FileUpload)
+  createAll(Header)
+  createAll(Sticky)
+  createAll(Radios)
+  createAll(NotificationBanner)
+  createAll(SkipLink)
+  createAll(Tabs)
+})

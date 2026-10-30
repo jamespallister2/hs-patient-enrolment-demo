@@ -1,0 +1,122 @@
+{% from "_macros/patient-search.njk" import appPatientSearch with context %}
+
+{% extends "_layouts/form.njk" %}
+
+{% set dateOfBirth = true %}
+{% set gridColumns = "full" %}
+{% set hideConfirmButton = true %}
+{% set title = __("consent.match.title", { child: consent.child }) %}
+
+{% block form %}
+  {{ super() }}
+
+  {{ heading({
+    text: title,
+    size: "l"
+  }) }}
+
+  <div class="nhsuk-grid-row">
+    <aside class="nhsuk-grid-column-one-third" data-module="app-sticky">
+      {% call card({
+        feature: true,
+        heading: {
+          text: __("consent.label"),
+          level: 2
+        }
+      }) %}
+        {{ summaryList({
+          classes: "nhsuk-u-margin-bottom-4 app-summary-list--full-width",
+          border: false,
+          rows: summaryRows(consent.child, {
+            fullAndPreferredNames: {
+              label: __("consent.child.fullAndPreferredNames.label")
+            },
+            dob: {},
+            postalCode: {},
+            schoolName: {},
+            contact: {
+              label: __("consent.contact.label"),
+              value: consent.formatted.contact
+            }
+          })
+        }) }}
+
+        <p class="nhsuk-body">
+          {{ link({
+            text: "View full consent response",
+            href: consentPath + "?referrer=" + consentPath + "/match"
+          }) }}
+        </p>
+
+        {{ actionLink({
+          href: consentPath + "/add",
+          text: __("consent.add.label")
+        }) }}
+      {% endcall %}
+    </aside>
+
+    <div class="nhsuk-grid-column-two-thirds">
+      {{ appPatientSearch({
+        hideProgrammeStatuses: true,
+        hideClinicStatuses: true,
+        clear: "/consents/" + consent.uuid + "/match"
+      }) }}
+
+      {% if initial %}
+        {{ heading({
+          caption: {
+            text: __("search.initial.default"),
+            placement: "after"
+          },
+          text: __("search.results"),
+          level: 2,
+          size: "m"
+        }) }}
+      {% else %}
+        {{ heading({
+          caption: {
+            html: __mf("patient.results.summary", {
+              from: results.from,
+              to: results.to,
+              count: results.count
+            }),
+            placement: "after"
+          },
+          text: __("search.results"),
+          level: 2,
+          size: "m"
+        }) }}
+
+        {% for patient in results.page %}
+          {{ summaryList({
+            card: {
+              classes: "app-card--compact",
+              heading: {
+                text: patient.fullName | highlightQuery(data.q) | safe,
+                level: 3,
+                size: "s"
+              },
+              clickable: true,
+              href: consentPath + "/link?patient_uuid=" + patient.uuid
+            },
+            lastRowBorder: false,
+            rows: summaryRows(patient, {
+              dob: {},
+              postalCode: {
+                value: patient.postalCode | highlightQuery(data.q)
+              },
+              schoolName: {
+                value: patient.school.name | highlightQuery(data.q)
+              },
+              contacts: {
+                value: patient.formatted.contacts | highlightQuery(data.q)
+              }
+            })
+          }) }}
+        {% endfor %}
+
+        {{ pagination(pages) }}
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

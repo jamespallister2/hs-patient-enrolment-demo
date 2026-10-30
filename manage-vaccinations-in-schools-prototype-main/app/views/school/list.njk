@@ -1,0 +1,161 @@
+{% extends "_layouts/form.njk" %}
+
+{% set gridColumns = "full" %}
+{% set hideConfirmButton = true %}
+{% set title = __("school.list.title") %}
+
+{% block form %}
+  {{ super() }}
+
+  {{ heading({
+    text: title,
+    size: "l"
+  }) }}
+
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-one-third">
+      {% call card({
+        classes: "app-filters",
+        feature: true,
+        heading: {
+          text: __("school.search.label"),
+          level: 2
+        }
+      }) %}
+        {{ searchInput({
+          label: {
+            text: __("search.label"),
+            size: "s"
+          },
+          attributes: {
+            formmethod: "post"
+          },
+          decorate: "q"
+        }) }}
+
+        {{ radios({
+          fieldset: {
+            legend: {
+              text: __("search.sort.label"),
+              size: "s"
+            }
+          },
+          small: true,
+          items: sortItems,
+          decorate: "sort"
+        }) if sortItems }}
+
+        {{ radios({
+          fieldset: {
+            legend: {
+              text: __("school.phase.label"),
+              size: "s"
+            }
+          },
+          small: true,
+          items: radioFilterItems(SchoolPhase, data.phase),
+          decorate: "phase"
+        }) }}
+
+        {{ checkboxes({
+          fieldset: {
+            legend: {
+              text: __("school.unplannedProgrammes.label"),
+              size: "s"
+            }
+          },
+          hint: __("school.unplannedProgrammes.hint"),
+          small: true,
+          items: unplannedProgrammeItems,
+          decorate: "programme_id"
+        }) }}
+
+        {{ checkboxes({
+          fieldset: {
+            legend: {
+              text: __("school.search.showOnly"),
+              size: "s"
+            }
+          },
+          small: true,
+          items: [
+            {
+              label: __("school.search.isClosed"),
+              value: "isClosed"
+            }
+          ],
+          decorate: "option"
+        }) }}
+
+        {{ appButtonGroup({
+          buttons: [
+            {
+              text: __("search.confirm"),
+              small: true,
+              variant: "secondary",
+              attributes: {
+                formmethod: "post"
+              }
+            },
+            {
+              text: __("search.clear"),
+              href: "/schools",
+              small: true,
+              variant: "secondary"
+            } if data.q or data.phase or data.option
+          ]
+        }) }}
+      {% endcall %}
+    </div>
+
+    <div class="nhsuk-grid-column-two-thirds">
+      {% if data.type and data.type != "none" %}
+        {% set title = data.type + "s" %}
+      {% else %}
+        {% set title = "All schools" %}
+      {% endif %}
+
+      {{ heading({
+        caption: {
+          html: __mf("school.results", {
+            from: results.from,
+            to: results.to,
+            count: results.count
+          }),
+          placement: "after"
+        },
+        text: title,
+        level: 2,
+        size: "m"
+      }) }}
+
+      {% for school in results.page %}
+        {{ summaryList({
+          card: {
+            classes: "app-card--compact",
+            heading: {
+              text: school.name | highlightQuery(data.q) | safe,
+              size: "s",
+              level: 3
+            },
+            href: school.uri,
+            clickable: true
+          },
+          lastRowBorder: false,
+          rows: summaryRows(school, {
+            patients: {},
+            id: {},
+            status: {},
+            phase: {},
+            address: {},
+            lastUpload: {},
+            nextSessionDate: {},
+            unplannedProgrammes: {}
+          })
+        }) }}
+      {% endfor %}
+
+      {{ pagination(pages) }}
+    </div>
+  </div>
+{% endblock %}

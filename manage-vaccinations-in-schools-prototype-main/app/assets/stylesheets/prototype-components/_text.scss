@@ -1,0 +1,56 @@
+@use "../vendor/nhsuk-frontend" as *;
+
+$_text-message-background-colour: nhsuk-tint(nhsuk-colour("grey-4"), 50%);
+
+.prototype-text {
+  position: relative;
+
+  max-width: 400px;
+  padding: nhsuk-spacing(3);
+
+  border-radius: nhsuk-spacing(3);
+
+  background-color: $_text-message-background-colour;
+
+  font-family: Helvetica, Arial, sans-serif;
+
+  a {
+    word-break: break-all;
+  }
+
+  &::before {
+    content: "";
+
+    position: absolute;
+    z-index: 0;
+    bottom: 0;
+    left: nhsuk-spacing(-2);
+
+    width: nhsuk-spacing(4);
+    height: nhsuk-spacing(3);
+
+    border-bottom-right-radius: nhsuk-spacing(3);
+
+    background: $_text-message-background-colour;
+  }
+
+  &::after {
+    content: "";
+
+    position: absolute;
+    z-index: 1;
+    bottom: 0;
+    left: nhsuk-spacing(-2);
+
+    width: nhsuk-spacing(2);
+    height: nhsuk-spacing(3);
+
+    border-bottom-right-radius: nhsuk-spacing(2);
+
+    background: nhsuk-colour("white");
+  }
+
+  *:last-child {
+    margin: 0;
+  }
+}

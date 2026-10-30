@@ -1,0 +1,35 @@
+{% extends "_layouts/form.njk" %}
+
+{% block form %}
+  {{ heading({
+    caption: notice.patient.fullName,
+    text: __("notice.action.title", type),
+    size: "l"
+  }) }}
+
+  {{ insetText({
+    text: "Before archiving this notice, make sure you have asked the child’s GP and your CHIS team to hide the Gardasil 9 (HPV) vaccination from their parents."
+  }) if notice.type == NoticeType.NoNotify }}
+
+  {{ __("notice.action.description") | nhsukMarkdown }}
+{% endblock %}
+
+{% block afterForm %}
+  {{ appButtonGroup({
+    buttons: [
+      {
+        text: __("notice.action.confirm", type),
+        variant: "warning",
+        attributes: {
+          formAction: notice.uri + "/" + type
+        }
+      }
+    ],
+    links: [
+      {
+        text: __("notice.action.cancel"),
+        href: "/notices"
+      }
+    ]
+  }) }}
+{% endblock %}

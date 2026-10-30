@@ -1,0 +1,42 @@
+{% call card({
+  classes: "nhsuk-u-margin-top-3",
+  feature: true,
+  heading: {
+    text: programme.name + ": " + (patientProgramme.status | lower),
+    classes: "app-card__heading--" + patientProgramme.statusColour,
+    size: "m"
+  }
+}) %}
+  {# Description #}
+  {{ patientProgramme.statusDescription | nhsukMarkdown }}
+
+  {# Decision table #}
+  {% set vaccinationRows = [] %}
+  {% for vaccination in patientProgramme.vaccinationOutcomes | reverse %}
+    {% set vaccinationRows = vaccinationRows | push([
+      {
+        html: vaccination.link.administeredAt
+      },
+      {
+        html: vaccination.formatted.outcome
+      }
+    ]) %}
+  {% endfor %}
+
+  {{ table({
+    id: "vaccinations",
+    caption: __("patientSession.vaccinationOutcomes.label"),
+    responsive: true,
+    head: [
+      { text: __("vaccination.administeredAt_date.label") },
+      { text: __("vaccination.outcome.label") }
+    ],
+    rows: vaccinationRows
+  }) if patientProgramme.vaccinationOutcomes | length }}
+
+  {# Actions #}
+  {{ actionLink({
+    text: __("patientSession.patientProgramme.label", programme.nameSentenceCase),
+    href: patientProgramme.uri + "?referrer=" + referrer
+  }) }}
+{% endcall %}

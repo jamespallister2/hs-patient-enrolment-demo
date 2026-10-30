@@ -1,0 +1,18 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("session.inviteToClinic.title") %}
+{% set confirmButtonText = __("session.inviteToClinic.confirm") %}
+
+{% block form %}
+  {{ heading({
+    caption: session.location.name,
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ __mf("session.inviteToClinic.count", {
+    count: session.patientSessionsForClinic.length
+  }) | nhsukMarkdown }}
+
+  {{ __("session.inviteToClinic.description", session.nextProgrammeClinic.formatted.date) | nhsukMarkdown }}
+{% endblock %}

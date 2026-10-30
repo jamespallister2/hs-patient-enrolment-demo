@@ -1,0 +1,34 @@
+{% extends "_layouts/form.njk" %}
+
+{% set audience = "parent" if isParentFacing else "team" %}
+{% set title = __("clinicBooking.contact.hasCommunicationNeeds.title." + audience) %}
+
+{% block form %}
+  {{ radios({
+    fieldset: {
+      legend: {
+        caption: appointmentCaption,
+        heading: title,
+        size: "l"
+      }
+    },
+    hint: __("clinicBooking.contact.hasCommunicationNeeds.hint." + audience),
+    items: [
+      {
+        label: __("clinicBooking.contact.hasCommunicationNeeds.yes"),
+        value: true,
+        conditional: {
+          html: textarea({
+            label: __("clinicBooking.contact.communicationNeeds.title"),
+            decorate: "booking.contact.communicationNeeds"
+          })
+        }
+      },
+      {
+        label: __("clinicBooking.contact.hasCommunicationNeeds.no"),
+        value: false
+      }
+    ],
+    decorate: "booking.contact.hasCommunicationNeeds"
+  }) }}
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "_layouts/form.njk" %}
+
+{% set confirmButtonText = __("school.new.check-answers.confirm") %}
+{% set title = __("school.new.check-answers.title") %}
+
+{% block form %}
+  {{ heading({
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ summaryList({
+    card: {
+      heading: {
+        text: __("school.new.summary"),
+        size: "m"
+      }
+    },
+    lastRowBorder: false,
+    rows: summaryRows(school, {
+      urn: {
+        href: school.uri + "/new/urn"
+      },
+      site: {},
+      name: {},
+      address: {},
+      email: {},
+      phase: {
+        href: school.uri + "/new/phase"
+      },
+      isSen: {
+        href: school.uri + "/new/sen"
+      },
+      yearGroups: {
+        href: school.uri + "/new/year-groups"
+      },
+      programmes: {
+        href: school.uri + "/new/programmes"
+      }
+    })
+  }) }}
+{% endblock %}

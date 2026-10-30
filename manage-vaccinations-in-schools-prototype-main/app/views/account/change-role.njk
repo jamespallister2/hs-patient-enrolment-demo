@@ -1,0 +1,22 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("account.change-role.title") %}
+{% set headerOptions = {
+  service: {
+    text: serviceName
+  }
+} %}
+
+{% block form %}
+  {{ radios({
+    fieldset: {
+      legend: {
+        caption: team.name,
+        heading: title,
+        size: "l"
+      }
+    },
+    items: enumItems(UserRole),
+    decorate: "account.role"
+  }) }}
+{% endblock %}

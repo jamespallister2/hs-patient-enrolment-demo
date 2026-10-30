@@ -1,0 +1,38 @@
+{% extends "_layouts/default.njk" %}
+
+{% set title = vaccine.brandWithType %}
+
+{% block content %}
+  {{ super() }}
+
+  {{ heading({
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ summaryList({
+    card: {
+      heading: {
+        text: __("vaccine.show.summary"),
+        size: "m"
+      },
+      actions: [
+        {
+          text: __("vaccine.show.delete"),
+          href: vaccine.uri + "/delete"
+        }
+      ]
+    },
+    lastRowBorder: false,
+    rows: summaryRows(vaccine, {
+      type: {},
+      brand: {},
+      manufacturer: {},
+      snomed: {},
+      method: {},
+      dose: {},
+      healthQuestions: {},
+      sideEffects: {}
+    })
+  }) }}
+{% endblock %}

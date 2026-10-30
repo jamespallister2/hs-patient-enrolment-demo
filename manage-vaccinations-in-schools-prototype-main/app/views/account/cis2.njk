@@ -1,0 +1,53 @@
+{% extends "_layouts/form.njk" %}
+
+{% set assetsName = "public" %}
+{% set hideConfirmButton = true %}
+{% set title = __("account.cis2.method.label") %}
+{% set headerOptions = {
+  service: {
+    text: "CIS2 Authentication"
+  }
+} %}
+
+{% block form %}
+  {{ radios({
+    fieldset: {
+      legend: {
+        heading: title,
+        size: "l"
+      }
+    },
+    name: "method",
+    items: [
+      { label: __("account.cis2.method.smartcard") },
+      { label: __("account.cis2.method.hello") },
+      { label: __("account.cis2.method.key") },
+      { label: __("account.cis2.method.ipad") },
+      { label: __("account.cis2.method.authenticator") },
+      { label: __("account.cis2.method.nhsMail") },
+      { label: __("account.cis2.method.passkey") }
+    ]
+  }) }}
+
+  {{ heading({
+    classes: "nhsuk-u-margin-bottom-2 nhsuk-u-margin-top-5",
+    text: __("account.cis2.terms.title"),
+    level: 2,
+    size: "xs"
+  }) }}
+
+  {{ __("account.cis2.terms.description") | nhsukMarkdown }}
+
+  {{ button({
+    text: __("form.continue")
+  }) }}
+
+  {{ checkboxes({
+    items: [
+      {
+        label: __("account.cis2.remember.label"),
+        hint: __("account.cis2.remember.hint")
+      }
+    ]
+  }) }}
+{% endblock %}

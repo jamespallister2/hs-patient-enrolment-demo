@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.base.json",
+  "include": [
+    "./app.js",
+    "./app/**/*.js",
+    "./node_modules/nhsuk-prototype-kit/**/*.js",
+    "./typings/**/*.d.ts"
+  ],
+  "exclude": ["./app/assets/javascripts"]
+}

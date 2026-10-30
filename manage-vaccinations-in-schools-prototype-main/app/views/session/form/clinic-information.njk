@@ -1,0 +1,15 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("session.venueInformation.title") %}
+
+{% block form %}
+  {{ textarea({
+    label: {
+      heading: title,
+      size: "l"
+    },
+    hint: __("session.venueInformation.hint"),
+    decorate: "session.venueInformation"
+  }) }}
+
+{% endblock %}

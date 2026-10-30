@@ -1,0 +1,29 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("school.urn.title") %}
+
+{% block form %}
+  {{ errorSummary({
+    heading: "There is a problem",
+    errorList: [
+      {
+        text: __("school.urn.error"),
+        href: "#school-urn-error"
+      }
+    ]
+  }) if data.error }}
+
+  {{ heading({
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ input({
+    label: __("school.urn.label"),
+    hint: __("school.urn.hint"),
+    code: true,
+    width: 10,
+    decorate: "school.urn",
+    errorMessage: __("school.urn.error") if data.error
+  }) }}
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends "_layouts/default.njk" %}
+
+{% set title = __("team.show.title") %}
+
+{% block content %}
+  {{ super() }}
+
+  {{ heading({
+    caption: team.name,
+    text: title,
+    size: "l"
+  }) }}
+
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-one-quarter">
+      {{ appSectionNavigation({
+        vertical: true,
+        items: navigationItems
+      }) }}
+    </div>
+
+    <div class="nhsuk-grid-column-three-quarters">
+      {{ summaryList({
+        card: {
+          heading: {
+            text: __("team.sessions.school.defaults"),
+            size: "m"
+          }
+        },
+        lastRowBorder: false,
+        rows: summaryRows(team, {
+          sessionOpenWeeks: {
+            href: team.uri + "/edit/school-sessions"
+          },
+          sessionReminderWeeks: {
+            href: team.uri + "/edit/school-sessions"
+          },
+          hasSchoolSessionRegistration: {
+            href: team.uri + "/edit/school-sessions"
+          }
+        })
+      }) }}
+
+      {{ summaryList({
+        card: {
+          heading: {
+            text: __("team.sessions.clinic.defaults"),
+            size: "m"
+          }
+        },
+        lastRowBorder: false,
+        rows: summaryRows(team, {
+          nasalSprayDuration: {
+            href: team.uri + "/edit/clinic-sessions"
+          },
+          injectionDuration: {
+            href: team.uri + "/edit/clinic-sessions"
+          },
+          hasClinicSessionRegistration: {
+            href: team.uri + "/edit/clinic-sessions"
+          }
+        })
+      }) }}
+    <div>
+  </div>
+{% endblock %}

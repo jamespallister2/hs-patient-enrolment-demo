@@ -1,0 +1,55 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("team.sessions.school.title") %}
+
+{% block form %}
+  {{ heading({
+    caption: team.name,
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ insetText({
+    text: __("team.sessions.school.text")
+  }) }}
+
+  {{ input({
+    formGroup: {
+      classes: "nhsuk-u-margin-bottom-7"
+    },
+    label: {
+      text: __("team.sessionOpenWeeks.title"),
+      size: "m"
+    },
+    hint: __("team.sessionOpenWeeks.hint"),
+    suffix: "weeks",
+    width: 2,
+    decorate: "team.sessionOpenWeeks"
+  }) }}
+
+  {{ input({
+    formGroup: {
+      classes: "nhsuk-u-margin-bottom-7"
+    },
+    label: {
+      text: __("team.sessionReminderWeeks.title"),
+      size: "m"
+    },
+    hint: __("team.sessionReminderWeeks.hint"),
+    suffix: "weeks",
+    width: 2,
+    decorate: "team.sessionReminderWeeks"
+  }) }}
+
+  {{ radios({
+    fieldset: {
+      legend: {
+        text: __("team.hasSchoolSessionRegistration.title"),
+        size: "m"
+      }
+    },
+    inline: true,
+    items: getBooleanItems(),
+    decorate: "team.hasSchoolSessionRegistration"
+  }) }}
+{% endblock %}

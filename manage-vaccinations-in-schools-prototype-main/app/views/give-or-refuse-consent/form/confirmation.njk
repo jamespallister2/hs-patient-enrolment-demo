@@ -1,0 +1,28 @@
+{% extends "_layouts/default.njk" %}
+
+{% set paths = { back: false } %}
+{% set title = __("consent.confirmation.title." + consent.decision) %}
+{% set text = __("consent.confirmation.text." + consent.decision, {
+  consent: consent,
+  session: session
+}) %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      {{ panel({
+        heading: title,
+        text: text | safe if not consent.hasAnswersNeedingTriage
+      }) }}
+
+      {{ __("consent.confirmation.triage." + consent.decision, {
+        consent: consent,
+        session: session
+      }) | nhsukMarkdown if consent.hasAnswersNeedingTriage }}
+
+      {{ __("consent.confirmation.description", {
+        consent: consent
+      }) | nhsukMarkdown }}
+    </div>
+  </div>
+{% endblock %}

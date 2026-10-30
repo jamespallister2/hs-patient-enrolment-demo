@@ -1,0 +1,69 @@
+{%- from "nhsuk/components/details/macro.njk" import details %}
+{%- from "nhsuk/components/heading/macro.njk" import heading %}
+{%- from "nhsuk/components/tables/macro.njk" import table %}
+
+{% macro patientRecords(params) %}
+  {% if params.patients.length %}
+    {% set patientRows = [] %}
+    {% for patient in params.patients %}
+      {% set patientRows = patientRows | push([
+        {
+          html: patient.vaccinations[0].link.fullNameAndNhsn if upload.type == UploadType.Report else patient.formatted.fullNameAndNhsn
+        },
+        {
+          html: patient.formatted.dob
+        },
+        {
+          text: patient.postalCode
+        },
+        {
+          text: patient.formatted.yearGroup
+        } if upload.type == UploadType.School,
+        {
+          text: patient.vaccinations[0].formatted.administeredAt_dateShort
+        } if upload.type == UploadType.Report
+      ]) %}
+    {% endfor %}
+
+    {{ heading({
+      caption: {
+        text: __mf("upload.show." + params.key + ".summary", {
+          count: patientRows.length
+        }) if upload.needsReview,
+        placement: "after"
+      } if params.key != "imported",
+      text: __("upload.show." + params.key + ".title") if upload.needsReview else __("upload.show." + params.key + ".label"),
+      level: 2,
+      size: "m"
+    }) }}
+
+    {{ details({
+      classes: "nhsuk-expander",
+      summary: __mf("upload.show." + params.key + ".count", {
+        count: patientRows.length
+      }),
+      html: table({
+        responsive: true,
+        head: [
+          {
+            text: __("patient.fullNameAndNhsn.label"),
+            width: "one-third"
+          },
+          {
+            text: __("patient.dob.label")
+          },
+          {
+            text: __("patient.postalCode.label")
+          },
+          {
+            text: __("patient.yearGroup.label")
+          } if upload.type == UploadType.School,
+          {
+            text: __("vaccination.createdAt.label")
+          } if upload.type == UploadType.Report
+        ],
+        rows: patientRows
+      })
+    }) | replace('class="nhsuk-details__summary"', 'class="nhsuk-details__summary" data-module="app-sticky"') }}
+  {% endif %}
+{% endmacro %}

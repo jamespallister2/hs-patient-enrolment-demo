@@ -1,0 +1,57 @@
+{% extends "_layouts/default.njk" %}
+
+{% block main %}
+  <div class="app-session-banner"{% if stickyBanner %} data-module="app-sticky"{% endif %}>
+    <div class="nhsuk-width-container">
+      {% block beforeContent %}{% endblock %}
+
+      <div class="nhsuk-main-wrapper app-main-wrapper--xs">
+        {{ notificationBanner(success) if success }}
+        {{ notificationBanner(message) if message }}
+
+        {{ heading({
+          caption: {
+            text: caption,
+            placement: "after"
+          } if caption,
+          text: headingText,
+          size: "l"
+        }) }}
+      </div>
+
+      {{ appSectionNavigation({
+        classes: "app-section-navigation--reverse",
+        items: navigationItems
+      }) if navigationItems }}
+    </div>
+  </div>
+
+  <div class="nhsuk-width-container">
+    <main class="nhsuk-main-wrapper nhsuk-main-wrapper--s" id="maincontent" role="main">
+      <form method="post" novalidate data-validate>
+        {% block content %}
+        {% endblock %}
+      </form>
+    </main>
+  </div>
+
+  {% if not session.isActive %}
+  <form class="app-dev-tools" action="{{ session.uri }}/status" method="post">
+    <div class="nhsuk-width-container">
+      {{ heading({
+        text: "Prototype tools",
+        level: 2,
+        size: "s"
+      }) }}
+
+      {{ "Vaccinations can only be recorded if a session is in progress. If you want to test vaccination recording, you can set this session as in progress for today." | nhsukMarkdown }}
+
+      {{ button({
+        classes: "nhsuk-u-margin-bottom-0",
+        text: "Set session in progress for today",
+        variant: "secondary"
+      }) }}
+    </div>
+  </form>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "_layouts/form.njk" %}
+
+{% set type = download.type | lower %}
+{% set confirmButtonText = __("download.create.confirm", type) %}
+{% set title = __("download.create.title", type) %}
+
+{% block form %}
+  {{ heading({
+    caption: download.session.shortName or download.school.name,
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ __("download.create.description." + download.type) | nhsukMarkdown }}
+
+  {{ radios({
+    formGroup: {
+      classes: "nhsuk-u-margin-bottom-8"
+    },
+    fieldset: {
+      legend: {
+        text: __("download.canRecordOffline.title"),
+        size: "m"
+      }
+    },
+    items: recordOfflineItems,
+    decorate: "download.canRecordOffline"
+  }) }}
+{% endblock %}

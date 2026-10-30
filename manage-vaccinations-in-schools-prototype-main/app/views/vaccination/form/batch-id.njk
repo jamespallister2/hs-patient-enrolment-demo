@@ -1,0 +1,37 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("vaccination.batch_id.title", vaccination.programmeOrVariantNameSentenceCase) if type == "new" else __("vaccination.batch_id.label") %}
+
+{% block form %}
+  {% set batches = [] %}
+  {% for batch in batchItems | sort(false, false, "id") %}
+    {% set batches = batches | push({
+      html: batch.formatted.id + " (" + batch.vaccine.brand + ")",
+      value: batch.id,
+      hint: "Expires " + batch.formatted.expiry,
+      conditional: {
+        html: checkboxes({
+          items: [
+            {
+              label: __("defaultBatch.id.title"),
+              value: batch.id
+            }
+          ],
+          decorate: "defaultBatchId"
+        })
+      } if type == "new" and vaccination.session_id
+    }) %}
+  {% endfor %}
+
+  {{ radios({
+    fieldset: {
+      legend: {
+        caption: vaccination.patient.fullName,
+        heading: title,
+        size: "l"
+      }
+    },
+    items: batches,
+    decorate: "vaccination.batch_id"
+  }) }}
+{% endblock %}

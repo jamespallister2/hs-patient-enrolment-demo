@@ -1,0 +1,18 @@
+{% extends "_layouts/form.njk" %}
+
+{% set audience = "parent" if isParentFacing else "team" %}
+{% set title = __("clinicBooking.preferredLocation.title." + audience, firstName) %}
+
+{% block form %}
+  {{ heading({
+    caption: appointmentCaption,
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ input({
+    label: __("clinicBooking.preferredLocation.location.label"),
+    hint: __("clinicBooking.preferredLocation.location.hint"),
+    decorate: "journeyData.preferredLocation"
+  }) }}
+{% endblock %}

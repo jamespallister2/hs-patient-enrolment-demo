@@ -1,0 +1,23 @@
+{% extends "_layouts/form.njk" %}
+
+{% set confirmButtonVariant = "warning" %}
+{% set confirmButtonText = __("consent.invalidate.confirm") %}
+{% set title = __("consent.invalidate.title") %}
+
+{% block form %}
+  {{ heading({
+    caption: __("consent.invalidate.caption", { consent: consent }),
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ __("consent.invalidate.description") | nhsukMarkdown }}
+
+  {{ textarea({
+    label: {
+      text: __("consent.note.label"),
+      size: "m"
+    },
+    decorate: "consent.note"
+  }) }}
+{% endblock %}

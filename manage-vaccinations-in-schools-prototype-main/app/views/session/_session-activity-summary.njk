@@ -1,0 +1,98 @@
+{% set sessionActivityRows = [] %}
+
+{# Unmatched consent for school sessions #}
+{% if session.type === SessionType.School %}
+  {% set consents = session.unmatchedConsents %}
+  {% if consents.length > 0 %}
+    {% set sessionActivityRows = sessionActivityRows | push(
+      {
+        key: {
+          text: __("session.activity.unmatchedConsent.label")
+        },
+        value: {
+          html: link(session.uri + "/consents", __mf("consent.count", { count: consents.length })) | nhsukMarkdown
+        }
+      }) %}
+  {% endif %}
+{% endif %}
+
+{# Unmatched appointments for clinic sessions #}
+{% if session.type === SessionType.Clinic %}
+  {% set unmatchedAppointments = session.unmatchedAppointments %}
+  {% if unmatchedAppointments.length > 0 %}
+    {% set sessionActivityRows = sessionActivityRows | push(
+      {
+        key: {
+          text: __("session.activity.unmatchedAppointments.label")
+        },
+        value: {
+          html: link(session.uri + "/unmatched-appointments", __mf("appointments.count.activity", { count: unmatchedAppointments.length })) | nhsukMarkdown
+        }
+      }) %}
+  {% endif %}
+{% endif %}
+
+{# No consent response #}
+{% if session.type === SessionType.School %}
+  {% set noConsentRow = sessionActivityRow("getConsent") %}
+  {% if noConsentRow %}
+    {% set sessionActivityRows = sessionActivityRows | push(noConsentRow) %}
+  {% endif %}
+{% endif %}
+
+{# Consent follow-up requested #}
+{% set followUpRow = sessionActivityRow("followUp") %}
+{% if followUpRow %}
+  {% set sessionActivityRows = sessionActivityRows | push(followUpRow) %}
+{% endif %}
+
+{# Conflicting consent #}
+{% set resolveConsentRow = sessionActivityRow("resolveConsent") %}
+{% if resolveConsentRow %}
+  {% set sessionActivityRows = sessionActivityRows | push(resolveConsentRow) %}
+{% endif %}
+
+{# Can offer additional catch-up vaccinations #}
+{% if session.type === SessionType.Clinic %}
+  {% set catchUpRow = sessionActivityRow("offerCatchUps") %}
+  {% if catchUpRow %}
+    {% set sessionActivityRows = sessionActivityRows | push(catchUpRow) %}
+  {% endif %}
+{% endif %}
+
+{# PSD review needed #}
+{% if session.hasPsdProtocol %}
+  {% set psdReviewRow = sessionActivityRow("giveInstructions") %}
+  {% if psdReviewRow %}
+    {% set sessionActivityRows = sessionActivityRows | push(psdReviewRow) %}
+  {% endif %}
+{% endif %}
+
+{# Ready for vaccinator #}
+{% if session.isActive %}
+  {% set readyToVaccinateRow = sessionActivityRow("record") %}
+  {% if readyToVaccinateRow %}
+    {% set sessionActivityRows = sessionActivityRows | push(readyToVaccinateRow) %}
+  {% endif %}
+{% endif %}
+
+{% if sessionActivityRows.length > 0 or session.isCompleted %}
+  {% call card({
+    heading: {
+      text: __("session.activity.label"),
+      level: 2,
+      size: "m"
+    }
+  }) %}
+    {{ summaryList({
+      rows: sessionActivityRows | removeLastSummaryBorder
+    }) if sessionActivityRows.length > 0 and not session.isCompleted }}
+
+    {{ actionLink({
+      text: __("session.inviteToClinic.label"),
+      href: session.uri + "/invite-to-clinic",
+      variant: "secondary"
+    }) if session.isCompleted }}
+  {% endcall %}
+{% endif %}
+

@@ -1,0 +1,7 @@
+You recently booked {{ child.firstName }} into a clinic so they can get their {{ session.vaccinationNames.sentenceCase }}.
+
+Please give consent for {{ child.firstName }} to be vaccinated ahead of your clinic appointment.
+
+[Give consent for the {{ session.vaccinationNames.sentenceCase }}]({{ session.consentUrl }}/start)
+
+{% include "emails/consent/_get-in-touch.njk" %}

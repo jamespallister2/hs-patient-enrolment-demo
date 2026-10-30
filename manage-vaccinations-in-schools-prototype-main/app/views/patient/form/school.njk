@@ -1,0 +1,18 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("patient.school.title") %}
+
+{% block form %}
+  {{ select({
+    label: {
+      caption: patient.fullName,
+      heading: title,
+      size: "l"
+    },
+    items: locationItems(data.schools, patient.school_id),
+    decorate: "patient.school_id",
+    attributes: {
+      "data-module": "app-autocomplete"
+    }
+  }) }}
+{% endblock %}

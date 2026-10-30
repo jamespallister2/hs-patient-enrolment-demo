@@ -1,0 +1,15 @@
+{% extends "_layouts/form.njk" %}
+
+{% set confirmButtonText = __("form.confirm") %}
+{% set title = __("reply.note.title") %}
+
+{% block form %}
+  {{ textarea({
+    label: {
+      caption: __("reply.show.title", reply.fullName),
+      heading: title,
+      size: "l"
+    },
+    decorate: "reply.note"
+  }) }}
+{% endblock %}

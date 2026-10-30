@@ -1,0 +1,27 @@
+{% extends "_layouts/form.njk" %}
+
+{% set confirmButtonText = __("batch.new.confirm") %}
+{% set title = __("batch.new.title") %}
+
+{% block form %}
+  {{ heading({
+    caption: vaccine.brand,
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ input({
+    label: __("batch.id.label"),
+    code: true,
+    width: 10,
+    decorate: "batch.id"
+  }) }}
+
+  {{ dateInput({
+    fieldset: {
+      legend: __("batch.expiry.label")
+    },
+    hint: __("batch.expiry.hint"),
+    decorate: "batch.expiry_"
+  }) }}
+{% endblock %}

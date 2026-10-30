@@ -1,0 +1,31 @@
+{%- from "nhsuk/components/card/macro.njk" import card -%}
+
+{% macro appDataCard(params) %}
+{% set classes = [] %}
+{% if params.colour %}
+  {% set classes = classes | push("app-card--" + params.colour) %}
+{% endif%}
+{% if params.compact %}
+  {% set classes = classes | push("app-card--compact") %}
+{% endif%}
+{% if params.classes %}
+  {% set classes = classes | push(params.classes) %}
+{% endif %}
+{% call card({
+  classes: classes | join(" "),
+  clickable: true if params.href,
+  href: params.href,
+  heading: {
+    text: params.heading.text,
+    level: params.heading.level | default(5),
+    size: params.heading.size | default("xs")
+  }
+}) %}
+  <p class="nhsuk-card__description app-card__data">
+    {{- params.data | default(0) -}}
+  </p>
+  {% if params.meta %}
+    <p class="nhsuk-body-s">{{ params.meta }}</p>
+  {% endif %}
+{% endcall %}
+{% endmacro %}

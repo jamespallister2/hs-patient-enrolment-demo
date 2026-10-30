@@ -1,0 +1,146 @@
+@use "../vendor/nhsuk-frontend" as *;
+
+$_badge-size-mobile: 16px;
+$_badge-small-size-mobile: 12px;
+$_timeline-border-width: 2px;
+
+@function _dot-size($size) {
+  @if $size == "default" {
+    @return $_badge-size-mobile;
+  } @else if $size == "small" {
+    @return $_badge-small-size-mobile;
+  }
+}
+
+@function _dot-ml($size) {
+  @return - calc(($size / 2) + ($_timeline-border-width / 2));
+}
+
+@function _dot-mt-tablet($margin) {
+  @return $margin - 1px;
+}
+
+@mixin _badge($size) {
+  $mt: 4px;
+  $mt-small: 6px;
+  width: _dot-size($size);
+
+  height: _dot-size($size);
+  margin-left: _dot-ml(_dot-size($size));
+
+  @if $size == "default" {
+    margin-top: $mt;
+    margin-right: nhsuk-spacing(4);
+  } @else {
+    margin-top: $mt-small;
+    margin-right: nhsuk-spacing(4) + 2px;
+  }
+
+  @include nhsuk-media-query($from: tablet) {
+    $tablet: _dot-size($size) + 4px;
+    width: $tablet;
+
+    height: $tablet;
+    margin-left: _dot-ml($tablet);
+
+    @if $size == "default" {
+      margin-top: _dot-mt-tablet($mt);
+    } @else {
+      margin-top: _dot-mt-tablet($mt-small);
+    }
+  }
+}
+
+.app-timeline {
+  padding: 0;
+  list-style: none;
+
+  @include nhsuk-responsive-margin(5, "bottom");
+  @include nhsuk-responsive-padding(2, "top");
+}
+
+.app-timeline__item {
+  display: flex;
+  position: relative;
+  margin-top: -6px;
+  margin-bottom: 0;
+  margin-left: 12px;
+
+  @include nhsuk-responsive-padding(5, "bottom");
+
+  &:last-child {
+    padding: 0;
+
+    &::before {
+      border: none;
+    }
+  }
+
+  &::before {
+    content: "";
+
+    display: block;
+
+    position: absolute;
+    top: nhsuk-spacing(2);
+    bottom: 0;
+    left: -$_timeline-border-width;
+
+    width: $_timeline-border-width;
+
+    border-left: $_timeline-border-width solid nhsuk-colour("grey-3");
+  }
+}
+
+.app-timeline__item--past::before {
+  border-color: nhsuk-colour("blue");
+}
+
+.app-timeline__item--highlighted blockquote {
+  padding-right: nhsuk-spacing(3);
+  border-color: nhsuk-tint(nhsuk-colour("warm-yellow"), 10%);
+  background-color: nhsuk-tint(nhsuk-colour("warm-yellow"), 70%);
+}
+
+.app-timeline__badge {
+  z-index: 1;
+  flex-shrink: 0;
+
+  @include _badge("default");
+}
+
+.app-timeline__badge--small {
+  @include _badge("small");
+}
+
+.app-timeline__header {
+  margin-bottom: 0;
+  font-weight: normal;
+
+  @include nhsuk-font-size(19);
+
+  &.nhsuk-u-font-weight-bold .nhsuk-u-font-code {
+    font-weight: inherit;
+  }
+}
+
+.app-timeline__content:last-child {
+  margin-bottom: 0;
+}
+
+.app-timeline__description {
+  padding-top: nhsuk-spacing(1);
+  color: $nhsuk-secondary-text-colour;
+
+  @include nhsuk-responsive-margin(3, "bottom");
+  @include nhsuk-font-size(16);
+
+  .nhsuk-tag {
+    border-color: inherit;
+    color: inherit;
+
+    &:last-of-type {
+      margin-right: nhsuk-spacing(2);
+    }
+  }
+}

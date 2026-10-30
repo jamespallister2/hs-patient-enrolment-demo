@@ -1,0 +1,35 @@
+{% extends "_layouts/form.njk" %}
+
+{% block beforeContent %}{% endblock %}
+{% set title = __("consent.hasEthnicityAnswers.title") %}
+
+{% block form %}
+  {% call fieldset({
+    legend: {
+      heading: title,
+      size: "l"
+    }
+  }) %}
+    {{ __("consent.hasEthnicityAnswers.description") | nhsukMarkdown }}
+
+    {{ radios({
+      fieldset: {
+        legend: {
+          text: __("consent.hasEthnicityAnswers.label"),
+          size: "m"
+        }
+      },
+      items: [
+        {
+          label: __("consent.hasEthnicityAnswers.yes.label"),
+          value: true
+        },
+        {
+          label: __("consent.hasEthnicityAnswers.no.label"),
+          value: false
+        }
+      ],
+      decorate: "consent.hasEthnicityAnswers"
+    }) }}
+  {% endcall %}
+{% endblock %}

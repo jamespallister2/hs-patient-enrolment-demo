@@ -1,0 +1,31 @@
+{% extends "_layouts/form.njk" %}
+
+{% block form %}
+  {{ heading({
+    caption: clinic.name,
+    text: __("clinic.action.title", type),
+    size: "l"
+  }) }}
+
+  {{ __("clinic.action.description") | nhsukMarkdown }}
+{% endblock %}
+
+{% block afterForm %}
+  {{ appButtonGroup({
+    buttons: [
+      {
+        text: __("clinic.action.confirm", type),
+        variant: "warning",
+        attributes: {
+          formAction: clinic.uri + "/" + type
+        }
+      }
+    ],
+    links: [
+      {
+        text: __("clinic.action.cancel"),
+        href: paths.back
+      }
+    ]
+  }) }}
+{% endblock %}

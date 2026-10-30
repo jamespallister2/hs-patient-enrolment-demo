@@ -1,0 +1,25 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("clinicBooking.teamHealthQuestions.title") %}
+
+{% block form %}
+  {{ radios({
+    fieldset: {
+      legend: {
+        heading: title,
+        size: "l"
+      }
+    },
+    items: [
+      {
+        label: __('clinicBooking.teamHealthQuestions.now'),
+        value: true
+      },
+      {
+        label: __('clinicBooking.teamHealthQuestions.later'),
+        value: false
+      }
+    ],
+    decorate: "journeyData.optedIntoHealthQuestions"
+  }) }}
+{% endblock %}

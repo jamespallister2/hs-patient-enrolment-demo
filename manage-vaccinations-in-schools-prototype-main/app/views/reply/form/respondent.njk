@@ -1,0 +1,22 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("reply.respondent.title") %}
+
+{% block form %}
+  {{ radios({
+    fieldset: {
+      legend: {
+        caption: reply.patient.fullName,
+        heading: title,
+        size: "l"
+      }
+    },
+    items: respondentItems | push({
+      divider: "or"
+    }) | push({
+      text: __("reply.respondent.new"),
+      value: "new"
+    }),
+    decorate: "respondent"
+  }) }}
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("consent.add.title") %}
+{% set confirmButtonText = __("consent.add.confirm") %}
+
+{% block form %}
+  {{ super() }}
+
+  {{ heading({
+    caption: __("consent.add.caption", { contact: consent.contact } ),
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ summaryList({
+    card: {
+      heading: {
+        text: __("patient.label"),
+        size: "m"
+      }
+    },
+    lastRowBorder: false,
+    rows: summaryRows(consent.child, {
+      nhsn: {},
+      fullName: {},
+      preferredNames: {},
+      dob: {},
+      gender: {},
+      address: {},
+      schoolName: {},
+      gpSurgery: {}
+    })
+  }) }}
+
+  {{ summaryList({
+    card: {
+      heading: {
+        text: __("consent.label"),
+        size: "m"
+      }
+    },
+    lastRowBorder: false,
+    rows: summaryRows(consent, {
+      decision: {},
+      refusalReason: {},
+      refusalReasonDetails: {}
+    })
+  }) }}
+
+  {{ summaryList({
+    card: {
+      heading: {
+        text: __("consent.healthAnswers.label"),
+        size: "m"
+      }
+    },
+    classes: "app-summary-list--full-width",
+    rows: healthAnswerRows(consent.healthAnswers)
+  }) if consent.hasGivenConsent }}
+{% endblock %}

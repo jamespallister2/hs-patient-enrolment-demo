@@ -1,0 +1,106 @@
+{% extends "_layouts/form.njk" %}
+
+{% set paths = { back: patient.uri } %}
+{% set confirmButtonText = __("patient.inviteToClinic.confirm") %}
+
+{% if clinicReadyProgrammes.length > 1 %}
+  {% set title = __("patient.inviteToClinic.title.multiple") %}
+{% else %}
+  {% if clinicReadyProgrammesWithoutClinics.count === 0 %}
+    {% set title = __("patient.inviteToClinic.title.single.clinicsScheduled", { firstName: patient.firstName, lastName: patient.lastName }) %}
+  {% else %}
+    {% set title = __("patient.inviteToClinic.title.single.noClinicsScheduled", { firstName: patient.firstName, lastName: patient.lastName }) %}
+  {% endif %}
+{% endif %}
+
+{% set checkboxItems = [] %}
+{% for patientProgramme in clinicReadyProgrammes %}
+  {% set checkboxItems = checkboxItems | push({
+    text: patientProgramme.programme.type,
+    value: patientProgramme.programme_id,
+    hint: __mf("patient.inviteToClinic.clinicCount.hint", {
+      programmeName: patientProgramme.programme.name | replace("Flu", "flu"),
+      count: patientProgramme.scheduledClinicsCount
+    })
+  }) %}
+{% endfor %}
+
+{% block form %}
+  {{ heading({
+    caption: patient.fullName,
+    text: title,
+    size: "l",
+    id: "checkboxes-heading"
+  }) }}
+
+  {% if clinicReadyProgrammes.length > 1 %}
+    {#
+      The child is clinic-ready for multiple programmes, so we'll offer checkboxes to invite to all of them,
+      regardless of clinic availability — but warn if any don't have clinics available
+    #}
+    {{ checkboxes({
+      fieldset: {
+        attributes: {
+          "aria-labelledby": "checkboxes-heading"
+        }
+      },
+      items: checkboxItems,
+      decorate: "clinicProgramme_ids"
+    }) }}
+
+    {{ warningCallout({
+      heading: __("patient.inviteToClinic.scheduledClinicWarning.title"),
+      text: __mf("patient.inviteToClinic.scheduledClinicWarning.description",
+        {
+          programmeNames: clinicReadyProgrammesWithoutClinics.names,
+          count: clinicReadyProgrammesWithoutClinics.count
+        }) | safe
+    }) if clinicReadyProgrammesWithoutClinics.count > 0 }}
+  {% else %}
+    {#
+      There must be exactly 1 clinic-ready programme, so only show the paragraph about number of clinics
+      for this one programme if there actually are some. Otherwise, lean on the warning callout.
+    #}
+    {% if clinicReadyProgrammesWithoutClinics.count === 0 %}
+      {# Tell the user how many clinics are available for this child's one clinic-ready programme #}
+      {{ __mf("patient.inviteToClinic.clinicCount.someParagraph",
+      {
+        programmeName: clinicReadyProgrammes[0].programme.name | replace("Flu", "flu"),
+        count: clinicReadyProgrammes[0].scheduledClinicsCount
+      }) | nhsukMarkdown }}
+    {% else %}
+      {# Tell the user there are NO clinics available for this child's one clinic-ready programme #}
+      {{ __("patient.inviteToClinic.clinicCount.noneParagraph",
+          {
+            programmeName: clinicReadyProgrammesWithoutClinics.names
+          }) | nhsukMarkdown
+      }}
+    {% endif %}
+
+    {# Fake the user's selection of a checkbox for this programme #}
+    <input type="hidden" id="clinicProgramme_ids" name="clinicProgramme_ids" value="{{clinicReadyProgrammes[0].programme_id}}" />
+  {% endif %}
+{% endblock %}
+
+{% block afterForm %}
+  {# Include a link to back out if there are no clinics available for the clinic-ready programmes #}
+  {% if clinicReadyProgrammes.length === clinicReadyProgrammesWithoutClinics.count %}
+    {{ appButtonGroup({
+      buttons: [
+        {
+          text: confirmButtonText,
+          variant: confirmButtonVariant
+        }
+      ],
+      links: [
+        {
+          text: __("patient.inviteToClinic.cancel"),
+          href: paths.back
+        }
+      ]
+    }) }}
+  {% else %}
+    {{ super() }}
+  {% endif %}
+{% endblock %}
+

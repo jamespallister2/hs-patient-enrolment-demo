@@ -1,0 +1,43 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("reply.healthAnswers.title") %}
+{% set vaccineName = "nasal spray flu" if reply.programme_id == "flu" else "MMR" %}
+
+{% macro questions(healthQuestions) %}
+  {% for key, value in healthQuestions %}
+    {{ radios({
+      fieldset: {
+        legend: __("healthQuestions." + key + ".label")
+      },
+      hint: __("healthQuestions." + key + ".hint", vaccineName),
+      items: [
+        {
+          text: __("reply.healthAnswers.yes"),
+          conditional: {
+            html: textarea({
+              label: __("reply.healthAnswers.details"),
+              hint: __("healthQuestions." + key + ".detailsHint"),
+              decorate: ["reply", "healthAnswers", key, "details"]
+            })
+          } if not value.conditional else {
+            html: questions(value.conditional)
+          }
+        },
+        {
+          text: __("reply.healthAnswers.no")
+        }
+      ],
+      decorate: ["reply", "healthAnswers", key, "answer"]
+    }) }}
+  {% endfor %}
+{% endmacro %}
+
+{% block form %}
+  {{ heading({
+    caption: reply.patient.fullName,
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ questions(reply.healthQuestionsForDecision) }}
+{% endblock %}

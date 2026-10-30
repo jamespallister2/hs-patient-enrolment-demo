@@ -1,0 +1,17 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("clinicBooking.parentalRelationship.title", firstName) %}
+
+{% block form %}
+  {{ heading({
+    caption: appointmentCaption,
+    text: title,
+    size: "l"
+  }) }}
+
+  {#
+    This question is for use in multi-child journeys, when we reinstate them, as we
+    need to be able to define the contact's relationship with each child separately
+  #}
+  {% include "book-into-a-clinic/form/_parental-relationship.njk" %}
+{% endblock %}

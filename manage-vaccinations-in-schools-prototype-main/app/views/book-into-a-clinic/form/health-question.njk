@@ -1,0 +1,57 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("healthQuestions." + key + ".label") %}
+{#
+  The nasal flu vaccine and both of the MMR vaccines are live vaccines and not suitable
+  for immunocompromised children. If we're showing this page for the immuneSystem health
+  question, we need to know which vaccine types to say are live vaccines. Could be:
+   - nasal spray flu vaccine is
+   - MMR vaccine is
+   - nasal spray flu and MMR vaccines are
+#}
+{% if key === "immuneSystem" %}
+  {# TODO: Move this next line into the controller and update it for the logic above #}
+  {% set hint = __mf("healthQuestions." + key + ".hintMulti", liveVaccines) %}
+{% else %}
+  {% set hint = __("healthQuestions." + key + ".hint") %}
+{% endif %}
+
+{% block form %}
+  {% call fieldset({
+    legend: {
+      caption: __("clinicBooking.healthAnswers.caption", fullName) if childCount > 1,
+      heading: title | replace("the child", "your child") if isParentFacing else title,
+      size: "l"
+    }
+  }) %}
+    {% if __("healthQuestions." + key + ".options") %}
+    <ul class="nhsuk-list nhsuk-list--bullet">
+      {% for option in __("healthQuestions." + key + ".options") %}
+        <li>{{ option }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    {{ radios({
+      hint: hint,
+      items: [
+        {
+          label: __("clinicBooking.healthAnswers.yes"),
+          value: __("clinicBooking.healthAnswers.yes"),
+          conditional: {
+            html: textarea({
+              label: __("clinicBooking.healthAnswers.details"),
+              hint: __("healthQuestions." + key + ".detailsHint"),
+              decorate: ["appointment", "healthAnswers", key, "details"]
+            })
+          } if not hasSubQuestions
+        },
+        {
+          label: __("clinicBooking.healthAnswers.no"),
+          value: __("clinicBooking.healthAnswers.no")
+        }
+      ],
+      decorate: ["appointment", "healthAnswers", key, "answer"]
+    }) }}
+  {% endcall %}
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("patientSession.clinicAppointment.cancel.confirm.title") %}
+
+{% block form %}
+  {{ heading({
+    caption: appointmentSummary,
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ summaryList({
+    card: {
+      heading: {
+        text: __("patientSession.clinicAppointment.cancel.confirm.details"),
+        size: "m"
+      }
+    },
+    lastRowBorder: false,
+    rows: summaryRows(appointment, {
+      nameAndAge: {
+        value: appointment.patient.fullName
+      },
+      dob: {},
+      programmeTags: {},
+      location: {},
+      date: {},
+      timeSlot: {},
+      offerRebooking: {
+        value: "Yes" if data.cancellation.offerRebooking else "No"
+      }
+    })
+  }) }}
+{% endblock %}
+
+{% block afterForm %}
+  {{ appButtonGroup({
+    buttons: [
+      {
+        text: __("patientSession.clinicAppointment.cancel.confirm.confirm"),
+        variant: "warning"
+      }
+    ],
+    links: [
+      {
+        text: __("patientSession.clinicAppointment.cancel.confirm.cancel"),
+        href: matchedPath
+      }
+    ]
+  }) }}
+{% endblock %}
+

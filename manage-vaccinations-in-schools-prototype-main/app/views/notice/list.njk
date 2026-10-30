@@ -1,0 +1,70 @@
+{% from "review/_navigation.njk" import reviewNavigation with context %}
+
+{% extends "_layouts/default.njk" %}
+
+{% set title = __("notice.list.title") %}
+
+{% block content %}
+  {{ super() }}
+
+  {{ reviewNavigation({
+    view: "notice"
+  }) }}
+
+  {% if notices.length %}
+    {% set noticeRows = [] %}
+    {% for notice in notices | sort(false, false, "createdAt") %}
+      {% set noticeRows = noticeRows | push([
+        {
+          html: notice.patient.link.fullNameAndNhsn
+        },
+        {
+          html: notice.formatted.createdAt
+        },
+        {
+          html: notice.patient.notice.name or "Not provided"
+        },
+        {
+          html: appActionList({
+            items: [
+              {
+                text: __("actions.archive"),
+                href: notice.uri + "/archive"
+              }
+            ]
+          })
+        }
+      ]) %}
+    {% endfor %}
+
+    {{ table({
+      id: "notices",
+      responsive: true,
+      card: {
+        heading: {
+          text: __mf("notice.count", { count: notices.length }),
+          level: 3
+        }
+      },
+      head: [
+        {
+          text: __("patient.label"),
+          width: "one-quarter"
+        },
+        {
+          text: __("notice.createdAt.label"),
+          width: "one-quarter"
+        },
+        {
+          text: __("notice.label")
+        },
+        {
+          text: __("actions.label")
+        }
+      ],
+      rows: noticeRows
+    }) }}
+  {% else %}
+    {{ __mf("notice.count", { count: 0 }) | nhsukMarkdown }}
+  {% endif %}
+{% endblock %}

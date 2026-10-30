@@ -1,0 +1,60 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __mf("clinicBooking.addAnother.title", { count: booking.appointments.length }) %}
+
+{% block form %}
+  {{ heading({
+    text: title,
+    size: "l"
+  }) }}
+
+  {% set appointmentRows = [] %}
+  {% for appointment in booking.appointments %}
+    {% set appointmentRows = appointmentRows | push([
+      {
+        html: appointment.fullFriendlyName
+      },
+      {
+        html: appActionList({
+          items: [
+            {
+              text: __("actions.change"),
+              href: appointment.uri.new + "/check-answers"
+            },
+            {
+              text: __("actions.delete"),
+              href: appointment.uri.new + "/delete-appointment"
+            } if booking.appointments.length > 1
+          ]
+        })
+      }
+    ]) %}
+  {% endfor %}
+
+  {{ table({
+    id: "appointments",
+    responsive: true,
+    card: {
+      heading: {
+        text: __("clinicBooking.addAnother.summary.title"),
+        size: "m"
+      }
+    },
+    head: [
+      { text: __("clinicBooking.addAnother.summary.child.label") },
+      { text: __("actions.label") }
+    ],
+    rows: appointmentRows
+  }) if appointmentRows.length }}
+
+  {{ radios({
+    fieldset: {
+      legend: {
+        text: __("clinicBooking.addAnother.question"),
+        size: "m"
+      }
+    },
+    items: getBooleanItems(),
+    decorate: "journeyData.addAnother"
+  }) }}
+{% endblock %}

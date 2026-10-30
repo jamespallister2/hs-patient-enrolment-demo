@@ -1,0 +1,17 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("reply.contact.canNotify.title", { contact: reply.contact }) %}
+
+{% block form %}
+  {{ radios({
+    fieldset: {
+      legend: {
+        caption: reply.patient.fullName,
+        heading: title,
+        size: "l"
+      }
+    },
+    items: getBooleanItems(),
+    decorate: "reply.contact.canNotify"
+  }) }}
+{% endblock %}

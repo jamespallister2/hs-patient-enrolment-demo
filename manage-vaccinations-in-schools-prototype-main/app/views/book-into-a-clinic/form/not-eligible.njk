@@ -1,0 +1,51 @@
+{% extends "_layouts/default.njk" %}
+
+{% set title = __("clinicBooking.notEligible.title", patient.firstName) %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      {{ heading({
+        caption: appointmentCaption,
+        text: title,
+        size: "l"
+      }) }}
+
+      {{ __("clinicBooking.notEligible.description") | nhsukMarkdown }}
+
+      {% set statusHtml -%}
+        {%- for id, patientProgramme in patient.activeProgrammes -%}
+          {{ patientProgramme.formatted.programmeStatus | nhsukMarkdown }}
+        {%- endfor %}
+      {%- endset %}
+
+      {{ summaryList({
+        card: {
+          classes: "app-card--compact",
+          heading: {
+            text: patient.fullName | safe,
+            level: 2,
+            size: "s"
+          }
+        },
+        lastRowBorder: false,
+        rows: summaryRows(patient, {
+          dob: {},
+          programmeStatus: {
+            label: __("patientSession.status.label"),
+            value: statusHtml
+          },
+          upcomingAppointments: {},
+          upcomingSchoolSessions: {}
+        })
+      }) }}
+
+      <p class="nhsuk-body">
+        {{ link({
+          text: __("clinicBooking.notEligible.return"),
+          href: session.uri + "/patients"
+        }) }}
+      </p>
+    </div>
+  </div>
+{% endblock %}

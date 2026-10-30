@@ -1,0 +1,49 @@
+{% extends "_layouts/form.njk" %}
+
+{% set confirmButtonText = __("form.confirm") %}
+{% set paths = { back: team.uri + "/schools" } %}
+{% set title = __("school.edit.title") %}
+
+{% block form %}
+  {{ super() }}
+
+  {{ heading({
+    caption: school.name,
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ summaryList({
+    card: {
+      heading: {
+        text: __("school.edit.summary"),
+        size: "m"
+      }
+    },
+    lastRowBorder: false,
+    rows: summaryRows(school, {
+      id: {},
+      name: {
+        href: "edit/name" if school.site
+      },
+      address: {
+        href: "edit/address" if school.site
+      },
+      email: {
+        href: "edit/email"
+      },
+      phase: {
+        href: "edit/phase"
+      },
+      isSen: {
+        href: "edit/sen"
+      },
+      yearGroups: {
+        href: "edit/year-groups"
+      },
+      programmes: {
+        href: "edit/programmes"
+      }
+    })
+  }) }}
+{% endblock %}

@@ -1,0 +1,47 @@
+@use "../vendor/nhsuk-frontend" as *;
+
+@mixin _app-summary-list-full-width {
+  .nhsuk-summary-list__row {
+    display: block;
+    padding-top: nhsuk-spacing(2);
+    padding-bottom: nhsuk-spacing(2);
+  }
+
+  &.nhsuk-summary-list--no-border .nhsuk-summary-list__row {
+    padding: 0;
+  }
+
+  .nhsuk-summary-list__key,
+  .nhsuk-summary-list__value,
+  .nhsuk-summary-list__actions {
+    display: block;
+    width: 100%;
+    text-align: left;
+  }
+
+  .nhsuk-summary-list__key {
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .nhsuk-summary-list__value {
+    padding-top: nhsuk-spacing(1);
+  }
+}
+
+.app-summary-list--full-width {
+  @include _app-summary-list-full-width;
+}
+
+.app-summary-list--full-width-at-large-desktop {
+  @include nhsuk-media-query($from: large-desktop) {
+    @include _app-summary-list-full-width;
+  }
+}
+
+.nhsuk-summary-list {
+  .nhsuk-icon {
+    width: nhsuk-px-to-rem(19);
+    height: nhsuk-px-to-rem(19);
+  }
+}

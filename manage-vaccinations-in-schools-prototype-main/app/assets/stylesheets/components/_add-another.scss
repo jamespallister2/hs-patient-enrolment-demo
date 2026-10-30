@@ -1,0 +1,47 @@
+@use "../vendor/nhsuk-frontend" as *;
+
+$_counter-size: 2rem;
+
+.app-add-another {
+  display: block;
+}
+
+// Show focus state when heading receives focus
+h1:has(+ .app-add-another):focus {
+  display: inline-block;
+
+  @include nhsuk-focused-text;
+}
+
+.app-add-another__list {
+  counter-reset: items;
+}
+
+.app-add-another__list-item {
+  --label-font: var(--font-fieldset-label);
+  position: relative;
+  padding-bottom: nhsuk-spacing(3);
+  padding-left: calc($_counter-size + nhsuk-spacing(3));
+
+  &::before {
+    content: counter(items);
+
+    display: flex;
+
+    position: absolute;
+
+    align-items: center;
+    justify-content: center;
+
+    width: $_counter-size;
+    height: $_counter-size;
+
+    color: nhsuk-colour("white");
+    background-color: nhsuk-colour("blue");
+
+    font-weight: bold;
+
+    counter-increment: items;
+    inset: 0;
+  }
+}

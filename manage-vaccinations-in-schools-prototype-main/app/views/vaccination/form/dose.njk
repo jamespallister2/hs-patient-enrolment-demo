@@ -1,0 +1,35 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("vaccination.dose.title", vaccination.programmeOrVariantNameSentenceCase) %}
+
+{% block form %}
+  {{ input({
+    label: {
+      caption: vaccination.patient.fullName,
+      heading: title,
+      size: "l"
+    },
+    suffix: "ml",
+    width: 5,
+    decorate: "vaccination.dose"
+  }) if vaccination.vaccine.criteria != VaccineCriteria.Intranasal else radios({
+    fieldset: {
+      legend: {
+        caption: vaccination.patient.fullName,
+        heading: __("vaccination.dosage.title"),
+        size: "l"
+      }
+    },
+    items: [
+      {
+        label: __("vaccination.dosage.full"),
+        value: "full"
+      },
+      {
+        label: __("vaccination.dosage.half"),
+        value: "half"
+      }
+    ],
+    decorate: "vaccination.dosage"
+  }) }}
+{% endblock %}

@@ -1,0 +1,33 @@
+@use "../vendor/nhsuk-frontend" as *;
+@use "../core" as app;
+
+.app-vaccine-criteria {
+  display: inline-flex;
+  align-items: center;
+  column-gap: nhsuk-spacing(2);
+
+  &[data-value="Gelatine-free injection only"]::before,
+  &[data-value="Injected vaccine only"]::before,
+  &[data-value="Nasal spray only"]::before,
+  &[data-value="Nasal spray preferred"]::before {
+    content: "";
+    width: 1em;
+    height: 1em;
+  }
+
+  &[data-value="Gelatine-free injection only"]::before,
+  &[data-value="Injected vaccine only"]::before {
+    background-color: currentcolor;
+    rotate: 45deg;
+    scale: 0.75;
+    transform-origin: center;
+  }
+
+  &[data-value="Nasal spray only"]::before,
+  &[data-value="Nasal spray preferred"]::before {
+    width: 1em;
+    height: 1em;
+    border: 0.25em solid currentcolor;
+    border-radius: 100%;
+  }
+}

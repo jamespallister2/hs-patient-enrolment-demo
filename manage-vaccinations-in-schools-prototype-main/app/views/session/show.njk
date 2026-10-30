@@ -1,0 +1,81 @@
+{% extends "_layouts/session.njk" %}
+
+{% set title = session.shortName %}
+{% set headingText = title %}
+{% set caption = session.formatted.date
+   + (" – " + session.formatted.yearGroups if session.type === SessionType.School)
+%}
+
+{% block content %}
+  {# Programme tabs (plus clinic details for clinic sessions) #}
+  {% include "session/_session-programme-summary.njk" %}
+
+  {# Vaccinations given in this session #}
+  {% if session.isActive or session.isCompleted %}
+    {% include "session/_session-vaccinated-summary.njk" %}
+  {% endif %}
+
+  {# Action required #}
+  {% if not session.isUnplanned %}
+    {% include "session/_session-activity-summary.njk" %}
+  {% endif %}
+
+  {# Session details (and edit/cancel actions, plus offline sheet) #}
+  {% call card({
+    heading: {
+      text: __("session.summary"),
+      level: 2,
+      size: "m"
+    },
+    actions: {
+      items: [
+      {
+        text: __("session.schedule.title") if session.isUnplanned else __("session.edit.title"),
+        href: session.uri + "/edit"
+      } if not session.isCancelled,
+      {
+        text: __("session.action.cancel"),
+        href: session.uri + "/cancel"
+      } if session.isPlanned or session.isUnplanned
+      ]
+    }
+  }) %}
+    {% set sessionDetailsRows = {
+      location: {},
+      school_id: {},
+      status: {},
+      patients: {},
+      programmes: {},
+      yearGroups: {},
+      consentWindow: {},
+      consentForms: {},
+      mmrConsent: {},
+      hasRegistration: {},
+      protocolNurse: {},
+      protocolHCA: {},
+      hasPsdProtocol: {}
+    } %}
+    {% if session.type === SessionType.Clinic %}
+      {% set sessionDetailsRows = {
+          location: {},
+          status: {},
+          programmes: {},
+          date: {},
+          vaccinationPeriods: {},
+          vaccinators: {},
+          appointmentLengths: {},
+          hasRegistration: {}
+      } %}
+    {% endif %}
+
+    {{ summaryList({
+      lastRowBorder: false,
+      rows: summaryRows(session, sessionDetailsRows)
+    }) }}
+
+    {{ actionLink({
+      text: __("session.download.label"),
+      href: session.uri + "/download?referrer=" + session.uri
+    }) if session.isPlanned or session.isActive }}
+  {% endcall %}
+{% endblock %}

@@ -1,0 +1,52 @@
+@use "../vendor/nhsuk-frontend" as *;
+
+.app-highlight {
+  border-bottom: 3px solid nhsuk-colour("warm-yellow");
+  background-color: nhsuk-tint(nhsuk-colour("warm-yellow"), 80%);
+
+  a & {
+    color: $nhsuk-link-colour;
+  }
+
+  a:visited & {
+    color: $nhsuk-link-visited-colour;
+  }
+
+  a:hover & {
+    color: $nhsuk-link-hover-colour;
+  }
+
+  a:active & {
+    color: $nhsuk-link-active-colour;
+  }
+
+  a:focus & {
+    border-color: transparent;
+    color: $nhsuk-focus-text-colour;
+    background-color: transparent;
+  }
+
+  // Ensure highlight is announced by screen readers
+  // @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/mark#accessibility
+  &::before,
+  &::after {
+    position: absolute;
+
+    width: 1px;
+    height: 1px;
+
+    overflow: hidden;
+
+    clip-path: inset(100%);
+
+    white-space: nowrap;
+  }
+
+  &::before {
+    content: " [highlight start] ";
+  }
+
+  &::after {
+    content: " [highlight end] ";
+  }
+}

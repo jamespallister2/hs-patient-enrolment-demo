@@ -1,0 +1,17 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("school.isSen.title") %}
+
+{% block form %}
+  {{ radios({
+    fieldset: {
+      legend: {
+        caption: school.name,
+        heading: title,
+        size: "l"
+      }
+    },
+    items: getBooleanItems(),
+    decorate: "school.isSen"
+  }) }}
+{% endblock %}

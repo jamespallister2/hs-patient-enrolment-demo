@@ -1,0 +1,44 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("clinicBooking.shortenAppointment.title") %}
+{% set hideConfirmButton = true %}
+
+{% block form %}
+{% set scenarioKey = "specificSlot" if slotStartTime else "anySlot" %}
+  {% set panelHtml %}
+    {{ __mf("clinicBooking.shortenAppointment.description." + scenarioKey, {
+      requiredMinutes: requiredMinutes,
+      requiredSlots: requiredSlots,
+      availableMinutes: availableMinutes,
+      availableSlots: availableSlots,
+      slotStartTime: slotStartTime
+    }) | nhsukMarkdown }}
+
+    {{ buttonGroup({
+      buttons: [
+        {
+          text: __("clinicBooking.shortenAppointment.confirm"),
+          variant: "reverse"
+        }
+      ],
+      links: [
+        {
+          text: __("clinicBooking.shortenAppointment.cancelEdit"),
+          href: editPath + "/discard"
+        } if journeyData.journeyType === ClinicBookingJourneyType.TeamEditing else {
+          text: __("clinicBooking.shortenAppointment.cancelEdit"),
+          href: session.uri + "/appointments"
+        }
+      ]
+    }) }}
+  {% endset %}
+
+  {{ panel({
+    heading: {
+      text: title,
+      size: "l"
+    },
+    variant: "interruption",
+    html: panelHtml
+  }) }}
+{% endblock %}

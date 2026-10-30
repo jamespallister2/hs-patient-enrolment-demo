@@ -1,0 +1,28 @@
+{% extends "_layouts/form.njk" %}
+
+{% set audience = "parent" if isParentFacing else "team" %}
+{% set title = __("clinicBooking.fluAlternative.title." + audience, firstName) %}
+
+{% block form %}
+  {{ radios({
+    fieldset: {
+      legend: {
+        caption: appointmentCaption,
+        heading: title,
+        size: "l"
+      }
+    },
+    hint: __("clinicBooking.fluAlternative.hint"),
+    items: [
+      {
+        label: __("clinicBooking.fluAlternative.yes.label." + audience),
+        value: true
+      },
+      {
+        label: __("clinicBooking.fluAlternative.no.label." + audience),
+        value: false
+      }
+    ],
+    decorate: "appointment.fluAlternative"
+  }) }}
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "_layouts/form.njk" %}
+
+{%- from "_macros/triage-form.njk" import appTriageForm with context %}
+
+{% set title = __("triage.new.title") %}
+
+{% block form %}
+  {{ heading({
+    caption: patient.fullName,
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ appTriageForm({
+    context: patientProgramme
+  }) }}
+{% endblock %}

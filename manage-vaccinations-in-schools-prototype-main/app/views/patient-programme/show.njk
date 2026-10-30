@@ -1,0 +1,257 @@
+{% from "patient/_navigation.njk" import patientNavigation with context %}
+
+{% extends "_layouts/form.njk" %}
+
+{% set gridColumns = "full" %}
+{% set hideConfirmButton = true %}
+{% set title = patient.initials + " – " + patientProgramme.name %}
+{% set formAction = patientProgramme.uri + "/record?referrer=" + referrer %}
+
+{% block beforeContent %}
+  {{ breadcrumb({
+    items: [
+      {
+        text: __("home.show.title"),
+        href: "/"
+      },
+      {
+        text: __("patient.list.title"),
+        href: "/patients"
+      },
+      {
+        text: patient.fullName,
+        href: patient.uri
+      } if patientProgramme.activeSeason and not patientProgramme.isActive,
+      {
+        text: patientProgramme.activeSeason.programme.name,
+        href: patientProgramme.activeSeason.uri
+      } if patientProgramme.activeSeason and not patientProgramme.isActive
+    ]
+  }) }}
+{% endblock %}
+
+{% block form %}
+  {{ super() }}
+
+  {% if patientProgramme.isActive %}
+    {{ patientNavigation({
+      patient: patient
+    }) }}
+  {% else %}
+    {{ heading({
+      caption: patient.fullName,
+      text: patientProgramme.name,
+      size: "l"
+    }) }}
+  {% endif %}
+
+  {% call card({
+    heading: {
+      text: __mf("patientProgramme.vaccinationsGiven.count", {
+        count: patientProgramme.vaccinationsGiven.length
+      }),
+      level: 3
+    }
+  }) %}
+    {{ patientProgramme.formatted.statusWithNotes | nhsukMarkdown }}
+
+    {% if patientProgramme.vaccinationsGiven.length %}
+      {% set vaccinationRows = [] %}
+      {% for vaccination in patientProgramme.vaccinationsGiven %}
+        {% set vaccinationRows = vaccinationRows | push([
+          {
+            html: vaccination.link.administeredAt
+          },
+          {
+            text: patient.dob | age(at=vaccination.administeredAt)
+          },
+          {
+            html: vaccination.formatted.programmeWithSequence
+          },
+          {
+            text: vaccination.source
+          }
+        ]) %}
+      {% endfor %}
+
+      {{ table({
+        id: "vaccinations",
+        responsive: true,
+        head: [
+          { text: __("vaccination.administeredAt.label") },
+          { text: __("vaccination.age.label") },
+          { text: __("vaccination.programme.label") },
+          { text: __("vaccination.source.label") }
+        ],
+        rows: vaccinationRows
+      }) }}
+    {% endif %}
+
+    {{ actionLink({
+      classes: "nhsuk-u-margin-0",
+      text: __("vaccination.new.alreadyVaccinated.title"),
+      href: patientProgramme.uri + "/new/previous-vaccination"
+    }) if patientProgramme.canRecordVaccination  }}
+  {% endcall %}
+
+  {% if patientProgramme.tetanusVaccinations %}
+    {% call card({
+      heading: {
+        text: __("patientProgramme.tetanus.label"),
+        level: 3
+      }
+    }) %}
+      {% set tetanusVaccinationRows = [] %}
+      {% for vaccination in patientProgramme.tetanusVaccinations %}
+        {% set tetanusVaccinationRows = tetanusVaccinationRows | push([
+          {
+            text: vaccination.formatted.administeredAt_date
+          },
+          {
+            text: patient.dob | age(at=vaccination.administeredAt)
+          },
+          {
+            html: vaccination.formatted.programmeWithSequence
+          },
+          {
+            html: loop.index | ordinal
+          }
+        ]) %}
+      {% endfor %}
+
+      {{ table({
+        id: "tetanus",
+        responsive: true,
+        head: [
+          { text: __("vaccination.administeredAt.label") },
+          { text: __("vaccination.age.label") },
+          { text: __("vaccination.programme.label") },
+          { text: __("vaccination.tetanus.label") }
+        ],
+        rows: tetanusVaccinationRows
+      }) }}
+
+      {{ actionLink({
+        text: __("vaccination.new.alreadyVaccinated.tetanus"),
+        href: patientProgramme.uri + "/new/tetanus"
+      }) }}
+    {% endcall %}
+  {% endif %}
+
+  
+  {% call card({
+    heading: {
+      text: __("patientProgramme.patientSessions.label"),
+      level: 3
+    }
+  }) %}
+    {% if patientProgramme.patientSessions.length %}
+      {% set patientSessionRows = [] %}
+      {% for patientSession in patientProgramme.patientSessions %}
+        {% set patientSessionRows = patientSessionRows | push([
+          {
+            html: link(patientSession.uri, patientSession.session.location.name)
+          },
+          {
+            html: patientSession.session.formatted.date if patientSession.session.date else patientSession.session.status
+          },
+          {
+            html: patientSession.formatted.outcome or "No outcome"
+          }
+        ]) %}
+      {% endfor %}
+
+      {{ table({
+        id: "patient-sessions",
+        sort: "name",
+        responsive: true,
+        head: [
+          {
+            text: __("session.location.label"),
+            width: "one-third"
+          },
+          {
+            text: __("session.date.label")
+          },
+          {
+            text: __("patientSession.outcome.label")
+          }
+        ],
+        rows: patientSessionRows
+      }) }}
+    {% else %}
+      {{ __("patientProgramme.patientSessions.none", patient.firstName) | nhsukMarkdown }}
+    {% endif %}
+
+    {{ appButtonGroup({
+      buttons: [
+        {
+          text: __("patientProgramme.inviteToClinic.label") | safe,
+          variant: "secondary",
+          decorate: "programme_ids",
+          value: patientProgramme.programme.id,
+          attributes: {
+            formaction: patient.uri + "/invite-to-clinic?referrer=" + patientProgramme.uri
+          }
+        },
+        {
+          text: __("patientProgramme.activeClinics.label") | safe,
+          href: patientProgramme.uri + "/clinics",
+          variant: "secondary"
+        },
+        {
+          text: __("patientProgramme.homeVisit.label"),
+          href: patientProgramme.uri + "/home-visit",
+          variant: "secondary"
+        }
+      ]
+    }) if patientProgramme.status != PatientStatus.Vaccinated and not patientProgramme.isIneligible and patientProgramme.isActive }}
+  {% endcall %}
+
+  {{ card({
+    heading: {
+      text: __("patientProgramme.auditEvents.label"),
+      level: 3
+    },
+    description: {
+      html: appTimeline({
+        items: timelineItems(patientProgramme.auditEvents)
+      })
+    }
+  }) if patientProgramme.auditEvents.length }}
+
+  {% if patientProgramme.otherSeasons %}
+    {% call card({
+      heading: {
+        text: __("patientProgramme.otherSeasons.label", patientProgramme.programme.nameSentenceCase),
+        level: 3
+      }
+    }) %}
+      {% set otherSeasonRows = [] %}
+      {% for patientProgramme in patientProgramme.otherSeasons %}
+        {% set otherSeasonRows = otherSeasonRows | push([
+          {
+            html: link(patientProgramme.uri, patientProgramme.name)
+          },
+          {
+            html: patientProgramme.formatted.status
+          },
+          {
+            html: patientProgramme.statusNotes
+          }
+        ]) %}
+      {% endfor %}
+
+      {{ table({
+        id: "other-seasons",
+        responsive: true,
+        head: [
+          { text: __("patientProgramme.name.label") },
+          { text: __("patientProgramme.status.label") },
+          { text: __("patientProgramme.statusNotes.label") }
+        ],
+        rows: otherSeasonRows
+      }) }}
+    {% endcall %}
+  {% endif %}
+{% endblock %}

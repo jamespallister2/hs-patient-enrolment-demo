@@ -1,0 +1,137 @@
+{% extends "_layouts/form.njk" %}
+
+{% set gridColumns = "full" %}
+{% set hideConfirmButton = true %}
+{% set title = __("upload.listSchoolUser.title") if account.isSchoolUser else __("upload.list.title") %}
+
+{% block form %}
+  {{ super() }}
+
+  {{ heading({
+    text: title,
+    size: "l"
+  }) }}
+
+  {% if account.isSchoolUser %}
+    <div class="app-action-link-with-description">
+      {{ actionLink({
+        href: "/uploads/new?school_id=" + account.team.schools[0].id,
+        text: __("session.upload-class-list.title")
+      }) }}
+      <p class="nhsuk-body">
+        {{ link({
+          text: __("upload.guides.index.title"),
+          href: "/uploads/guides"
+        }) }}
+      </p>
+    </div>
+  {% else %}
+    {{ actionLink({
+      href: "/uploads/new",
+      text: __("upload.new.label")
+    }) }}
+  {% endif %}
+
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-one-third">
+      {% call card({
+        classes: "app-filters",
+        feature: true,
+        heading: {
+          text: __("upload.search.label"),
+          level: 2
+        }
+      }) %}
+        {{ radios({
+          fieldset: {
+            legend: {
+              text: __("upload.type.label"),
+              size: "s"
+            }
+          },
+          small: true,
+          items: radioFilterItems(UploadType),
+          decorate: "type"
+        }) if not account.isSchoolUser }}
+
+        {{ checkboxes({
+          fieldset: {
+            legend: {
+              text: __("upload.status.label"),
+              size: "s"
+            }
+          },
+          small: true,
+          items: checkboxFilterItems(SchoolUploadStatus if account.isSchoolUser else TeamUploadStatus),
+          decorate: "status"
+        }) }}
+
+        {{ appButtonGroup({
+          buttons: [
+            {
+              text: __("search.confirm"),
+              small: true,
+              variant: "secondary",
+              attributes: {
+                formmethod: "post"
+              }
+            },
+            {
+              text: __("search.clear"),
+              href: "/uploads",
+              small: true,
+              variant: "secondary"
+            } if data.type or data.status
+          ]
+        }) }}
+      {% endcall %}
+    </div>
+
+    <div class="nhsuk-grid-column-two-thirds">
+      {% if data.type and data.type != "none" and not account.isSchoolUser %}
+        {% set title = data.type | replace("records", "record uploads") %}
+      {% else %}
+        {% set title = __("upload.list.results") %}
+      {% endif %}
+
+      {{ heading({
+        caption: {
+          html: __mf("upload.results", {
+            from: results.from,
+            to: results.to,
+            count: results.count
+          }),
+          placement: "after"
+        },
+        text: title,
+        level: 2,
+        size: "m"
+      }) }}
+
+      {% for upload in results.page %}
+        {{ summaryList({
+          card: {
+            classes: "app-card--compact",
+            heading: {
+              text: upload.nameFor(account),
+              size: "s",
+              level: 3
+            },
+            href: upload.uri,
+            clickable: true
+          },
+          lastRowBorder: false,
+          rows: summaryRows(upload, {
+            fileName: {},
+            school: {} if not account.isSchoolUser else none,
+            yearGroups: {},
+            schoolStatus: {} if account.isSchoolUser else none,
+            teamStatus: {} if not account.isSchoolUser else none
+          })
+        }) }}
+      {% endfor %}
+
+      {{ pagination(pages) }}
+    </div>
+  </div>
+{% endblock %}

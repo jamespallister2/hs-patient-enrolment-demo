@@ -1,0 +1,26 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("session.clinic.title") %}
+
+{% block form %}
+  {{ heading({
+    text: title,
+    size: "l"
+  }) }}
+
+  {% if clinicRadios %}
+    {{ radios({
+      items: clinicRadios,
+      decorate: "session.clinic_id"
+    }) }}
+  {% else %}
+    {{ select({
+      label: __("session.clinic.search.label"),
+      items: locationItems(clinics, session.clinic_id),
+      decorate: "session.clinic_id",
+      attributes: {
+        "data-module": "app-autocomplete"
+      }
+    }) }}
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,401 @@
+import {
+  AuditEventType,
+  ConsentStatus,
+  ConsentWindow,
+  PatientStatus,
+  PreScreenQuestion,
+  RegistrationStatus,
+  SessionType,
+  VaccinationOutcome,
+  VaccineCriteria
+} from '../enums.js'
+import { PatientSession, Programme, User, Vaccination } from '../models.js'
+import { getAccountVaccineMethods } from '../utils/account.js'
+import { formatDate, today } from '../utils/date.js'
+import { getAdditionalNeeds } from '../utils/feature-flags.js'
+import { saveAndRedirect } from '../utils/redirect.js'
+
+export const patientSessionController = {
+  /**
+   * @type {RequestParamHandler}
+   */
+  read(request, response, next, nhsn) {
+    const { programme_id, session_id } = request.params
+    const { __, account } = response.locals
+    const { data } = request.session
+
+    const patientSession = PatientSession.findAll(data).find(
+      (patientSession) =>
+        patientSession.session_id === session_id &&
+        patientSession.programme_id === programme_id &&
+        patientSession.patient.nhsn === nhsn
+    )
+
+    const registeredNurseUsers = User.findAll(data).filter(
+      (user) => user.isRegisteredNurse
+    )
+
+    const allVaccinatingUsers = User.findAll(data).filter(
+      (user) => user.canVaccinate
+    )
+
+    const { clinicAppointment, patient, patientProgramme, programme, session } =
+      patientSession
+
+    const vaccinated = patientSession.siblingPatientSessions.find(
+      ({ patientProgramme }) => patientProgramme.isVaccinated
+    )
+
+    const due = patientSession.siblingPatientSessions.filter(
+      (patientSession) => patientSession.canRecordSessionOutcome
+    )
+
+    const vaccineMethods = getAccountVaccineMethods(account, patientSession)
+
+    response.locals.options = {
+      // Show outstanding vaccinations
+      showOutstandingVaccinations: vaccinated && due.length > 1,
+      // Send a request to give consent (if none sent yet, or it failed)
+      canInvite:
+        patient.hasContactDetails &&
+        session.consentWindow === ConsentWindow.Open &&
+        !session.isActive &&
+        (patientProgramme.consent === ConsentStatus.NotDelivered ||
+          (patientProgramme.consent === ConsentStatus.NoResponse &&
+            patientProgramme.consentRequests.length === 0)),
+      // Send a reminder to give consent (if request sent but no response yet)
+      canRemind:
+        patient.hasContactDetails &&
+        session.consentWindow === ConsentWindow.Open &&
+        !session.isActive &&
+        patientProgramme.consent === ConsentStatus.NoResponse &&
+        patientProgramme.consentRequests.length > 0,
+      // Perform Gillick assessment
+      canGillick:
+        account.isRegisteredNurse &&
+        session.isActive &&
+        !vaccinated &&
+        !patientProgramme.consentGiven,
+      // Perform triage
+      canTriage: account.isRegisteredNurse,
+      // Patient needs triage
+      needsTriage: patientProgramme.status === PatientStatus.Triage,
+      // Patient already triaged
+      hasTriage: patientProgramme.triageNotes.length > 0,
+      hasInstruction: session.hasPsdProtocol && patientProgramme.hasInstruction,
+      canAssess:
+        account.isRegisteredNurse ||
+        (account.isHCA && patientProgramme.hasInstruction),
+      canRegister: session.hasRegistration && session.isActive,
+      canRecord:
+        vaccineMethods?.includes(patientProgramme.vaccine?.method) &&
+        patientSession.canRecordSessionOutcome &&
+        session.isActive,
+      canRecordInjectionSite:
+        patientProgramme.vaccine?.criteria !== VaccineCriteria.Intranasal
+    }
+
+    // Extra info about the consent reminders sent so far
+    if (response.locals.options.canRemind) {
+      const { count, lastSentAt } = patientProgramme.consentRemindersSummary
+      response.locals.consentRemindersSent = count
+
+      if (count > 0) {
+        const formattedDate = formatDate(lastSentAt, {
+          dateStyle: 'long'
+        })
+        response.locals.lastConsentReminderDate = `Last reminder sent on ${formattedDate}`
+      }
+    }
+
+    // Vaccinator has permission to record using the alternative vaccine
+    // and patient has consent to vaccinate using the alternative vaccine
+    response.locals.canRecordAlternativeVaccine =
+      vaccineMethods?.includes(programme.alternativeVaccine?.method) &&
+      patientProgramme.canRecordAlternativeVaccine
+
+    const view = request.path.split('/').at(-1)
+    response.locals.navigationItems = [
+      ...(session.type === SessionType.Clinic
+        ? [
+            {
+              text: __('patientSession.appointment.title'),
+              href: `${patientSession.uri}/appointment`,
+              current: view === 'appointment'
+            }
+          ]
+        : []),
+      ...patientSession.siblingPatientSessions.map((patientSession) => ({
+        ...(patientSession.patientProgramme.isVaccinated && { icon: 'tick' }),
+        text: patientSession.programme.name,
+        href: patientSession.uri,
+        current:
+          !['appointment', 'events'].includes(view) &&
+          patientSession.programme_id === programme_id
+      })),
+      {
+        text: __('patientSession.events.title'),
+        href: `${patientSession.uri}/events`,
+        current: view === 'events'
+      }
+    ]
+
+    response.locals.programmeItems = [
+      ...patientSession.siblingPatientSessions.map((patientSession) => ({
+        text: patientSession.programme.name,
+        value: patientSession.programme_id
+      }))
+    ]
+
+    response.locals.referrer = patientSession.uri
+    response.locals.patientProgramme = patientProgramme
+    response.locals.patientSession = patientSession
+    response.locals.patient = patient
+    response.locals.programme = programme
+    response.locals.session = session
+    response.locals.clinicAppointment = clinicAppointment
+    response.locals.registeredNurseUsers = registeredNurseUsers
+    response.locals.allVaccinatingUsers = allVaccinatingUsers
+
+    // Use different values for pre-screening questions
+    // `IsWell` and `IsPregnant` should persist per patient
+    response.locals.preScreenQuestionItems =
+      patientProgramme.vaccine &&
+      Object.entries(patientProgramme.vaccine.preScreenQuestions).map(
+        ([key, text]) => {
+          let value = `${programme.id}-${key}`
+          if (text === PreScreenQuestion.IsWell) {
+            value = `${nhsn}-is-well`
+          } else if (text === PreScreenQuestion.IsPregnant) {
+            value = `${nhsn}-is-pregnant`
+          }
+
+          return { text, value }
+        }
+      )
+
+    next()
+  },
+
+  /**
+   * @type {RequestHandler<Record<string, string>>}
+   */
+  show(request, response) {
+    const view = request.params.view || 'show'
+
+    response.locals.additionalNeedsFeatureFlag = getAdditionalNeeds()
+
+    return response.render(`patient-session/${view}`)
+  },
+
+  /**
+   * @type {RequestHandler<Record<string, string>>}
+   */
+  readForm(request, response, next) {
+    const { referrer } = request.session
+    const { patientSession, session } = response.locals
+
+    // Show back link to referring page, else patient session page
+    response.locals.back =
+      referrer ||
+      (session.type === SessionType.Clinic
+        ? `${patientSession.uri}/appointment`
+        : patientSession.uri)
+
+    return next()
+  },
+
+  /**
+   * @param {string} type - Form type
+   * @returns {RequestHandler<Record<string, string>>} Request handler
+   */
+  showForm(type) {
+    return (request, response) => {
+      const { view } = request.params
+
+      response.render(`patient-session/form/${view}`, { type })
+    }
+  },
+
+  /**
+   * @type {RequestHandler<Record<string, string>>}
+   */
+  register(request, response) {
+    const { register } = request.body.patientSession
+    const { data } = request.session
+    const { __, account, patientSession, session, back } = response.locals
+
+    patientSession.registerAttendance(
+      {
+        createdBy_uid: account.uid
+      },
+      register
+    )
+
+    if (
+      register === RegistrationStatus.Absent &&
+      patientSession.patientProgramme.status !== PatientStatus.Consent
+    ) {
+      // Record vaccination outcome as absent if safe to vaccinate
+      const programme = Programme.findOne(session.programme_ids[0], data)
+      const vaccination = Vaccination.create(
+        {
+          location: session.location.name,
+          locationType: session.locationType,
+          outcome: VaccinationOutcome.Absent,
+          patient_uuid: patientSession.patient_uuid,
+          programme_id: programme.id,
+          session_id: session.id,
+          vaccine_snomed: patientSession.patientProgramme.vaccine.snomed,
+          createdAt: today(10),
+          createdBy_uid: account.uid,
+          administeredAt: today(10),
+          administeredBy_uid: account.uid,
+          ...(session.clinic_id && {
+            clinic_id: session.clinic_id
+          }),
+          ...(session.school_id && {
+            school_id: session.school_id
+          })
+        },
+        data
+      )
+
+      patientSession.patient.recordVaccination(
+        Vaccination.findOne(vaccination.uuid, data)
+      )
+    }
+
+    request.flash(
+      'message',
+      __(`patientSession.registration.success.${patientSession.register}`, {
+        patientSession
+      })
+    )
+
+    return saveAndRedirect(request, response, back)
+  },
+
+  /**
+   * @param {string} type - Form type
+   * @returns {RequestHandler<Record<string, string>>} Request handler
+   */
+  gillick(type) {
+    return (request, response) => {
+      const { gillick } = request.body.patientSession
+      const { data } = request.session
+      const { __, account, back, patientSession } = response.locals
+
+      if (type === 'edit') {
+        gillick.updatedAt = today()
+      }
+
+      gillick.createdBy_uid = account.uid
+
+      request.flash('success', __(`patientSession.gillick.${type}.success`))
+
+      patientSession.assessGillick(gillick)
+
+      // Clean up session data
+      delete data.patientSession?.gillick
+
+      saveAndRedirect(request, response, back)
+    }
+  },
+
+  /**
+   * @type {RequestHandler<Record<string, string>>}
+   */
+  preScreen(request, response) {
+    const { preScreen } = request.body
+    const { data } = request.session
+    const { patientSession, programme } = response.locals
+
+    // Pre-screen interview
+    patientSession.preScreen({
+      note: preScreen.note,
+      createdBy_uid: preScreen.assessedBy_uid
+    })
+
+    // Pre-screening outcome is to vaccinate with the alternative vaccine
+    patientSession.hasAlternativeVaccine = preScreen.ready === 'alternative'
+
+    // Update patient session
+    PatientSession.update(patientSession.uuid, patientSession, data)
+
+    return saveAndRedirect(
+      request,
+      response,
+      `${programme.uri}/vaccinations/new?patientSession_uuid=${patientSession.uuid}`
+    )
+  },
+
+  /**
+   * @type {RequestHandler<Record<string, string>>}
+   */
+  invite(request, response) {
+    const { __, back, patient, patientSession } = response.locals
+
+    patient.addToSession(patientSession)
+    patient.requestConsent(patientSession)
+
+    request.flash(
+      'success',
+      __('patientSession.invite.success', { contact: patient.contacts[0] })
+    )
+
+    return saveAndRedirect(request, response, back)
+  },
+
+  /**
+   * @type {RequestHandler<Record<string, string>>}
+   */
+  remind(request, response) {
+    const { account, back, patient, patientSession } = response.locals
+
+    patientSession.sendConsentReminder(
+      {
+        createdBy_uid: account.uid
+      },
+      patient.contacts[0]
+    )
+
+    return saveAndRedirect(request, response, back)
+  },
+
+  /**
+   * @type {RequestHandler<Record<string, string>>}
+   */
+  note(request, response) {
+    let { note, type, programme_ids } = request.body
+    const { data } = request.session
+    const { __, account, back, patientSession } = response.locals
+
+    programme_ids = Array.isArray(programme_ids)
+      ? programme_ids
+      : [programme_ids]
+
+    patientSession.saveNote({
+      note,
+      type,
+      createdBy_uid: account.uid,
+      session_id:
+        type === AuditEventType.SessionNote && patientSession.session_id,
+      programme_ids: type === AuditEventType.ProgrammeNote && programme_ids
+    })
+
+    // Clean up session data
+    delete data.note
+
+    request.flash(
+      'success',
+      __(`patientSession.notes.new.success`, { patientSession })
+    )
+
+    return saveAndRedirect(request, response, back)
+  }
+}
+
+/**
+ * @import { RequestHandler, RequestParamHandler } from 'express'
+ */

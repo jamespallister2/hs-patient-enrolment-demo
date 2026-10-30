@@ -1,0 +1,6 @@
+@use "../core" as *;
+
+// Reduce space between summary list and button group
+.nhsuk-summary-list:has(+ .nhsuk-button-group) {
+  @include nhsuk-responsive-margin(4, "bottom");
+}

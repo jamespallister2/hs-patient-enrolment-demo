@@ -1,0 +1,29 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("team.contact.title") %}
+
+{% block form %}
+  {{ heading({
+    caption: team.name,
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ input({
+    label: __("team.email.label"),
+    decorate: "team.email"
+  }) }}
+
+  {{ input({
+    label: __("team.tel.label"),
+    decorate: "team.tel",
+    type: "tel"
+  }) }}
+
+  {{ input({
+    label: __("team.privacyPolicyUrl.label"),
+    hint: __("team.privacyPolicyUrl.hint"),
+    decorate: "team.privacyPolicyUrl",
+    type: "url"
+  }) }}
+{% endblock %}

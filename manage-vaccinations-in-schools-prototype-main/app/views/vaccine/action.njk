@@ -1,0 +1,33 @@
+{% extends "_layouts/form.njk" %}
+
+{% set paths = { back: vaccine.uri } %}
+
+{% block form %}
+  {{ heading({
+    caption: vaccine.brand,
+    text: __("vaccine.action.title", type),
+    size: "l"
+  }) }}
+
+  {{ __("vaccine.action.description") | nhsukMarkdown }}
+{% endblock %}
+
+{% block afterForm %}
+  {{ appButtonGroup({
+    buttons: [
+      {
+        text: __("vaccine.action.confirm", type),
+        variant: "warning",
+        attributes: {
+          formAction: vaccine.uri + "/" + type
+        }
+      }
+    ],
+    links: [
+      {
+        text: __("vaccine.action.cancel"),
+        href: vaccine.uri
+      }
+    ]
+  }) }}
+{% endblock %}

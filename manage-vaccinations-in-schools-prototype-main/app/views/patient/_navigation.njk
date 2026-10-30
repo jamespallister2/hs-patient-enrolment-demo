@@ -1,0 +1,31 @@
+{%- from "nhsuk/components/heading/macro.njk" import heading %}
+{%- from "_macros/action-list.njk" import appActionList %}
+{%- from "_macros/section-navigation.njk" import appSectionNavigation %}
+
+{% macro patientNavigation(params) %}
+  {{ heading({
+    text: params.patient.fullName,
+    size: "l"
+  }) }}
+
+  {{ appActionList({
+    items: [
+      {
+        tag: {
+          text: __("patient.isArchived.label"),
+          classes: "nhsuk-tag--grey"
+        }
+      }
+    ]
+  }) if patient.isArchived }}
+
+  {{ appSectionNavigation({
+    items: sectionNavigationItems
+  }) }}
+
+  {{ heading({
+    classes: "nhsuk-u-visually-hidden",
+    text: patientProgramme.name or __("patient." + params.view + ".title"),
+    level: 2
+  }) }}
+{% endmacro %}

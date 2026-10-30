@@ -1,0 +1,80 @@
+{% from "review/_navigation.njk" import reviewNavigation with context %}
+
+{% extends "_layouts/form.njk" %}
+
+{% set gridColumns = "full" %}
+{% set hideConfirmButton = true %}
+{% set title = __("move.list.title") %}
+
+{% block form %}
+  {{ super() }}
+
+  {{ reviewNavigation({
+    view: "move"
+  }) }}
+
+  {{ actionLink({
+    text: __("move.download.label"),
+    href: "/moves/download?referrer=/moves"
+  }) }}
+
+  {% set resultRows = [] %}
+  {% for move in results.page %}
+    {% set resultRows = resultRows | push([
+      {
+        text: move.formatted.createdAt
+      },
+      {
+        html: move.patient.fullName
+      },
+      {
+        html: move.movement + (appStatus({
+          classes: "app-status--small nhsuk-u-margin-top-1 nhsuk-u-margin-bottom-0",
+          text: __("move.team_id.label"),
+          icon: "warning",
+          colour: "blue"
+        }) if move.team_id)
+      },
+      {
+        html: appActionList({
+          items: [
+            {
+              text: __("actions.review"),
+              href: move.uri
+            }
+          ]
+        })
+      }
+    ]) %}
+  {% endfor %}
+
+  {% if moves.length %}
+    {{ table({
+      id: "moves",
+      responsive: true,
+      card: {
+        heading: {
+          text: __mf("move.count", { count: moves.length }),
+          level: 3
+        }
+      },
+      head: [
+        { text: __("move.createdAt.label") },
+        { text: __("child.label") },
+        { text: __("move.label") },
+        { text: __("actions.label") }
+      ],
+      rows: resultRows
+    }) }}
+
+    {{ pagination(pages) }}
+
+    {{ __mf("move.results", {
+      from: results.from,
+      to: results.to,
+      count: results.count
+    }) | nhsukMarkdown }}
+  {% else %}
+    {{ __mf("move.count", { count: 0 }) | nhsukMarkdown }}
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "_layouts/default.njk" %}
+
+{% set assetsName = "public" %}
+{% set title = serviceName + " (Mavis)" %}
+{% set headerOptions = {
+  service: {
+    text: serviceName
+  }
+} %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      {{ heading({
+        text: title
+      }) }}
+
+      {% filter nhsukMarkdown %}
+Mavis is a digital platform for school age immunisation service (SAIS) providers.
+
+There are 2 ways to use Mavis:
+- use the full service to manage every stage of your vaccination programmes
+- use the National reporting service to upload vaccination records and share them with NHS England
+
+Once you log in, you'll be taken to the service your organisation is set up to use.
+      {% endfilter %}
+
+      {{ button({
+        classes: "nhsuk-u-margin-bottom-4",
+        html: __("account.cis2.title"),
+        href: "/account/cis2",
+        variant: "login"
+      }) }}
+
+      <p class="nhsuk-body">
+        {{ link({
+          text: __("account.cis2.unlock"),
+          href: "https://manage-care-identities.care-identity-service2.nhs.uk/#/self-service/unlock-authenticator"
+        }) }}
+      </p>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("vaccination.note.title") %}
+
+{% block form %}
+  {{ textarea({
+    label: {
+      caption: vaccination.patient.fullName,
+      heading: title,
+      size: "l"
+    },
+    hint: __("vaccination.note.hint"),
+    decorate: "vaccination.note"
+  }) }}
+{% endblock %}

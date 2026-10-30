@@ -1,0 +1,30 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("defaultBatch.edit.title") %}
+
+{% block form %}
+  {{ heading({
+    caption: session.location.name,
+    text: title,
+    size: "l"
+  }) }}
+
+  {% set batches = [] %}
+  {% for batch in batchItems %}
+    {% set batches = batches | push({
+      html: batch.name,
+      value: batch.id
+    }) %}
+  {% endfor %}
+
+  {{ radios({
+    fieldset: {
+      legend: {
+        text: vaccine.brandWithType,
+        size: "m"
+      }
+    },
+    items: batches,
+    decorate: "defaultBatch.id"
+  }) }}
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends "_layouts/meta.njk" %}
+
+{% from "nhsuk/components/header/macro.njk" import header %}
+
+{% set template = data.template or defaultTemplate %}
+{% set title = title or "Email messages" %}
+
+{% set navigationItems = [] %}
+{% for theme, items in templates %}
+  {% for item in items %}
+    {% if item != "" %}
+      {% set navigationItems = navigationItems | push({
+        text: __("emails." + dir + "." + item + ".label"),
+        href: "?template=" + item,
+        current: template === item,
+        theme: theme
+      }) %}
+    {% endif %}
+  {% endfor %}
+{% endfor %}
+
+{% block content %}
+  {{ heading({
+    caption: {
+      text: caption,
+      placement: "before"
+    },
+    text: title,
+    size: "l"
+  }) }}
+
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-one-third">
+      {% for theme, items in navigationItems | groupby("theme") %}
+        {{ heading({
+          classes: "nhsuk-u-margin-bottom-2",
+          text: theme,
+          level: 3,
+          size: "xs"
+        }) }}
+        {{ appSectionNavigation({
+          small: true,
+          vertical: true,
+          items: items
+        }) }}
+      {% endfor %}
+    </div>
+
+    <div class="nhsuk-grid-column-two-thirds">
+      {% call card({
+        heading: {
+          text: __("emails." + dir + "." + template + ".name", placeholders) | safe,
+          size: "s"
+        }
+      }) %}
+        <article class="prototype-email">
+          <footer class="prototype-email__header">
+            From: <span class="nhsuk-u-secondary-text-colour">{{ placeholders.from.name }} &lt;{{ placeholders.from.email }}&gt;</span><br>
+            To: <span class="nhsuk-u-secondary-text-colour">{{ placeholders.to.name }} &lt;{{ placeholders.to.email }}&gt;</span>
+          </footer>
+          {{ header({
+            classes: "nhsuk-header--white"
+          }) }}
+          {% filter nhsukMarkdown %}
+            {%- include "emails/" + dir + "/" + template + ".njk" %}
+          {% endfilter %}
+        </article>
+      {% endcall %}
+    <div>
+  </div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("clinicBooking.notConvenient.title") %}
+
+{% block form %}
+  {{ heading({
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ __("clinicBooking.notConvenient.intro") | nhsukMarkdown }}
+
+  {%- set otherHtml = input({
+    label: __("clinicBooking.notConvenient.otherDetails"),
+    decorate: "appointment.abandonmentReasonOther"
+  }) %}
+  {% set reasonRadioItems = injectConditionalHtml(enumItems(AppointmentAbandonmentReason), AppointmentAbandonmentReason.Other, otherHtml) %}
+
+  {{ checkboxes({
+    fieldset: {
+      legend: {
+        text: __("clinicBooking.notConvenient.label"),
+        size: "s"
+      }
+    },
+    hint: __("clinicBooking.notConvenient.hint"),
+    items: reasonRadioItems,
+    decorate: "appointment.abandonmentReasons"
+  }) }}
+{% endblock %}

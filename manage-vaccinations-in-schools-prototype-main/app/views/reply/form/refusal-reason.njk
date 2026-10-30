@@ -1,0 +1,35 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("reply.refusalReason.title") %}
+
+{% block form %}
+  {{ radios({
+    fieldset: {
+      legend: {
+        caption: reply.patient.fullName,
+        heading: title,
+        size: "l"
+      }
+    },
+    items: [
+      { label: ReplyRefusal.Gelatine } if programme.type == ProgrammeType.Flu,
+      { label: ReplyRefusal.GelatineMMR } if programme.type == ProgrammeType.MMR,
+      { label: ReplyRefusal.AlreadyVaccinated },
+      { label: ReplyRefusal.GettingElsewhere },
+      { label: ReplyRefusal.Medical },
+      { label: ReplyRefusal.OutsideSchool },
+      { label: ReplyRefusal.Personal },
+      { divider: "or" },
+      {
+        label: ReplyRefusal.Other,
+        conditional: {
+          html: input({
+            label: __("reply.refusalReasonOther.label"),
+            decorate: "reply.refusalReasonOther"
+          })
+        }
+      }
+    ],
+    decorate: "reply.refusalReason"
+  }) }}
+{% endblock %}

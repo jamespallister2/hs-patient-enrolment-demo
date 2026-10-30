@@ -1,0 +1,19 @@
+{% extends "_layouts/abandon-booking.njk" %}
+
+{% set title = __("clinicBooking.clinicLocation.title", firstName) %}
+
+{% block form %}
+  {{ radios({
+    fieldset: {
+      legend: {
+        caption: appointmentCaption,
+        heading: title,
+        size: "l"
+      }
+    },
+    hint: __('clinicBooking.clinicLocation.hint', appointment.preferredPostcode),
+    items: clinicLocationItems,
+    decorate: "journeyData.clinic_id"
+  }) }}
+
+{% endblock %}

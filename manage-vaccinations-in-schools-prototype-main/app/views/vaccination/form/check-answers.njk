@@ -1,0 +1,119 @@
+{% extends "_layouts/form.njk" %}
+
+{% set confirmButtonText = __("vaccination.new.confirm") %}
+{% set title = __("vaccination.new.check-answers.title") %}
+{% if patientSession %}
+  {% set mismatchedMethods = vaccination.vaccine.method != vaccination.patientSession.patientProgramme.vaccine.method and not patientSession.patientProgramme.canRecordAlternativeVaccine %}
+{% endif %}
+
+{% block form %}
+  {{ heading({
+    caption: vaccination.patient.fullName,
+    text: title,
+    size: "l"
+  }) }}
+
+  {% set vaccinationSummaryListHtml = summaryList({
+    lastRowBorder: false,
+    rows: summaryRows(vaccination, {
+      programme: {},
+      outcome: {},
+      vaccine: {
+        href: vaccination.uri + "/new/vaccine" if programme.alternativeVaccine or vaccination.outcome == VaccinationOutcome.AlreadyVaccinated
+      },
+      method: {
+        href: vaccination.uri + "/new/method" if vaccination.method != VaccinationMethod.Intranasal
+      },
+      site: {
+        href: vaccination.uri + "/new/site" if vaccination.method != VaccinationMethod.Intranasal
+      },
+      dose: {
+        href: vaccination.uri + "/new/dose"
+      },
+      sequence: {
+        href: vaccination.uri + "/new/sequence"
+      },
+      batch: {
+        href: vaccination.uri + "/new/batch-id"
+      },
+      location: {
+        href: vaccination.uri + "/new/location"
+      },
+      identifiedBy: {
+        href: vaccination.uri + "/new/identified-by"
+      },
+      assessedBy: {
+        href: vaccination.uri + "/new/assessed-by"
+      },
+      administeredBy: {
+        href: vaccination.uri + "/new/administered-by"
+      },
+      administeredAt_date: {
+        href: vaccination.uri + "/new/administered-at"
+      },
+      administeredAt_time: {
+        href: vaccination.uri + "/new/administered-at"
+      },
+      createdBy: {},
+      createdAt: {},
+      protocol: {}
+    })
+  }) %}
+
+  {% if mismatchedMethods %}
+    {% call warningCallout({
+      heading: __("vaccination.new.mismatchedMethods.title")
+    }) %}
+      {{ __("vaccination.new.mismatchedMethods.description") | nhsukMarkdown }}
+
+      {{ vaccinationSummaryListHtml }}
+    {% endcall %}
+
+  {% elif not vaccination.wasGiven %}
+    {{ warningCallout({
+      heading: __("vaccination.new.notGiven.title"),
+      html: summaryList({
+        lastRowBorder: false,
+        rows: summaryRows(vaccination, {
+          programme: {},
+          outcome: {
+            href: vaccination.uri + "/new/decline"
+          },
+          identifiedBy: {
+            href: vaccination.uri + "/new/identified-by"
+          },
+          administeredAt: {
+            href: vaccination.uri + "/new/administered-at"
+          },
+          location: {}
+        })
+      })
+    }) }}
+
+  {% else %}
+    {{ card({
+      heading: {
+        text: __("vaccination.new.check-answers.summary"),
+        size: "m"
+      },
+      description: {
+        html: vaccinationSummaryListHtml
+      }
+    }) }}
+  {% endif %}
+
+  {{ card({
+    headingHtml: " ",
+    description: {
+      html: textarea({
+        classes: "nhsuk-u-margin-bottom-0",
+        label: {
+          text: __("vaccination.note.title") + " (optional)",
+          size: "m"
+        },
+        hint: __("vaccination.note.hint") if vaccination.outcome != VaccinationOutcome.AlreadyVaccinated else __("vaccination.note.hintAlreadyVaccinated"),
+        decorate: "vaccination.note"
+      })
+    }
+  }) }}
+{% endblock %}

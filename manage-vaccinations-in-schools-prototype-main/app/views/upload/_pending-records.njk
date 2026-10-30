@@ -1,0 +1,115 @@
+{%- from "_macros/change.njk" import appChange with context -%}
+
+{% set patientRows = [] %}
+{% for patient in upload.pendingPatients %}
+  {% set archiveChangeset = __("upload.show.partial.decision.archived.label", ArchiveRecordReason.Error) | nl2br %}
+  {% set archiveRadios = radios({
+    formGroup: {
+      classes: "nhsuk-u-margin-bottom-2"
+    },
+    fieldset: {
+      legend: {
+        classes: "nhsuk-u-visually-hidden",
+        text: __("upload.show.partial.decision.title", { patient: patient })
+      }
+    },
+    small: true,
+    items: [
+      {
+        label: __("upload.show.partial.decision.ignore.label"),
+        value: "ignore"
+      },
+      {
+        label: __("upload.show.partial.decision.restore.label"),
+        value: "restore"
+      }
+    ],
+    decorate: "pending-record-" + loop.index0
+  }) %}
+  {% set archiveDecision = __("upload.show.partial.decision.restore.label") %}
+
+  {% set duplicateChangeset = summaryList({
+    lastRowBorder: false,
+    rows: summaryRows(patient, {
+      dob: {
+        value: appChange(patient.formatted.dob, "1 January 2021")
+      },
+      yearGroup: {
+        value: appChange(patient.formatted.yearGroup, "Reception")
+      }
+    })
+  }) %}
+  {% set duplicateRadios = radios({
+    formGroup: {
+      classes: "nhsuk-u-margin-bottom-2"
+    },
+    fieldset: {
+      legend: {
+        classes: "nhsuk-u-visually-hidden",
+        text: __("upload.show.partial.decision.title", { patient: patient })
+      }
+    },
+    small: true,
+    items: [
+      {
+        label: __("upload.show.partial.decision.original.label"),
+        value: "original"
+      },
+      {
+        label: __("upload.show.partial.decision.duplicate.label"),
+        value: "duplicate"
+      },
+      {
+        label: __("upload.show.partial.decision.both.label"),
+        value: "both"
+      } if patient.hasMissingNhsNumber
+    ],
+    decorate: "decision-" + loop.index0
+  }) %}
+  {% set duplicateDecision = __("upload.show.partial.decision.duplicate.label") %}
+
+  {% set patientRows = patientRows | push([
+    {
+      html: patient.formatted.fullNameAndNhsn
+    },
+    {
+      classes: "app-table__cell--summary-list",
+      html: archiveChangeset if loop.first else duplicateChangeset
+    },
+    {
+      html: archiveRadios if upload.needsReview else archiveDecision
+    } if loop.first else {
+      html: duplicateRadios if upload.needsReview else duplicateDecision
+    }
+  ]) %}
+{% endfor %}
+
+{{ heading({
+  caption: {
+    text: __("upload.show.partial.summary"),
+    placement: "after"
+  } if upload.needsReview,
+  text: __("upload.show.partial.title") if upload.needsReview else __("upload.show.partial.label"),
+  level: 2,
+  size: "m"
+}) }}
+
+{{ table({
+  classes: "app-table--review",
+  responsive: true,
+  card: {
+    heading: {
+      text: __mf("upload.show.partial.count", {
+        count: patientRows.length
+      }),
+      level: 3,
+      size: "s"
+    }
+  },
+  head: [
+    { text: __("patient.fullNameAndNhsn.label") },
+    { html: appChange("Existing record in Mavis", "Uploaded record") },
+    { html: __("upload.show.partial.decision.label") }
+  ],
+  rows: patientRows
+}) }}

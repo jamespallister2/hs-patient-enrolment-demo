@@ -1,0 +1,17 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("session.date.title") %}
+
+{% block form %}
+  {{ dateInput({
+    fieldset: {
+      legend: {
+        caption: session.location.name if type == "edit",
+        heading: title,
+        size: "l"
+      }
+    },
+    hint: __("session.date.hint"),
+    decorate: "session.date_"
+  }) }}
+{% endblock %}

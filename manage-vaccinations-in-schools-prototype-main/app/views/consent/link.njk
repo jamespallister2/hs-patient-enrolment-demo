@@ -1,0 +1,71 @@
+{% extends "_layouts/form.njk" %}
+
+{% set gridColumns = "full" %}
+{% set title = __("consent.link.title") %}
+{% set confirmButtonText = __("consent.link.confirm") %}
+{% set paths = { back: consentPath + "/match" } %}
+
+{% block form %}
+  {{ super() }}
+
+  {{ heading({
+    caption: __("consent.link.caption", { contact: consent.contact } ),
+    text: title,
+    size: "l"
+  }) }}
+
+  <div class="nhsuk-grid-row nhsuk-card-group">
+    <div class="nhsuk-grid-column-one-half nhsuk-card-group__item">
+      {{ summaryList({
+        card: {
+          feature: true,
+          heading: {
+            text: __("consent.label"),
+            size: "m"
+          }
+        },
+        lastRowBorder: false,
+        rows: summaryRows(consent.child, {
+          fullName: {
+            value: consent.child.fullName | highlightDifference(patient.fullName)
+          },
+          dob: {
+            value: consent.child.formatted.dob | highlightDifference(patient.formatted.dob)
+          },
+          address: {
+            value: consent.child.formatted.address | highlightDifference(patient.formatted.address)
+          },
+          schoolName: {
+            value: consent.child.formatted.schoolName | highlightDifference(patient.formatted.schoolName)
+          },
+          gpSurgery: {
+            value: consent.child.formatted.gpSurgery | highlightDifference(patient.formatted.gpSurgery)
+          },
+          contact: {
+            value: consent.contact.fullNameAndRelationship
+          }
+        })
+      }) }}
+    </div>
+    <div class="nhsuk-grid-column-one-half nhsuk-card-group__item">
+      {{ summaryList({
+        card: {
+          feature: true,
+          heading: {
+            text: __("patient.label"),
+            size: "m"
+          }
+        },
+        lastRowBorder: false,
+        rows: summaryRows(patient, {
+          fullName: {},
+          dob: {},
+          address: {},
+          schoolName: {},
+          gpSurgery: {},
+          contacts: {}
+        })
+      }) }}
+    </div>
+  </div>
+{% endblock %}

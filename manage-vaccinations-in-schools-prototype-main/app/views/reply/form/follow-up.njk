@@ -1,0 +1,57 @@
+{% extends "_layouts/form.njk" %}
+
+{% set paths = { back: reply.uri } %}
+{% set title = __("reply.follow-up.title") %}
+
+{% block form %}
+  {{ heading({
+    caption: __("reply.follow-up.caption", { reply: reply }),
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ insetText({
+    html: summaryList({
+      lastRowBorder: false,
+      rows: summaryRows(reply, {
+        contact: {
+          value: reply.contact.fullNameAndRelationship
+        },
+        email: {
+          label: __("contact.email.label"),
+          value: reply.contact.email
+        },
+        tel: {
+          label: __("contact.tel.label"),
+          value: reply.contact.tel
+        },
+        communicationNeeds: {
+          label: __("contact.communicationNeeds.label"),
+          value: reply.contact.communicationNeeds
+        },
+        refusalReason: {},
+        refusalReasonDetails: {}
+      })
+    })
+  }) }}
+
+  {{ radios({
+    fieldset: {
+      legend: {
+        text: __("reply.follow-up.decision.label"),
+        size: "m"
+      }
+    },
+    items: [
+      {
+        label: __("reply.follow-up.decision.consent.label"),
+        value: false
+      },
+      {
+        label: __("reply.follow-up.decision.refuse.label"),
+        value: true
+      }
+    ],
+    decorate: "decision"
+  }) }}
+{% endblock %}

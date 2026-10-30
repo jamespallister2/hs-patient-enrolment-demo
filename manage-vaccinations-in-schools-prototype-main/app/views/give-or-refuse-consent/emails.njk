@@ -1,0 +1,68 @@
+{% extends "_layouts/emails.njk" %}
+
+{% set caption = __("consent.start.title." + session.presetNames[0]) | safe %}
+{% if session.programmes.length == 1 %}
+  {% set vaccine__n = "vaccine" %}
+  {% set is__n = "is" %}
+{% else %}
+  {% set vaccine__n = "vaccines" %}
+  {% set is__n = "are" %}
+{% endif %}
+
+{% set programme = session.programmes[0] %}
+
+{% set placeholders = {
+  from: {
+    name: account.team.name,
+    email: account.team.email
+  },
+  to: {
+    name: consent.contact.fullName,
+    email: consent.contact.email or "example@example.com"
+  },
+  child: consent.child,
+  session: session,
+  team: team
+} %}
+
+{% set defaultTemplate = "invite" %}
+{% set dir = "consent" %}
+{% set templates = {
+  "Invite": [
+    "invite",
+    "invite-catch-up" if programme.type == ProgrammeType.HPV,
+    "invite-reminder",
+    "invite-subsequent-reminder",
+    "invite-clinic",
+    "invite-clinic-reminder",
+    "invite-clinic-consent",
+    "information-child" if programme.type == ProgrammeType.HPV
+  ],
+  "Consent": [
+    "consent-already-vaccinated" if programme.type == ProgrammeType.MMR,
+    "consent-given",
+    "consent-given-changed-school",
+    "consent-refused",
+    "consent-needs-triage",
+    "consent-unknown-contact"
+  ],
+  "Triage": [
+    "triage-vaccinate",
+    "triage-vaccinate-second-dose" if programme.type == ProgrammeType.MMR,
+    "triage-invite-to-clinic",
+    "triage-delay-vaccination",
+    "triage-do-not-vaccinate"
+  ],
+  "Record": [
+    "vaccination-reminder",
+    "vaccination-given",
+    "vaccination-not-given-absent",
+    "vaccination-not-given-refused",
+    "vaccination-not-given-unwell",
+    "vaccination-not-given-contraindicated-delay-vaccination",
+    "vaccination-not-given-contraindicated-invite-to-clinic",
+    "vaccination-not-given-contraindicated-do-not-vaccinate",
+    "vaccination-already-had",
+    "vaccination-deleted"
+  ]
+} %}

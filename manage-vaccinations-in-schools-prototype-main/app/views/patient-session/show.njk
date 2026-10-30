@@ -1,0 +1,98 @@
+{% extends "_layouts/session.njk" %}
+
+{% set title = patient.initials + " – " + session.shortName %}
+{% set headingText = patientSession.patient.fullName %}
+{% set stickyBanner = true %}
+
+{% block beforeContent %}
+  {{ breadcrumb({
+    variant: "reverse",
+    items: [
+      {
+        text: session.shortName,
+        href: session.uri
+      },
+      {
+        text: __("session.patients.title"),
+        href: session.uri + "/patients"
+      }
+    ]
+  }) }}
+{% endblock %}
+
+{% block content %}
+  {{ super() }}
+  <div class="nhsuk-grid-row">
+    <div class="app-grid-column-patient-record" data-module="app-sticky">
+      {{ summaryList({
+        classes: "app-summary-list--full-width-at-large-desktop nhsuk-u-margin-bottom-2",
+        lastRowBorder: false,
+        rows: summaryRows(patient, {
+          nhsn: {
+            changeLabel: "the child’s NHS number",
+            href: patient.uri + "/edit/nhsn" if patient.hasMissingNhsNumber
+          },
+          dob: {},
+          impairments: {},
+          adjustments: {},
+          address: {}
+        })
+      }) }}
+
+      <p class="nhsuk-body">
+        {{ link({
+          text: __("patientSession.show.childRecordLink.label"),
+          href: patient.uri
+        }) }}
+      </p>
+    </div>
+
+    <div class="app-grid-column-patient-session">
+      {{ warningCallout({
+        classes: "nhsuk-u-margin-top-3",
+        heading: __mf("patientSession.outstandingVaccinations.label", {
+          count: patientSession.outstandingVaccinations.length
+        }),
+        text: __mf("patientSession.outstandingVaccinations.message", {
+          count: patientSession.outstandingVaccinations.length,
+          names: patientSession.formatted.outstandingVaccinations
+        })
+      }) if options.showOutstandingVaccinations }}
+
+      {% include "patient-session/_status.njk" %}
+
+      {% for auditEvent in patientSession.sessionNotes %}
+        {{ card({
+          classes: "nhsuk-u-margin-top-2 app-card--orange",
+          heading: {
+            text: __("patientSession.sessionNote.label"),
+            level: 3
+          },
+          description: {
+            html: appEvent({ auditEvent: auditEvent, showProgrammes: true })
+          }
+        }) }}
+      {% endfor %}
+
+      {% if options.canGillick or patientSession.gillick %}
+        {% include "patient-session/_gillick.njk" %}
+      {% endif %}
+
+      {% include "patient-session/_consent.njk" %}
+
+      {% include "patient-session/_triage.njk" %}
+
+      {% if options.hasInstruction %}
+        {% include "patient-session/_instruct.njk" %}
+      {% endif %}
+
+      {% if options.canRegister and session.type === SessionType.School %}
+        {% include "patient-session/_register.njk" %}
+      {% endif %}
+
+      {% if options.canRecord %}
+        {% include "patient-session/_record.njk" %}
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

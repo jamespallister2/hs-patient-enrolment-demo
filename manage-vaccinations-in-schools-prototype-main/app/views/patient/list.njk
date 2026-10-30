@@ -1,0 +1,156 @@
+{% from "_macros/patient-search.njk" import appPatientSearch with context %}
+
+{% extends "_layouts/form.njk" %}
+
+{% set gridColumns = "full" %}
+{% set hideConfirmButton = true %}
+{% set title = __("patient.listSchoolUser.title") if account.isSchoolUser else __("patient.list.title") %}
+
+{% block form %}
+  {{ super() }}
+
+  {{ heading({
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ actionLink({
+    text: "Download spreadsheet",
+    href: "#"
+  } if account.isSchoolUser else {
+    text: __("pdsRecord.start.label"),
+    href: "/pds/new/start"
+  }) }}
+
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-one-third">
+      {{ appPatientSearch({
+        clear: "/patients",
+        hideClinicStatuses: account.isSchoolUser,
+        hideProgrammeStatuses: account.isSchoolUser
+      }) }}
+    </div>
+
+    <div class="nhsuk-grid-column-two-thirds">
+      {% if initial %}
+        {{ heading({
+          caption: {
+            text: __("search.initial.default"),
+            placement: "after"
+          },
+          text: __("search.results"),
+          level: 2,
+          size: "m"
+        }) }}
+      {% else %}
+        {{ heading({
+          caption: {
+            html: __mf("patient.results.summary", {
+              from: results.from,
+              to: results.to,
+              count: results.count
+            }),
+            placement: "after"
+          },
+          text: __("search.results"),
+          level: 2,
+          size: "m"
+        }) }}
+
+        {% if showingClinicReady and results.count > 0 %}
+          {% call insetText({
+            classes: "nhsuk-u-margin-top-0 nhsuk-u-margin-bottom-4"
+          }) %}
+            {{ heading({
+              caption: {
+                text: __("patient.results.inviteToClinic.hint"),
+                placement: "after"
+              },
+              text: __mf("patient.results.inviteToClinic.title", {
+                count: results.count
+              }),
+              level: 3,
+              size: "s"
+            }) }}
+
+            {{ actionLink({
+              text: __mf("patient.results.inviteToClinic.link", { count: results.count }),
+              href: "/patients/invite-to-clinic" + query | asQueryString
+            }) }}
+          {% endcall %}
+        {% endif %}
+
+        {% for patient in results.page %}
+          {% set statusHtml -%}
+            {%- if data.programme_id %}
+              {%- for id, patientProgramme in patient.activeProgrammes -%}
+                {%- if data.programme_id | includes(id) -%}
+                  {{ patientProgramme.formatted.programmeStatus | nhsukMarkdown }}
+                {%- endif -%}
+              {%- endfor %}
+            {% else %}
+              {%- for id, patientProgramme in patient.activeProgrammes -%}
+                {{ patientProgramme.formatted.programmeStatus | nhsukMarkdown }}
+              {%- endfor %}
+            {% endif %}
+          {%- endset %}
+
+          {% set consentGivenDateHtml -%}
+            {%- if data.programme_id %}
+              {%- for id, patientProgramme in patient.activeProgrammes -%}
+                {%- if data.programme_id | includes(id) -%}
+                  {{ patientProgramme.formatted.consentGivenDate | nhsukMarkdown }}
+                {%- endif -%}
+              {%- endfor %}
+            {% else %}
+              {%- for id, patientProgramme in patient.activeProgrammes -%}
+                {{ patientProgramme.formatted.consentGivenDate | nhsukMarkdown }}
+              {%- endfor %}
+            {% endif %}
+          {%- endset %}
+
+          {{ summaryList({
+            card: {
+              classes: "app-card--compact",
+              heading: {
+                text: patient.fullAndPreferredNames | highlightQuery(data.q) | safe,
+                size: "s",
+                level: 3
+              },
+              href: patient.uri if not account.isSchoolUser,
+              clickable: true if not account.isSchoolUser
+            },
+            lastRowBorder: false,
+            rows: summaryRows(patient, {
+              dob: {},
+              school: {
+                value: patient.school.name | highlightQuery(data.q)
+              },
+              yearGroup: {},
+              status: {
+                label: __("patientSession.consentGivenDate.label"),
+                value: consentGivenDateHtml
+              }
+            }) if account.isSchoolUser else summaryRows(patient, {
+              nhsn: {
+                value: patient.formatted.nhsn | highlightQuery(data.q)
+              },
+              dob: {},
+              school: {
+                value: patient.school.name | highlightQuery(data.q)
+              },
+              yearGroup: {},
+              clinicProgramme_ids: {},
+              status: {
+                label: __("patientSession.status.label"),
+                value: statusHtml
+              }
+            })
+          }) }}
+        {% endfor %}
+
+        {{ pagination(pages) }}
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

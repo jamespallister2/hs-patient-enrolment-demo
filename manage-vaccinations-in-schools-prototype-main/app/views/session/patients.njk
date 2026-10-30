@@ -1,0 +1,213 @@
+{% from "_macros/patient-search.njk" import appPatientSearch with context %}
+
+{% extends "_layouts/session.njk" %}
+
+{% set title = session.shortName + " – " + __("session." + view + ".title") %}
+{% set headingText = session.shortName %}
+{% set caption = session.formatted.date
+   + (" – " + session.formatted.yearGroups if session.type === SessionType.School)
+%}
+
+{% block content %}
+  {% if (view == "record") and not session.isActive %}
+    {{ heading({
+      caption: {
+        html: __("session." + view + ".information"),
+        placement: "after"
+      },
+      text: __("session." + view + ".title"),
+      level: 2,
+      size: "m"
+    }) }}
+  {% else %}
+    <div class="nhsuk-grid-row">
+      <div class="nhsuk-grid-column-one-third">
+        {{ appPatientSearch({
+          clear: session.uri + "/" + view,
+          checkboxFilters: checkboxFilters,
+          radioFilters: radioFilters,
+          hideClinicStatuses: true,
+          hidePatientIneligibleStatus: true,
+          hideProgrammeStatuses: account.isSchoolUser,
+          showAdditionalProgrammes: session.type === SessionType.Clinic and (session.isPlanned or session.isActive) and view === 'patients',
+          view: view
+        }) }}
+      </div>
+
+      <div class="nhsuk-grid-column-two-thirds">
+        {{ details({
+          classes: "nhsuk-expander app-expander--compact nhsuk-u-margin-top-3",
+          summary: "Your vaccinations today",
+          html: table({
+            responsive: true,
+            firstCellIsHeader: false,
+            head: [
+              { text: __("vaccine.label") },
+              { text: __("user.vaccinations.label") },
+              { text: __("defaultBatch.label") }
+            ],
+            rows: vaccinationTableRows(session)
+          }) if view == "record"
+        }) if view == "record" and session.isActive }}
+
+        {% if data.status and data.status != "none" %}
+          {% set title = __("session." + view + ".label") + ": " + data.status %}
+        {% else %}
+          {% set title = __("session." + view + ".title") %}
+        {% endif %}
+
+        {{ heading({
+          caption: {
+            html: __mf("patient.results.summary", {
+              from: results.from,
+              to: results.to,
+              count: results.count
+            }),
+            placement: "after"
+          },
+          text: title | replace(",", " or "),
+          level: 2,
+          size: "m"
+        }) }}
+
+        {% if view == "instructions" and session.activity.giveInstructions and account.canPrescribe %}
+          {% call insetText() %}
+            {{ __mf("session.instructions.count", {
+              count: session.activity.giveInstructions
+            }) | nhsukMarkdown }}
+
+            {{ actionLink({
+              text: __("session.giveInstructions.label"),
+              href: session.uri + "/give-instructions"
+            }) }}
+          {% endcall %}
+        {% endif %}
+
+        {% if view === "patients" and session.type === SessionType.Clinic and (session.isPlanned or session.isActive) %}
+          {{ actionLink({
+            href: session.uri + "/book-into-a-clinic/",
+            text: "Add a child to this clinic"
+          }) }}
+        {% endif %}
+
+        {% if data.programme_id %}
+          {% set ids = data.programme_id %}
+        {% else %}
+          {# TODO: For clinics, show union of booked and targeted programmes #}
+          {% set ids = session.programme_ids %}
+        {% endif %}
+
+        {% for patientSession in results.page %}
+          {% set statusHtml %}
+            {% for patientSession in patientSession.siblingPatientSessions %}
+              {% if ids | includes(patientSession.programme_id) %}
+                {{ patientSession.patientProgramme.formatted.programmeStatus | nhsukMarkdown }}
+              {% endif %}
+            {% endfor %}
+          {% endset %}
+
+          {% set consentGivenDateHtml -%}
+            {% for patientSession in patientSession.siblingPatientSessions %}
+              {% if ids | includes(patientSession.programme_id) %}
+                {{ patientSession.patientProgramme.formatted.consentGivenDate | nhsukMarkdown }}
+              {%- endif -%}
+            {%- endfor %}
+          {%- endset %}
+
+          {% set patientSessionUri = patientSession.uri %}
+          {% if session.type === SessionType.Clinic %}
+            {% set patientSessionUri = patientSession.clinicAppointment.uri.matched if patientSession.clinicAppointment else (patientSessionUri + "/appointment") %}
+          {% endif %}
+
+          {% call card({
+            classes: "app-card--compact",
+            heading: {
+              text: patientSession.patient.fullAndPreferredNames | highlightQuery(data.q) | safe,
+              level: 3,
+              size: "s"
+            },
+            clickable: not showRegistration and not account.isSchoolUser,
+            href: patientSessionUri if not account.isSchoolUser
+          }) %}
+            {{ summaryList({
+              lastRowBorder: false,
+              rows: summaryRows(patientSession.patient, {
+                dob: {},
+                impairments: {},
+                adjustments: {},
+                yearGroup: {
+                  value: patientSession.formatted.yearGroup
+                },
+                vaccineCriteria: {
+                  label: __("patientSession.vaccineCriteria.label"),
+                  value: patientSession.formatted.vaccineCriteria
+                } if session.canOfferAlternativeVaccine and not account.isSchoolUser,
+                instructionStatus: {
+                  label: __("patientSession.instructionStatus.label"),
+                  value: patientSession.formatted.instructionStatus
+                } if view == "instructions" and patientSession.instructionStatus and not account.isSchoolUser,
+                register: {
+                  label: __("patientSession.register.label"),
+                  value: patientSession.formatted.register,
+                  href: (patientSession.uri + "/edit/registration?referrer=" + session.uri + "/" + view) if view == "patients" and patientSession.register != RegistrationStatus.Pending
+                } if showRegistration,
+                status: {
+                  label: __("patientSession.consentGivenDate.label") if account.isSchoolUser else __("patientSession.status.label"),
+                  value: consentGivenDateHtml if account.isSchoolUser else statusHtml
+                } if view != "instructions",
+                additionalProgrammes: {
+                  label: __("patientSession.additionalProgrammes.label"),
+                  value: patientSession.formatted.additionalProgrammesToOffer
+                },
+                clinicAppointment: {
+                  label: __("patientSession.clinicAppointment.label"),
+                  value: patientSession.clinicAppointment.formatted.timeSlot
+                } if not account.isSchoolUser,
+                notes: {
+                  label: __("patientSession.sessionNotes.label"),
+                  value: appEvent({
+                    auditEvent: patientSession.sessionNotes[0],
+                    showProgrammes: false,
+                    truncate: 300,
+                    patientSession: patientSession
+                  })
+                } if patientSession.sessionNotes[0] and not account.isSchoolUser
+              })
+            }) }}
+
+            {{ appButtonGroup({
+              buttons: [
+                {
+                  text: __("patientSession.registration.actions.present.label"),
+                  small: true,
+                  variant: "secondary",
+                  decorate: "patientSession.register",
+                  value: RegistrationStatus.Present,
+                  attributes: {
+                    "aria-label": __("patientSession.registration.actions.present.title", { patient: patientSession.patient }),
+                    formaction: patientSession.uri + "/edit/registration?referrer=" + session.uri + "/" + view + "&register=" + data.register,
+                    formmethod: "post"
+                  }
+                },
+                {
+                  classes: "app-button--secondary-warning",
+                  text: __("patientSession.registration.actions.absent.label"),
+                  small: true,
+                  decorate: "patientSession.register",
+                  value: RegistrationStatus.Absent,
+                  attributes: {
+                    "aria-label": __("patientSession.registration.actions.absent.title", { patient: patientSession.patient }),
+                    formaction: patientSession.uri + "/edit/registration?referrer=" + session.uri + "/" + view + "&register=" + data.register,
+                    formmethod: "post"
+                  }
+                }
+              ]
+            }) if showRegistration and patientSession.register == RegistrationStatus.Pending }}
+          {% endcall %}
+        {% endfor %}
+
+        {{ pagination(pages) }}
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}

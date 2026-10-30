@@ -1,0 +1,273 @@
+{% extends "_layouts/form.njk" %}
+
+{% set confirmButtonText = __("consent.new.check-answers.confirm") %}
+{% set title = __("consent.new.check-answers.title") %}
+{% set gridColumns = "three-quarters" %}
+{% set programme_id = "flu" if "Flu" in session.presetNames else "mmr" %}
+{% set refusalReasonHasDetails = consent.refusalReason != RefusalReason.PersonalChoice or consent.refusalReason != RefusalReason.Other %}
+{% macro editPath(view) -%}
+  {{- view }}?referrer={{ session.consentUrl }}/{{ consent.uuid}}/new/check-answers
+{%- endmacro %}
+
+{% block form %}
+  {{ heading({
+    text: title,
+    size: "l"
+  }) }}
+
+  {% if consent.decision == ReplyDecision.OnlyMenACWY %}
+    {{ summaryList({
+      card: {
+        heading: {
+          text: "Consent for the MenACWY vaccination",
+          size: "m"
+        }
+      },
+      lastRowBorder: false,
+      rows: summaryRows(consent, {
+        decision: {
+          value: ReplyDecision.Given,
+          href: editPath("decision")
+        }
+      })
+    }) }}
+
+    {{ summaryList({
+      card: {
+        heading: {
+          text: "Consent for the Td/IPV vaccination",
+          size: "m"
+        }
+      },
+      lastRowBorder: false,
+      rows: summaryRows(consent, {
+        decision: {
+          value: ReplyDecision.Refused,
+          href: editPath("decision")
+        },
+        refusalReason: {
+          href: editPath("refusal-reason")
+        },
+        refusalReasonDetails: {
+          href: editPath("refusal-reason-details")
+        }
+      })
+    }) }}
+  {% elif consent.decision == ReplyDecision.OnlyTdIPV %}
+    {{ summaryList({
+      card: {
+        heading: {
+          text: "Consent for the MenACWY vaccination",
+          size: "m"
+        }
+      },
+      lastRowBorder: false,
+      rows: summaryRows(consent, {
+        decision: {
+          value: ReplyDecision.Refused,
+          href: editPath("decision")
+        },
+        refusalReason: {
+          href: editPath("refusal-reason")
+        },
+        refusalReasonDetails: {
+          href: editPath("refusal-reason-details")
+        }
+      })
+    }) }}
+
+    {{ summaryList({
+      card: {
+        heading: {
+          text: "Consent for the Td/IPV vaccination",
+          size: "m"
+        }
+      },
+      lastRowBorder: false,
+      rows: summaryRows(consent, {
+        decision: {
+          value: ReplyDecision.Given,
+          href: editPath("decision")
+        }
+      })
+    }) }}
+  {% else %}
+    {{ summaryList({
+      card: {
+        heading: {
+          text: __("consent.decision.summary", { session: session }) | safe,
+          size: "m"
+        }
+      },
+      lastRowBorder: false,
+      rows: summaryRows(consent, {
+        decision: {
+          href: editPath("decision")
+        },
+        hasConsentForAlternativeVaccine: {
+          label: __("consent.hasConsentForAlternativeVaccine." + programme_id + ".label"),
+          href: editPath("alternative")
+        } if session.canOfferAlternativeVaccine,
+        refusalReason: {
+          href: editPath("refusal-reason")
+        },
+        refusalReasonDetails: {
+          href: editPath("refusal-reason-details")
+        },
+        hasRequestedConsultation: {
+          href: editPath("consultation")
+        }
+      })
+    }) }}
+  {% endif %}
+
+  {{ summaryList({
+    card: {
+      heading: {
+        text: __("consent.child.summary"),
+        size: "m"
+      }
+    },
+    lastRowBorder: false,
+    rows: summaryRows(consent.child, {
+      fullFriendlyName: {
+        href: editPath("child")
+      },
+      preferredName: {
+        href: editPath("child")
+      },
+      dob: {
+        href: editPath("dob")
+      },
+      address: {
+        href: editPath("address")
+      } if consent.hasGivenConsent,
+      school: {
+        value: consent.child.formatted.school or session.location.name,
+        href: editPath("school")
+      } if session.type === SessionType.School,
+      impairments: {
+        href: editPath("impairments")
+      },
+      adjustments: {
+        href: editPath("adjustments")
+      }
+    })
+  }) }}
+
+  {{ summaryList({
+    card: {
+      heading: {
+        text: __("consent.contact.summary"),
+        size: "m"
+      }
+    },
+    lastRowBorder: false,
+    rows: summaryRows(consent.contact_, {
+      fullName: {
+        href: editPath("contact")
+      },
+      relationship: {
+        href: editPath("contact")
+      },
+      hasParentalResponsibility: {
+        href: editPath("contact")
+      },
+      email: {
+        href: editPath("contact")
+      },
+      tel: {
+        href: editPath("contact")
+      },
+      canSms: {
+        href: editPath("contact")
+      },
+      communicationNeeds: {
+        href: editPath("communication-needs")
+      }
+    })
+  }) }}
+
+  {{ summaryList({
+    classes: "app-summary-list--full-width",
+    card: {
+      heading: {
+        text: __("consent.healthAnswers.label"),
+        size: "m"
+      }
+    },
+    rows: healthAnswerRows(
+      consent.healthAnswers,
+      editPath("health-question-{{key}}"),
+      true
+    )
+  }) if consent.hasGivenConsent }}
+
+  {% if SessionPresetName.MMR in session.presetNames and consent.decision == ReplyDecision.AlreadyVaccinated %}
+    {{ summaryList({
+      card: {
+        heading: {
+          text: __("consent.firstDose.label"),
+          size: "m"
+        }
+      },
+      lastRowBorder: false,
+      rows: summaryRows(consent, {
+        createdAt: {
+          label: __("consent.previousDose.createdAt.label"),
+          value: consent.firstDose.formatted.createdAt_date,
+          href: editPath("first-dose-date")
+        },
+        country: {
+          label: __("consent.previousDose.country.label"),
+          value: consent.firstDose.formatted.country,
+          href: editPath("first-dose-country")
+        }
+      })
+    }) }}
+
+    {{ summaryList({
+      card: {
+        heading: {
+          text: __("consent.secondDose.label"),
+          size: "m"
+        }
+      },
+      lastRowBorder: false,
+      rows: summaryRows(consent, {
+        createdAt: {
+          label: __("consent.previousDose.createdAt.label"),
+          value: consent.secondDose.formatted.createdAt_date,
+          href: editPath("second-dose-date")
+        },
+        country: {
+          label: __("consent.previousDose.country.label"),
+          value: consent.secondDose.formatted.country,
+          href: editPath("second-dose-country")
+        }
+      })
+    }) }}
+  {% elif consent.refusalReason == ReplyRefusal.AlreadyVaccinated %}
+    {{ summaryList({
+      card: {
+        heading: {
+          text: __("consent.previousDose.label", session.programmes[0].nameSentenceCase),
+          size: "m"
+        }
+      },
+      lastRowBorder: false,
+      rows: summaryRows(consent, {
+        createdAt: {
+          label: __("consent.previousDose.administeredAt.label"),
+          value: consent.firstDose.formatted.administeredAt_date,
+          href: editPath("previous-dose")
+        },
+        country: {
+          label: __("consent.previousDose.country.label"),
+          value: consent.firstDose.formatted.country,
+          href: editPath("previous-dose")
+        }
+      })
+    }) }}
+  {% endif %}
+{% endblock %}

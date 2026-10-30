@@ -1,0 +1,35 @@
+{% extends "_layouts/form.njk" %}
+
+{% set audience = "parent" if isParentFacing else "team" %}
+{% set title = __("clinicBooking.mmrAlternative.title." + audience, firstName) %}
+{% set hint = __("clinicBooking.mmrAlternative.hint") %}
+
+{# Replace MMR with MMRV content as necessary #}
+{% if data.programmesToOffer.eligibleForMmrv %}
+  {% set title = title | replace('MMR', 'MMRV') %}
+  {% set hint = hint | replace('MMR', 'MMRV') %}
+{% endif %}
+
+{% block form %}
+  {{ radios({
+    fieldset: {
+      legend: {
+        caption: appointmentCaption,
+        heading: title,
+        size: "l"
+      }
+    },
+    hint: hint,
+    items: [
+      {
+        label: __("clinicBooking.mmrAlternative.yes.label." + audience, firstName),
+        value: true
+      },
+      {
+        label: __("clinicBooking.mmrAlternative.no.label." + audience, firstName),
+        value: false
+      }
+    ],
+    decorate: "appointment.mmrAlternative"
+  }) }}
+{% endblock %}

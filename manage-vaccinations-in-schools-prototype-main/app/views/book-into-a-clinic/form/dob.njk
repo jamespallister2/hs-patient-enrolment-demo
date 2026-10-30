@@ -1,0 +1,17 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("clinicBooking.dob.title", firstName) %}
+
+{% block form %}
+  {{ dateInput({
+    fieldset: {
+      legend: {
+        caption: appointmentCaption,
+        heading: title,
+        size: "l"
+      }
+    },
+    hint: __("clinicBooking.dob.hint"),
+    decorate: "appointment.child.dob_"
+  }) }}
+{% endblock %}

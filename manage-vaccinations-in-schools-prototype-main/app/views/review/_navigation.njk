@@ -1,0 +1,44 @@
+{%- from "nhsuk/components/heading/macro.njk" import heading %}
+{%- from "_macros/section-navigation.njk" import appSectionNavigation %}
+
+{% macro reviewNavigation(params) %}
+  {{ heading({
+    text: __("review.list.title"),
+    size: "l"
+  }) }}
+
+  {{ appSectionNavigation({
+    items: [
+      {
+        text: __("notice.list.label"),
+        badge: { text: data.counts.notices },
+        href: "/notices",
+        current: params.view == "notice"
+      },
+      {
+        text: __("consent.list.label"),
+        badge: { text: data.counts.consents },
+        href: "/consents",
+        current: params.view == "consent"
+      },
+      {
+        text: __("appointments.list.label"),
+        badge: { text: data.counts.appointments },
+        href: "/unmatched-appointments",
+        current: params.view == "appointments"
+      },
+      {
+        text: __("move.list.label"),
+        badge: { text: data.counts.moves },
+        href: "/moves",
+        current: params.view == "move"
+      }
+    ]
+  }) }}
+
+  {{ heading({
+    classes: "nhsuk-u-visually-hidden",
+    text: __(params.view + ".list.title"),
+    level: 2
+  }) }}
+{% endmacro %}

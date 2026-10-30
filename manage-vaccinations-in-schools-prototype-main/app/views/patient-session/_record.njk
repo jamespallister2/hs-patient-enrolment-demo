@@ -1,0 +1,202 @@
+{% set headingText -%}
+  {%- if patientProgramme.programme.alternativeVaccine %}
+    <span class="app-vaccine-criteria" data-value="{{ patientProgramme.vaccineCriteria }}">
+      {{- __("patientSession.record.titleWithMethod", {
+        programme: patientProgramme.programme,
+        method: patientProgramme.vaccineCriteria | lower | replace("only", "") | replace("preferred", "")
+      }) | safe -}}
+    </span>
+  {%- else -%}
+    {{- __("patientSession.record.title", {
+      programme: patientProgramme.programme
+    }) | safe -}}
+  {%- endif -%}
+{% endset %}
+
+{% call card({
+  heading: {
+    text: headingText | safe,
+    size: "m"
+  }
+}) %}
+  {{ radios({
+    fieldset: {
+      legend: {
+        classes: "nhsuk-u-font-size-22",
+        text: __("preScreen.hasSelfIdentified.label", {
+          prefix: "Have you" if options.canAssess else "Has a nurse",
+          patient: patient
+        }),
+        size: "s"
+      }
+    },
+    items: [
+      {
+        label: __("preScreen.hasSelfIdentified.true"),
+        value: true
+      },
+      {
+        label: __("preScreen.hasSelfIdentified.false"),
+        value: false,
+        conditional: {
+          html: input({
+            label: __("preScreen.identifiedBy.name.title"),
+            width: 20,
+            decorate: "preScreen.identifiedBy.name"
+          }) + input({
+            label: __("preScreen.identifiedBy.relationship.title"),
+            hint: __("preScreen.identifiedBy.relationship.hint"),
+            width: 20,
+            decorate: "preScreen.identifiedBy.relationship"
+          })
+        }
+      }
+    ],
+    decorate: "preScreen.hasSelfIdentified"
+  }) }}
+
+  <hr class="nhsuk-section-break nhsuk-section-break--visible nhsuk-section-break--l">
+
+  {{ heading({
+    text: __("preScreen.label", { patient: patient }),
+    level: 4,
+    size: "s"
+  }) }}
+
+{% filter nhsukMarkdown %}
+{{ __("preScreen.description", {
+  prefix: "Have you" if options.canAssess else "Has a nurse",
+  patient: patient
+}) }}
+{% for question in patientProgramme.vaccine.preScreenQuestions %}
+- {{ question }}
+{% endfor %}
+{% endfilter %}
+
+  {{ checkboxes({
+    items: [
+      {
+        label: __("preScreen.check.label")
+      }
+    ],
+    decorate: ["preScreen", "check"],
+    _validate: {
+      presence: {
+        message: __("preScreen.check.error")
+      }
+    }
+  }) if account.isRegisteredNurse }}
+
+  {{ textarea({
+    label: __("preScreen.note.label") + " (optional)",
+    rows: 2,
+    decorate: "preScreen.note"
+  }) }}
+
+  {% if session.hasVgdProtocol %}
+    {{ select({
+      label: __("preScreen.assessedBy.title"),
+      items: userItems(registeredNurseUsers, preScreen.assessedBy),
+      decorate: "preScreen.assessedBy_uid",
+      attributes: {
+        "data-module": "app-autocomplete"
+      }
+    }) if not account.isRegisteredNurse else input({
+      type: "hidden",
+      value: account.uid,
+      decorate: "preScreen.assessedBy_uid"
+    }) }}
+  {% endif %}
+
+  <hr class="nhsuk-section-break nhsuk-section-break--visible nhsuk-section-break--l">
+
+  {% set vaccinationSiteHtml = radios({
+    fieldset: {
+      legend: __("preScreen.injectionSite.label")
+    },
+    items: [
+      { label: VaccinationSite.ArmLeftUpper },
+      { label: VaccinationSite.ArmRightUpper },
+      { label: VaccinationSite.Other }
+    ],
+    decorate: "preScreen.injectionSite",
+    _validate: {
+      conditional: {
+        dependentOn: {
+          name: "[preScreen][ready]",
+          value: true
+        },
+        message: __("preScreen.injectionSite.error")
+      }
+    }
+  }) %}
+
+  {% set administeredByHtml = select({
+    label: __("preScreen.administeredBy.title"),
+    items: userItems(allVaccinatingUsers, preScreen.assessedBy),
+    decorate: "preScreen.administeredBy_uid",
+    attributes: {
+      "data-module": "app-autocomplete"
+    }
+  }) %}
+
+  {% if session.hasVgdProtocol and account.isRegisteredNurse and options.canRecordInjectionSite %}
+    {% set preScreenReadyHtml = administeredByHtml + vaccinationSiteHtml %}
+  {% elif session.hasVgdProtocol and account.isRegisteredNurse %}
+    {% set preScreenReadyHtml = administeredByHtml %}
+  {% elif options.canRecordInjectionSite %}
+    {% set preScreenReadyHtml = vaccinationSiteHtml %}
+  {% endif %}
+
+  {{ radios({
+    fieldset: {
+      legend: {
+        classes: "nhsuk-u-font-size-22",
+        text: __("preScreen.ready.label", {
+          patient: patient,
+          programme: patientProgramme.programme,
+          method: patientProgramme.vaccine.method | lower
+        }) | safe,
+        size: "m"
+      }
+    },
+    items: [
+      {
+        label: __("preScreen.ready.yes"),
+        value: true,
+        conditional: {
+          html: preScreenReadyHtml
+        } if preScreenReadyHtml
+      },
+      {
+        label: __("preScreen.ready.no"),
+        value: false
+      },
+      {
+        divider: "or"
+      } if canRecordAlternativeVaccine,
+      {
+        label: __("preScreen.ready.alternative"),
+        value: "alternative",
+        conditional: {
+          html: preScreenReadyHtml
+        }
+      } if canRecordAlternativeVaccine
+    ],
+    decorate: "preScreen.ready",
+    _validate: {
+      presence: {
+        message: __("preScreen.ready.error", {
+          programme: patientProgramme.programme
+        })
+      }
+    }
+  }) }}
+
+  {{ button({
+    text: __("preScreen.confirm"),
+    attributes: {
+      formaction: patientSession.uri + "/new/pre-screen?referrer=" + referrer
+    }
+  }) }}
+{% endcall %}

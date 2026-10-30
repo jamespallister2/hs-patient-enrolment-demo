@@ -1,0 +1,32 @@
+{% extends "_layouts/meta.njk" %}
+
+{% set title = user.fullName %}
+{% set paths = { back: "/users" } %}
+
+{% block content %}
+  <div class="nhsuk-u-width-three-quarters">
+    {{ super() }}
+
+    {{ heading({
+      caption: __("user.list.title"),
+      text: title,
+      size: "l"
+    }) }}
+
+    {{ summaryList({
+      card: {
+        heading: {
+          text: __("user.show.summary"),
+          size: "m"
+        }
+      },
+      lastRowBorder: false,
+      rows: summaryRows(user, {
+        uid: {},
+        fullName: {},
+        email: {},
+        role: {}
+      })
+    }) }}
+  </div>
+{% endblock %}

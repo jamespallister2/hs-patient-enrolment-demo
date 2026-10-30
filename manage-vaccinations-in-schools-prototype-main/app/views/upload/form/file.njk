@@ -1,0 +1,53 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("upload.file.titleSchoolUser") if account.isSchoolUser else __("upload.file.title", { type: upload.type | lower }) %}
+
+{% set templateFormat %}
+  {% if upload.type == UploadType.Cohort %}
+    {% include "upload/_template-format-cohort.njk" %}
+  {% elif upload.type == UploadType.School %}
+    {% if upload.format == UploadFormat.Arbor %}
+      {% include "upload/_template-format-school-arbor.njk" %}
+    {% elif upload.format == UploadFormat.Bromcom %}
+      {% include "upload/_template-format-school-bromcom.njk" %}
+    {% elif upload.format == UploadFormat.SIMS %}
+      {% include "upload/_template-format-school-sims.njk" %}
+    {% else %}
+      {% include "upload/_template-format-school-csv.njk" %}
+    {% endif %}
+  {% elif upload.type == UploadType.Report %}
+    {% include "upload/_template-format-report.njk" %}
+  {% endif %}
+{% endset %}
+
+{% block form %}
+  {{ heading({
+    text: title,
+    size: "l"
+  }) }}
+
+  {% if upload.type == UploadType.Report %}
+    {{ __("upload.file.description.report") | nhsukMarkdown }}
+  {% else %}
+    {{ __("upload.file.description.other") | nhsukMarkdown }}
+  {% endif %}
+
+  {% if account.isSchoolUser %}
+    {{ __("upload.file.descriptionSchoolUser") | nhsukMarkdown }}
+  {% endif %}
+
+  {{ details({
+    summary: __("upload.file.format"),
+    html: templateFormat
+  }) if not account.isSchoolUser }}
+
+  {{ fileUpload({
+    id: "upload",
+    name: "upload",
+    label: {
+      text: __("upload.file.label"),
+      size: "m"
+    },
+    errorMessage: errors.upload if errors.upload
+  }) }}
+{% endblock %}

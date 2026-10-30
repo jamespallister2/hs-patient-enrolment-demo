@@ -1,0 +1,23 @@
+{%- from "nhsuk/components/link/macro.njk" import link %}
+{%- from "x-nhsuk/decorated/button/macro.njk" import button with context %}
+
+{%- set classNames = "nhsuk-button-group" -%}
+
+{% macro appButtonGroup(params) -%}
+{%- if params.classes %}
+  {%- set classNames = classNames ~ " " ~ params.classes -%}
+{%- endif -%}
+{% if params.buttons | removeEmpty | length %}
+<div class="{{ classNames }}">
+{% for item in params.buttons -%}
+{{- button(item) if item -}}
+{%- endfor -%}
+{%- for item in params.links -%}
+{{- link(item) -}}
+{%- endfor %}
+{%- if params.description %}
+<p><span class="nhsuk-u-secondary-text-colour">{{ params.description }}</span></p>
+{%- endif %}
+</div>
+{% endif %}
+{% endmacro %}

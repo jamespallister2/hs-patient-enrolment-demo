@@ -1,0 +1,21 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("reply.method.title") %}
+
+{% block form %}
+  {{ radios({
+    fieldset: {
+      legend: {
+        caption: reply.patient.fullName,
+        heading: title,
+        size: "l"
+      }
+    },
+    items: [
+      { label: ReplyMethod.Phone },
+      { label: ReplyMethod.InPerson },
+      { label: ReplyMethod.Paper }
+    ],
+    decorate: "reply.method"
+  }) }}
+{% endblock %}

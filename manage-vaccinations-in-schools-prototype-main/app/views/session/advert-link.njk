@@ -1,0 +1,26 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("session.advertise.link.title") %}
+{% set hideConfirmButton = true %}
+
+{% block form %}
+  {{ heading({
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ code({
+    text: data.clinicAdvert.link,
+    button: true,
+    copyButtonText: __("session.advertise.link.copy.label"),
+    copiedButtonText: __("session.advertise.link.copied.label")
+  }) }}
+
+  {{ __("session.advertise.link.description", { programmeNames: data.clinicAdvert.programmeNames }) | nhsukMarkdown }}
+
+  {{ button({
+    text: __("session.advertise.link.confirm"),
+    name: "action",
+    value: "return"
+  }) }}
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("consent.child.address.title") %}
+
+{% block form %}
+  {% call fieldset({
+    legend: {
+      heading: title,
+      size: "l"
+    }
+  }) %}
+    <p class="nhsuk-hint">{{ __("consent.child.address.hint") }}</p>
+
+    {{ input({
+      label: __("location.addressLine1.label"),
+      autocomplete: "address-line1",
+      decorate: "consent.child.address.addressLine1"
+    }) }}
+
+    {{ input({
+      label: __("location.addressLine2.label") + " (optional)",
+      autocomplete: "address-line2",
+      decorate: "consent.child.address.addressLine2"
+    }) }}
+
+    {{ input({
+      classes: "nhsuk-u-width-two-thirds",
+      label: __("location.addressLevel1.label"),
+      autocomplete: "address-level1",
+      decorate: "consent.child.address.addressLevel1"
+    }) }}
+
+    {{ input({
+      label: __("location.postalCode.label"),
+      autocomplete: "postal-code",
+      width: 10,
+      decorate: "consent.child.address.postalCode"
+    }) }}
+  {% endcall %}
+{% endblock %}

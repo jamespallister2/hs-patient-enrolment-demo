@@ -1,0 +1,145 @@
+{% extends "_layouts/form.njk" %}
+
+{% set confirmButtonText = __("form.confirm") %}
+{% set paths = { back: session.uri } %}
+{% set title = __("session.edit.title") %}
+
+{% block form %}
+  {{ super() }}
+
+  {{ heading({
+    caption: session.location.name,
+    text: title,
+    size: "l"
+  }) }}
+
+  {% if session.type === SessionType.School %}
+    {{ summaryList({
+      card: {
+        heading: {
+          text: __("session.summary"),
+          size: "m"
+        }
+      },
+      lastRowBorder: false,
+      rows: summaryRows(session, {
+        type: {},
+        clinic: {
+          href: session.uri + "/edit/clinic"
+        },
+        school: {
+          href: session.uri + "/edit/school" if session.consentWindow == ConsentWindow.Opening
+        },
+        programmes: {
+          href: session.uri + "/edit/programmes" if session.consentWindow == ConsentWindow.Opening
+        },
+        yearGroups: {
+          href: session.uri + "/edit/year-groups" if session.consentWindow == ConsentWindow.Opening
+        },
+        dates: {
+          href: session.uri + "/edit/dates"
+        },
+        consentOpenAt: {
+          href: session.uri + "/edit/consent-open-at"
+        },
+        reminderWeeks: {
+          href: session.uri + "/edit/reminders"
+        },
+        consentContacts: {
+          href: session.uri + "/edit/consent-contacts"
+        },
+        mmrConsent: {
+          href: session.uri + "/edit/mmr-consent"
+        },
+        hasRegistration: {
+          href: session.uri + "/edit/registration"
+        },
+        protocolNurse: {
+          href: session.uri + "/edit/protocol"
+        },
+        protocolHCA: {
+          href: session.uri + "/edit/protocol"
+        },
+        hasPsdProtocol: {
+          href: session.uri + "/edit/protocol"
+        }
+      })
+    }) }}
+  {% else %}
+    {{ summaryList({
+      card: {
+        heading: {
+          text: __("session.summary"),
+          size: "m"
+        }
+      },
+      lastRowBorder: false,
+      rows: summaryRows(session, {
+        type: {},
+        programmes: {
+          href: session.uri + "/edit/programmes"
+        },
+        catchUps: {
+          href: session.uri + "/new/catch-ups"
+        } if not session.isFluOnlyClinic else none,
+        location: {
+          href: session.uri + "/edit/clinic" if not session.hasAppointments
+        },
+        date: {
+          href: session.uri + "/edit/date" if not session.hasAppointments
+        },
+        hasRegistration: {
+          href: session.uri + "/edit/registration"
+        },
+        vaccinationPeriods: {
+          href: session.uri + "/edit/vaccination-periods"
+        },
+        vaccinators: {
+          href: session.uri + "/edit/vaccinators"
+        },
+        appointmentLengths: {
+          href: session.uri + "/new/appointment-length" if not session.hasAppointments
+        },
+        totalSlots: {}
+      })
+    }) }}
+
+    {% if appointmentsToCancel.length > 0 %}
+      {% set calloutHtml %}
+        {{ __mf("session.edit.appointments.cancellation.description", { count: appointmentsToCancel.length }) | nhsukMarkdown }}
+
+        {% set appointmentLinks = [] %}
+        {% for appointment in appointmentsToCancel %}
+          {% set appointmentLinks = appointmentLinks | push(appointment.link.summary) %}
+        {% endfor %}
+
+        {{ details({
+          summary: __("session.edit.appointments.cancellation.detailsTitle"),
+          html: appointmentLinks | nhsukList
+        }) }}
+      {% endset %}
+
+      {{ warningCallout({
+        heading: __("session.edit.appointments.cancellation.title"),
+        html: calloutHtml
+      }) }}
+    {% endif %}
+  {% endif %}
+{% endblock %}
+
+{% block afterForm %}
+  {{ appButtonGroup({
+    buttons: [
+      {
+        text: confirmButtonText,
+        variant: confirmButtonVariant
+      }
+    ],
+    links: [
+      {
+        text: __("session.edit.cancel"),
+        href: session.uri
+      }
+    ]
+  }) }}
+{% endblock afterForm %}

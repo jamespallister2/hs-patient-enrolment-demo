@@ -1,0 +1,21 @@
+{% extends "_layouts/form.njk" %}
+
+{% if type == "request" %}
+  {% set title = __("upload.request.yearGroups.title") %}
+{% else %}
+  {% set title = __("upload.yearGroups.titleSchoolUser") if account.isSchoolUser else __("upload.yearGroups.title") %}
+{% endif %}
+
+{% block form %}
+  {{ checkboxes({
+    fieldset: {
+      legend: {
+        caption: upload.school.name if type == "request",
+        heading: title,
+        size: "l"
+      }
+    },
+    items: yearGroupItems,
+    decorate: "upload.yearGroups"
+  }) }}
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends "_layouts/form.njk" %}
+
+{% set confirmButtonText = __("form.confirm") %}
+{% set title = __("vaccination.edit.title") %}
+
+{% block form %}
+  {{ super() }}
+
+  {{ heading({
+    caption: vaccination.patient.fullName,
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ summaryList({
+    card: {
+      heading: {
+        text: __("vaccination.edit.summary"),
+        size: "m"
+      }
+    },
+    lastRowBorder: false,
+    rows: summaryRows(vaccination, {
+      programme: {},
+      outcome: {
+        href: "edit/outcome"
+      },
+      vaccine: {
+        href: "edit/vaccine" if programme.alternativeVaccine
+      },
+      method: {
+        href: "edit/method" if vaccination.method != VaccinationMethod.Intranasal
+      },
+      site: {
+        href: "edit/site" if vaccination.method != VaccinationMethod.Intranasal
+      },
+      dose: {
+        href: "edit/dose"
+      },
+      sequence: {
+        href: "edit/sequence"
+      },
+      batch: {
+        href: "edit/batch"
+      },
+      identifiedBy: {
+        href: "edit/identified-by"
+      },
+      assessedBy: {
+        href: "edit/assessed-by"
+      },
+      administeredBy: {
+        href: "edit/administered-by"
+      },
+      administeredAt: {
+        href: "edit/administered-at"
+      },
+      location: {
+        href: "edit/location"
+      },
+      note: {
+        href: "edit/note"
+      }
+    })
+  }) }}
+{% endblock %}

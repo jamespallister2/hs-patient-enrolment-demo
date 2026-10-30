@@ -1,0 +1,127 @@
+@use "sass:color";
+@use "../vendor/nhsuk-frontend" as *;
+
+$app-card-colours: "blue", "green", "orange", "red";
+
+@each $colour in $app-card-colours {
+  .app-card--#{$colour} {
+    border-color: nhsuk-colour($colour);
+    color: nhsuk-colour("dark-#{$colour}");
+    background-color: nhsuk-colour("pale-#{$colour}");
+
+    &.nhsuk-card--clickable {
+      box-shadow: 0 $nhsuk-card-border-bottom-width 0 nhsuk-colour($colour);
+    }
+
+    &.nhsuk-card--clickable:hover,
+    &.nhsuk-card--clickable:has(.nhsuk-card__heading a:hover),
+    &.nhsuk-card--clickable:has(.nhsuk-card__link:hover) {
+      border-color: nhsuk-colour("dark-#{$colour}");
+      box-shadow: 0 $nhsuk-card-border-bottom-width 0 nhsuk-colour("dark-#{$colour}");
+    }
+  }
+}
+
+.app-card--blue,
+.app-card--green,
+.app-card--orange,
+.app-card--red {
+  &.nhsuk-card--clickable:active,
+  &.nhsuk-card--clickable:has(.nhsuk-card__heading a:active),
+  &.nhsuk-card--clickable:has(.nhsuk-card__link:active) {
+    box-shadow: none;
+  }
+
+  .nhsuk-card__link,
+  .nhsuk-card__link:hover {
+    color: inherit;
+  }
+}
+
+.app-card--offset {
+  background-color: rgb(nhsuk-colour("grey-5"), 0.5);
+}
+
+.app-card--compact {
+  margin-bottom: 0;
+
+  &:not(:first-child) {
+    @include nhsuk-responsive-margin(4, "top");
+  }
+
+  .nhsuk-card__heading-container {
+    @include nhsuk-responsive-padding(4, "left");
+    @include nhsuk-responsive-padding(4, "right");
+    @include nhsuk-responsive-padding(4, "top");
+  }
+
+  .nhsuk-card__heading {
+    @include nhsuk-responsive-margin(2, "bottom");
+  }
+
+  .nhsuk-card__content {
+    @include nhsuk-responsive-padding(4);
+  }
+
+  .nhsuk-card__heading-container + .nhsuk-card__content {
+    padding-top: 0;
+  }
+
+  .nhsuk-button-group .nhsuk-button {
+    @include nhsuk-media-query($from: tablet) {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// Align counts across cards
+.nhsuk-card:has(> .nhsuk-card__content > .app-card__data) {
+  display: flex;
+
+  .nhsuk-card__heading {
+    line-height: 1.2;
+  }
+
+  .nhsuk-card__content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+}
+
+.app-card__data {
+  @include nhsuk-font(48, $weight: bold);
+}
+
+.nhsuk-card--feature > .nhsuk-card__content {
+  & > .app-card__heading {
+    &--green {
+      background-color: nhsuk-colour("green");
+    }
+
+    &--grey {
+      background-color: nhsuk-colour("grey-1");
+    }
+
+    &--orange {
+      background-color: nhsuk-shade(nhsuk-colour("orange"), 30%);
+    }
+
+    &--red {
+      background-color: nhsuk-colour("red");
+    }
+  }
+}
+
+.nhsuk-card--warning {
+  // Increase prominence of blockquote border
+  blockquote {
+    border-left-color: nhsuk-colour("black");
+  }
+
+  // Ensure summary row border colour matches card border
+  .nhsuk-summary-list__row {
+    border-color: nhsuk-colour("yellow");
+  }
+}

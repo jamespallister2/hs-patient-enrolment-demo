@@ -1,0 +1,18 @@
+{% call card({
+  heading: {
+    text: __("patientSession.gillick.title"),
+    size: "m"
+  }
+}) %}
+  {# Description #}
+  {% if patientSession.gillick %}
+    {{ patientSession.gillick.competent | nhsukMarkdown }}
+  {% endif %}
+
+  {# Actions #}
+  {% set type = "edit" if patientSession.gillick.competent else "new" %}
+  {{ actionLink({
+    text: __("patientSession.gillick." + type + ".title"),
+    href: patientSession.uri + "/" + type + "/gillick?referrer=" + referrer
+  }) if not patientSession.patientProgramme.isVaccinated }}
+{% endcall %}

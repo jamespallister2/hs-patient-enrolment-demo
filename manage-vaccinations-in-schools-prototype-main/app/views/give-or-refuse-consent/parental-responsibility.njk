@@ -1,0 +1,18 @@
+{% extends "_layouts/default.njk" %}
+
+{% set title = __("consent.parental-responsibility.title") %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      {{ heading({
+        text: title,
+        size: "l"
+      }) }}
+
+      {{ __("consent.parental-responsibility.description", {
+        team: team
+      }) | nhsukMarkdown }}
+    </div>
+  </div>
+{% endblock %}

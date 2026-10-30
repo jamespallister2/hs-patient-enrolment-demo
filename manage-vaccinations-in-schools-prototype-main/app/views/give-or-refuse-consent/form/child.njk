@@ -1,0 +1,48 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("consent.child.title") %}
+
+{% block form %}
+  {{ heading({
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ __("consent.child.description") | nhsukMarkdown }}
+
+  {{ input({
+    label: __("consent.child.firstName.label"),
+    hint: __("consent.child.firstName.hint"),
+    decorate: "consent.child.firstName"
+  }) }}
+
+  {{ input({
+    label: __("consent.child.lastName.label"),
+    hint: __("consent.child.lastName.hint"),
+    decorate: "consent.child.lastName"
+  }) }}
+
+  {{ radios({
+    fieldset: {
+      legend: __("consent.child.hasPreferredName.label")
+    },
+    items: [
+      {
+        label: __("consent.child.hasPreferredName.yes"),
+        conditional: {
+          html: input({
+            label: __("consent.child.preferredFirstName.label") + " (optional)",
+            decorate: "consent.child.preferredFirstName"
+          }) + input({
+            label: __("consent.child.preferredLastName.label") + " (optional)",
+            decorate: "consent.child.preferredLastName"
+          })
+        }
+      },
+      {
+        label: __("consent.child.hasPreferredName.no")
+      }
+    ],
+    decorate: "child.preferred-name-choice"
+  }) }}
+{% endblock %}

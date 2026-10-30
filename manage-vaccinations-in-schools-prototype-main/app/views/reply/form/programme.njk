@@ -1,0 +1,21 @@
+{% extends "_layouts/form.njk" %}
+
+{% if reply.hasSelfConsent %}
+  {% set title = __("reply.programme.title.Child") %}
+{% else %}
+  {% set title = __("reply.programme.title.Contact") %}
+{% endif %}
+
+{% block form %}
+  {{ radios({
+    fieldset: {
+      legend: {
+        caption: reply.patient.fullName,
+        heading: title,
+        size: "l"
+      }
+    },
+    items: programmeItems,
+    decorate: "reply.programme_id"
+  }) }}
+{% endblock %}

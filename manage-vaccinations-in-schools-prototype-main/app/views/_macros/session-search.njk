@@ -1,0 +1,99 @@
+{%- from "nhsuk/components/button/macro.njk" import button with context -%}
+{%- from "nhsuk/components/card/macro.njk" import card with context -%}
+{%- from "nhsuk/components/details/macro.njk" import details with context -%}
+{%- from "x-nhsuk/decorated/button/macro.njk" import button with context %}
+{%- from "x-nhsuk/decorated/checkboxes/macro.njk" import checkboxes with context %}
+{%- from "x-nhsuk/decorated/date-input/macro.njk" import dateInput with context %}
+{%- from "x-nhsuk/decorated/radios/macro.njk" import radios with context %}
+{%- from "x-nhsuk/decorated/search-input/macro.njk" import searchInput with context -%}
+{%- from "_macros/button-group.njk" import appButtonGroup with context -%}
+
+{% macro appSessionSearch(params) %}
+  {% call card({
+    classes: "app-filters",
+    feature: true,
+    heading: {
+      text: __("session.search.label"),
+      level: params.heading.level | default(2)
+    }
+  }) %}
+    {{ searchInput({
+      label: {
+        text: __("search.label"),
+        size: "s"
+      },
+      hint: __("search.hint.session"),
+      attributes: {
+        formmethod: "post"
+      },
+      decorate: "q"
+    }) if not account.isSchoolUser }}
+
+    {{ radios({
+      fieldset: {
+        legend: {
+          text: __("session.academicYear.label"),
+          size: "s"
+        }
+      },
+      small: true,
+      items: academicYearItems,
+      decorate: "academicYear"
+    }) if academicYearItems }}
+
+    {{ checkboxes({
+      fieldset: {
+        legend: {
+          text: __("programme.label"),
+          size: "s"
+        }
+      },
+      small: true,
+      items: programmeItems,
+      decorate: "programme_id"
+    }) }}
+
+    {{ radios({
+      fieldset: {
+        legend: {
+          text: __("session.status.label"),
+          size: "s"
+        }
+      },
+      small: true,
+      items: radioFilterItems(SessionStatus),
+      decorate: "status"
+    }) }}
+
+    {{ radios({
+      fieldset: {
+        legend: {
+          text: __("session.type.label"),
+          size: "s"
+        }
+      },
+      small: true,
+      items: radioFilterItems(SessionType),
+      decorate: "type"
+    }) if not account.isSchoolUser }}
+
+    {{ appButtonGroup({
+      buttons: [
+        {
+          text: __("search.confirm"),
+          small: true,
+          variant: "secondary",
+          attributes: {
+            formmethod: "post"
+          }
+        },
+        {
+          text: __("search.clear"),
+          href: params.clear or "/sessions",
+          small: true,
+          variant: "secondary"
+        } if data.q or data.programme_id or data.status != "none" or data.type != "none"
+      ]
+    }) }}
+  {% endcall %}
+{% endmacro %}

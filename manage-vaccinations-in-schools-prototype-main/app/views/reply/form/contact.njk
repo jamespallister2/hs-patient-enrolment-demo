@@ -1,0 +1,102 @@
+{% extends "_layouts/form.njk" %}
+
+{% if reply.contact.fullName %}
+  {% set title = __("reply.contact.title.edit", { contact: reply.contact }) %}
+{% else %}
+  {% set title = __("reply.contact.title.new") %}
+{% endif %}
+{% set showContactDetails = true if not patientProgramme.patient.isSensitive else false %}
+
+{% block form %}
+  {{ heading({
+    caption: reply.patient.fullName,
+    text: title,
+    size: "l"
+  }) }}
+
+  {%- set fosterCarerHtml = radios({
+    fieldset: {
+      legend: __("contact.hasParentalResponsibility.delegatedLabel")
+    },
+    hint: __("contact.hasParentalResponsibility.hint"),
+    items: getBooleanItems(),
+    decorate: "reply.contact.hasParentalResponsibility"
+  }) %}
+
+  {%- set guardianHtml = radios({
+    fieldset: {
+      legend: __("contact.hasParentalResponsibility.label")
+    },
+    hint: __("contact.hasParentalResponsibility.hint"),
+    items: getBooleanItems(),
+    decorate: "reply.contact.hasParentalResponsibility"
+  }) %}
+
+  {%- set otherHtml = input({
+    label: __("contact.relationshipOther.label"),
+    decorate: "reply.contact.relationshipOther"
+  }) + radios({
+    fieldset: {
+      legend: __("contact.hasParentalResponsibility.label")
+    },
+    hint: __("contact.hasParentalResponsibility.hint"),
+    items: getBooleanItems(),
+    decorate: "reply.contact.hasParentalResponsibility"
+  }) %}
+
+  {# Add conditional html for ‘Foster carer’ option #}
+  {% set items = injectConditionalHtml(parentalRelationshipItems, RelationshipType.Fosterer, fosterCarerHtml) %}
+
+  {# Add conditional html for ‘Guardian’ option #}
+  {% set items = injectConditionalHtml(items, RelationshipType.Guardian, guardianHtml) %}
+
+  {# Add conditional html for ‘Other’ option #}
+  {% set items = injectConditionalHtml(items, RelationshipType.Other, otherHtml) %}
+
+  {{ input({
+    label: __("contact.fullName.label"),
+    decorate: "reply.contact.fullName"
+  }) }}
+
+  {# `pop` removes `Other` and `Unknown` from RelationshipType array #}
+  {{ radios({
+    fieldset: {
+      legend: __("contact.relationship.label")
+    },
+    items: items,
+    decorate: "reply.contact.relationship"
+  }) }}
+
+  {{ input({
+    label: __("contact.email.label"),
+    decorate: "reply.contact.email"
+  }) if showContactDetails }}
+
+  {{ input({
+    label: __("contact.tel.label") + " (optional)",
+    decorate: "reply.contact.tel"
+  }) if showContactDetails }}
+
+  {{ radios({
+    fieldset: {
+      legend: __("contact.hasCommunicationNeeds.title")
+    },
+    items: [
+      {
+        label: __("contact.hasCommunicationNeeds.yes"),
+        value: true,
+        conditional: {
+          html: textarea({
+            label: __("contact.communicationNeeds.title"),
+            decorate: "reply.contact.communicationNeeds"
+          })
+        }
+      },
+      {
+        label: __("contact.hasCommunicationNeeds.no"),
+        value: false
+      }
+    ],
+    decorate: "reply.contact.hasCommunicationNeeds"
+  }) if showContactDetails }}
+{% endblock %}

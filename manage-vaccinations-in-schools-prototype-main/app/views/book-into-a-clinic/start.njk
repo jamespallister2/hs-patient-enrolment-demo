@@ -1,0 +1,44 @@
+{% extends "_layouts/default.njk" %}
+
+{% set title = false %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      {{ heading({
+        text: __("clinicBooking.start.title")
+      }) }}
+
+      {{ __("clinicBooking.start.intro") | nhsukMarkdown }}
+
+      {% if data.programmesToOffer.programmes.length > 1 %}
+        <h2>About the vaccinations</h2>
+      {% endif %}
+
+      {% for programme in data.programmesToOffer.programmes %}
+        {% if data.programmesToOffer.programmes.length > 1 %}
+          <h3>{{ programme.name }}</h3>
+        {% else %}
+          <h2>About the {{ programme.name | replace('Flu', 'flu') }} vaccination</h2>
+        {% endif %}
+
+        {{ __("clinicBooking.start.programme." + programme.id) | nhsukMarkdown }}
+      {% endfor %}
+
+      <h2>{{ __("clinicBooking.start.online.title") }}</h2>
+
+      {{ __("clinicBooking.start.online.description") | nhsukMarkdown }}
+
+      {{ button({
+        text: __("clinicBooking.start.online.confirm"),
+        href: "new"
+      }) }}
+
+      <h2>
+        {{ __("clinicBooking.start.otherMethods.title") }}
+      </h2>
+
+      {{ __("clinicBooking.start.otherMethods.description", { team: team }) | nhsukMarkdown }}
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "_layouts/form.njk" %}
+
+{% set title = __("vaccination.administeredAt.title", vaccination.programmeOrVariantNameSentenceCase) %}
+
+{% block form %}
+  {{ heading({
+    caption: vaccination.patient.fullName,
+    text: title,
+    size: "l"
+  }) }}
+
+  {{ dateInput({
+    fieldset: {
+      legend: {
+        text: __("vaccination.administeredAt_date.label"),
+        size: "m"
+      }
+    },
+    hint: __("vaccination.administeredAt_date.hint"),
+    decorate: "vaccination.administeredAt_"
+  }) }}
+
+  {{ dateInput({
+    fieldset: {
+      legend: {
+        text: __("vaccination.administeredAt_time.label"),
+        size: "m"
+      }
+    },
+    hint: __("vaccination.administeredAt_time.hint"),
+    items: [
+      {
+        label: "Hour",
+        width: 2,
+        id: "vaccination-administeredAt_-hour",
+        name: "[vaccination][administeredAt_][hour]",
+        value: vaccination.administeredAt_.hour
+      },
+      {
+        label: "Minute",
+        width: 2,
+        id: "vaccination-administeredAt_-minute",
+        name: "[vaccination][administeredAt_][minute]",
+        value: vaccination.administeredAt_.minute
+      }
+    ]
+  }) }}
+{% endblock %}
