@@ -1,0 +1,7 @@
+{% extends "layout.html" %}{% set pageName = "Add a cohort" %}{% block beforeContent %}{{ backLink({href:"/proposed/cohort",text:"Back"}) }}{% endblock %}{% block content %}
+<div class="nhsuk-grid-row"><div class="nhsuk-grid-column-two-thirds">
+<h1 class="nhsuk-heading-xl">Add a cohort</h1><p>Create the cohort first, then add patients one at a time or from a CSV file.</p>
+<form action="/proposed/cohort/create" method="post">
+{{ input({id:"cohort-name",name:"name",label:{text:"Cohort name",classes:"nhsuk-label--m"}}) }}
+{{ radios({idPrefix:"condition",name:"condition",fieldset:{legend:{text:"Condition / pathway",size:"m"}},items:[{value:"copd",text:"COPD"},{value:"asthma",text:"Asthma"}]}) }}
+{{ button({text:"Continue"}) }}</form></div></div>{% endblock %}
