@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% set pageName = "Patient enrolment" %}
+{% block content %}
+<div class="nhsuk-grid-row"><div class="nhsuk-grid-column-full">
+<h1 class="nhsuk-heading-xl">Patient enrolment</h1>
+<p>Find a patient and enrol them on a digital therapeutic.</p>
+{{ button({ text: "Enrol a patient", href: "/proposed/enrol/flow/find" }) }}
+<h2 class="nhsuk-heading-m">Patient enrolments</h2>
+<p><a class="nhsuk-link" href="/proposed/enrol/patient">Priya Patel</a></p>
+</div></div>
+{% endblock %}
