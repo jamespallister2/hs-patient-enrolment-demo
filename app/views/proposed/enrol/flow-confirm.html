@@ -1,6 +1,14 @@
 {# Illustrative enrolment outcomes: no real enrolment is created. #}
 {% extends "layout.html" %}
 {% set pageName = "Enrolment outcome" %}
+{% block beforeContent %}
+  {{ breadcrumb({
+    items: [
+      { href: "/proposed/enrol/flow", text: "Patient enrolment" },
+      { href: "/proposed/enrol/patient", text: "Priya Patel" }
+    ]
+  }) }}
+{% endblock %}
 {% block content %}
 <div class="nhsuk-grid-row"><div class="nhsuk-grid-column-full">
   {% if outcome == "accepted" %}
