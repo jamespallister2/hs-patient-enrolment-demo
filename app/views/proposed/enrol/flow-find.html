@@ -5,12 +5,13 @@
 <div class="nhsuk-grid-row"><div class="nhsuk-grid-column-two-thirds">
   <h1 class="nhsuk-heading-xl">Find a patient</h1>
   <form action="/proposed/enrol/flow/select" method="get">
+    <h2 class="nhsuk-heading-m">Search by NHS number</h2>
     {{ input({
       id: "nhsNumber", name: "nhsNumber", inputmode: "numeric", spellcheck: false, width: 10,
       label: { text: "NHS number" },
       hint: { text: "If you know it, enter it here and skip the fields below. You can include spaces." }
     }) }}
-    <p>Or search using the patient's details:</p>
+    <h2 class="nhsuk-heading-m nhsuk-u-margin-top-6">Or search by patient details</h2>
     {{ input({ id: "familyName", name: "familyName", label: { text: "Family name" } }) }}
     {{ dateInput({
       id: "dob", namePrefix: "dob",
