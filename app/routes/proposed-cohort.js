@@ -43,8 +43,9 @@ module.exports = function (router) {
     if (p && !c.patients.some(x=>x.key===p.key) && !(p.key==='priya' && c.dtxLabel==='myCOPD')) c.patients.push({...p,issue:null})
     res.redirect('/proposed/cohort/detail')
   })
-  router.get('/proposed/cohort/upload', show('upload'))
+  router.get('/proposed/cohort/upload', show('upload', req => ({ uploadError: req.query.error === 'missing' })))
   router.post('/proposed/cohort/sample-upload', function(req,res) {
+    if (req.query.selected !== 'yes') return res.redirect('/proposed/cohort/upload?error=missing')
     const c=cohort(req)
     for (const p of [patients.amara,patients.wei,patients.priya]) {
       if (!c.patients.some(x=>x.key===p.key)) c.patients.push({...p, issue:p.key==='priya' && c.dtxLabel==='myCOPD' ? 'Potential duplicate enrolment' : null})
