@@ -25,6 +25,14 @@
       <h3 class="nhsuk-heading-s">View enrolment — rejected outcome</h3>
       <p><a class="nhsuk-link" href="/prototype/sign-in-as/clinician?next=/proposed/enrol/details-rejected">View proposed enrolment details screen</a></p>
       <p class="nhsuk-body-s">Reason: The current screen says completed even when the enrolment has been rejected. This version makes the outcome and reason clearer.</p>
+      <h3 class="nhsuk-heading-s">Submission confirmation versus viewing a record</h3>
+      <p class="nhsuk-body-s">Reason: Show a confirmation when something has just happened, but a standard details page when viewing the record later.</p>
+      <ul class="nhsuk-list nhsuk-list--bullet">
+        <li><a href="/proposed/enrol/submission-result?outcome=accepted">After submitting — accepted</a></li>
+        <li><a href="/proposed/enrol/view-details?outcome=accepted">View later — accepted</a></li>
+        <li><a href="/proposed/enrol/submission-result?outcome=rejected">After submitting — rejected</a></li>
+        <li><a href="/proposed/enrol/view-details?outcome=rejected">View later — rejected</a></li>
+      </ul>
     </div>
   </div>
 {% endblock %}
