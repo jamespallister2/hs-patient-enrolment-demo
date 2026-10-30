@@ -1,6 +1,12 @@
-{% extends "layout.html" %}{% set pageName = "Upload a CSV file" %}{% block beforeContent %}{{ backLink({href:"/proposed/cohort/add",text:"Back"}) }}{% endblock %}{% block content %}
-<div class="nhsuk-grid-row"><div class="nhsuk-grid-column-two-thirds"><h1 class="nhsuk-heading-xl">Upload a CSV file</h1>
-<p>Use the CSV template to prepare patients for {{ cohort.name }}.</p><p><a href="/bulk/template.csv">Download CSV template</a></p>
-<p>For this prototype, use the sample upload to see how patient validation and duplicate checks might work. No file is uploaded.</p>
-<form method="post" action="/proposed/cohort/sample-upload">{{ button({text:"Use sample CSV"}) }}</form>
-</div></div>{% endblock %}
+{% extends "layout.html" %}
+{% set pageName = "Upload a CSV file" %}
+{% block beforeContent %}{{ backLink({ href: "/proposed/cohort/add", text: "Back" }) }}{% endblock %}
+{% block content %}
+<div class="nhsuk-grid-row"><div class="nhsuk-grid-column-two-thirds">
+<h1 class="nhsuk-heading-xl">Upload a CSV file</h1>
+<p>Use the CSV template to prepare patients for {{ cohort.name }}.</p>
+<p><a href="/bulk/template.csv">Download CSV template</a></p>
+<p>For this prototype, use the sample upload to see how validation and duplicate checks might work. No file is uploaded.</p>
+<form method="post" action="/proposed/cohort/sample-upload">{{ button({ text: "Use sample CSV" }) }}</form>
+</div></div>
+{% endblock %}
