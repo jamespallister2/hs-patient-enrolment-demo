@@ -3,13 +3,12 @@
 {% set pageName = "What is the patient's NHS number?" %}
 
 {% block beforeContent %}
-  {{ backLink({ href: "/versions", text: "Back" }) }}
+  {{ backLink({ href: "/enrolments", text: "Back" }) }}
 {% endblock %}
 
 {% block content %}
   <div class="nhsuk-grid-row">
     <div class="nhsuk-grid-column-two-thirds">
-      <span class="nhsuk-caption-m">Proposed — Version 2</span>
       <form method="post" action="/enrol/nhs-number-answer" novalidate>
         {{ input({
           id: "proposedNhsNumber",
@@ -23,8 +22,6 @@
           value: enrol.nhsNumberEntered
         }) }}
         {{ button({ text: "Continue" }) }}
-      </form>
-      {{ insetText({ text: "Prototype note: this proposed question continues into the existing enrolment journey. The rest of Version 2 has not yet been designed." }) }}
-    </div>
+      </form>    </div>
   </div>
 {% endblock %}
