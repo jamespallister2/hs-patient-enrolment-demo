@@ -2,7 +2,7 @@
 {% extends "layout.html" %}
 {% set pageName = "Are you sure you want to delete this enrolment?" %}
 {% block beforeContent %}
-  {{ backLink({ href: "/enrolments", text: "Back" }) }}
+  {{ backLink({ href: "/proposed/enrol/flow", text: "Back" }) }}
 {% endblock %}
 {% block content %}
   <div class="nhsuk-grid-row"><div class="nhsuk-grid-column-two-thirds">
@@ -12,7 +12,7 @@
     <form action="/proposed/enrol/delete-confirmed" method="post">
       <div class="nhsuk-button-group">
         {{ button({ text: "Delete enrolment", variant: "warning" }) }}
-        <a class="nhsuk-link" href="/enrolments">Cancel</a>
+        <a class="nhsuk-link" href="/proposed/enrol/flow">Cancel</a>
       </div>
     </form>
   </div></div>
