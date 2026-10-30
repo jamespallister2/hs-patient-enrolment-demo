@@ -1,0 +1,10 @@
+{% extends "layout.html" %}{% set pageName = "Cohort enrolment" %}{% block content %}
+<div class="nhsuk-grid-row"><div class="nhsuk-grid-column-full"><h1 class="nhsuk-heading-xl">Cohort enrolment</h1>
+<p>Create and manage patient cohorts for enrolment.</p>
+{{ button({ text: "Add a cohort", href: "/proposed/cohort/new" }) }}
+<h2 class="nhsuk-heading-m">Cohorts</h2>
+{% if cohort %}
+{{ table({ responsive: true, head: [{text:"Name"},{text:"Condition / pathway"},{text:"Digital therapeutic"},{text:"Patients"},{text:"Status"},{text:"Action"}],
+rows: [[{text:cohort.name},{text:cohort.conditionLabel},{text:cohort.dtxLabel},{text:cohort.patients | length},{text:cohort.status},{html:'<a href="/proposed/cohort/detail">View cohort</a>'}]] }) }}
+{% else %}<p>You have not created any cohorts yet.</p>{% endif %}
+</div></div>{% endblock %}
