@@ -60,7 +60,13 @@ module.exports = function (router) {
   })
   router.get('/proposed/enrol/flow/confirm', function (req, res) {
     // Demo only: no enrolment data is submitted.
-    res.render('proposed/enrol/flow-confirm')
+    const outcome = ['accepted', 'rejected', 'processing'].includes(req.query.outcome) ? req.query.outcome : 'accepted'
+    const tag = (label, colour) => '<strong class="nhsuk-tag nhsuk-tag--' + colour + '">' + label + '</strong>'
+    res.render('proposed/enrol/flow-confirm', {
+      outcome,
+      processingTag: tag(outcome === 'processing' ? 'Processing' : 'Completed', outcome === 'processing' ? 'yellow' : 'green'),
+      outcomeTag: tag(outcome === 'processing' ? 'Awaiting outcome' : outcome === 'accepted' ? 'Accepted' : 'Rejected', outcome === 'processing' ? 'grey' : outcome === 'accepted' ? 'green' : 'red')
+    })
   })
   router.get('/proposed/enrol/flow/review', function (req, res) {
     res.render('proposed/enrol/flow-review', { duplicate: req.query.dtx === 'mycopd' })
