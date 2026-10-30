@@ -28,7 +28,13 @@ module.exports = function (router) {
     showStatusComparison(req, res, false)
   })
   router.get('/proposed/enrol/patient', function (req, res) {
-    res.render('proposed/enrol/patient')
+    const patients = {
+      priya: { name: 'Priya Patel', number: '900 000 0068' },
+      amara: { name: 'Amara Okafor', number: '900 000 0033' },
+      wei: { name: 'Wei Chen', number: '900 000 0041' }
+    }
+    const patientKey = ['amara', 'wei'].includes(req.query.patient) ? req.query.patient : 'priya'
+    res.render('proposed/enrol/patient', { patientName: patients[patientKey].name, nhsNumber: patients[patientKey].number, patientKey })
   })
   router.get('/proposed/enrol/patient-dtx/:id', function (req, res, next) {
     const records = {
