@@ -1,5 +1,16 @@
-{% extends "layout.html" %}{% set pageName = "Choose a digital therapeutic" %}{% block beforeContent %}{{ backLink({href:"/proposed/cohort/new",text:"Back"}) }}{% endblock %}{% block content %}
-<div class="nhsuk-grid-row"><div class="nhsuk-grid-column-two-thirds"><h1 class="nhsuk-heading-xl">Choose a digital therapeutic</h1>
-<p>{{ cohort.name }} — {{ cohort.conditionLabel }}</p><form action="/proposed/cohort/save-product" method="post">
-{{ radios({idPrefix:"product",name:"product",fieldset:{legend:{text:"Which digital therapeutic is this cohort for?",size:"m"}},items:products}) }}
-{{ button({text:"Create cohort"}) }}</form></div></div>{% endblock %}
+{% extends "layout.html" %}
+{% set pageName = "Choose a digital therapeutic" %}
+{% block beforeContent %}{{ backLink({ href: "/proposed/cohort/new", text: "Back" }) }}{% endblock %}
+{% block content %}
+<div class="nhsuk-grid-row"><div class="nhsuk-grid-column-two-thirds">
+<h1 class="nhsuk-heading-xl">Choose a digital therapeutic</h1>
+<p>{{ cohort.name }} — {{ cohort.conditionLabel }}</p>
+<form action="/proposed/cohort/save-product" method="post">
+{{ radios({
+  idPrefix: "product", name: "product",
+  fieldset: { legend: { text: "Which digital therapeutic is this cohort for?", size: "m" } },
+  items: products
+}) }}
+{{ button({ text: "Create cohort" }) }}
+</form></div></div>
+{% endblock %}
