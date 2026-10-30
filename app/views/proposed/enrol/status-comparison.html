@@ -2,12 +2,11 @@
 {% extends "layout.html" %}
 {% set pageName = "Enrolment " + outcome %}
 {% block beforeContent %}
-  {{ backLink({ href: "/versions", text: "Back" }) }}
+  {{ backLink({ href: "/enrolments", text: "Back" }) }}
 {% endblock %}
 {% block content %}
   <div class="nhsuk-grid-row">
     <div class="nhsuk-grid-column-two-thirds">
-      <span class="nhsuk-caption-m">Proposed — Version 2</span>
       {% if isConfirmation %}
         {% if outcome == "accepted" %}
           {{ panel({ heading: { text: "Enrolment accepted", size: "l" }, text: patientName + " has been sent to enrolment and accepted." }) }}
@@ -40,9 +39,9 @@
       {% if isConfirmation %}
         <p><a class="nhsuk-link" href="/proposed/enrol/view-details?outcome={{ outcome }}">View enrolment details</a></p>
       {% else %}
-        <p><a class="nhsuk-link" href="/proposed/enrol/submission-result?outcome={{ outcome }}">See the submission confirmation</a></p>
+        <p><a class="nhsuk-link" href="/enrolments">Return to enrolments</a></p>
       {% endif %}
-      <p><a class="nhsuk-link" href="/versions">Return to design comparisons</a></p>
+      <p><a class="nhsuk-link" href="/enrolments">Return to enrolments</a></p>
     </div>
   </div>
 {% endblock %}
