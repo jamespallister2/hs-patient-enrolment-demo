@@ -11,6 +11,22 @@ module.exports = function (router) {
   router.get('/proposed/enrol/details-rejected', function (req, res) {
     res.render('proposed/enrol/details-rejected')
   })
+  // Mock outcomes only: neither route submits or modifies enrolments.
+  function showStatusComparison (req, res, isConfirmation) {
+    const outcome = req.query.outcome === 'rejected' ? 'rejected' : 'accepted'
+    res.render('proposed/enrol/status-comparison', {
+      outcome,
+      isConfirmation,
+      patientName: outcome === 'accepted' ? 'Priya Patel' : 'Amara Okafor',
+      nhsNumber: outcome === 'accepted' ? '900 000 0068' : '900 000 0033'
+    })
+  }
+  router.get('/proposed/enrol/submission-result', function (req, res) {
+    showStatusComparison(req, res, true)
+  })
+  router.get('/proposed/enrol/view-details', function (req, res) {
+    showStatusComparison(req, res, false)
+  })
   router.get('/proposed/enrol/delete', function (req, res) {
     res.render('proposed/enrol/delete')
   })
