@@ -16,7 +16,7 @@
     <p>Upload a prepared CSV file of patients to add them to {{ cohort.name }}.</p>
     <p><a class="nhsuk-link" href="/bulk/template.csv">Download the CSV template</a></p>
 
-    <form action="/proposed/cohort/sample-upload" method="post">
+    <form id="csv-upload-form" action="/proposed/cohort/sample-upload" method="post">
       {{ fileUpload({
         id: "cohort-csv",
         name: "cohortCsv",
@@ -28,6 +28,22 @@
       {{ button({ text: "Upload and check patients" }) }}
     </form>
     <p class="nhsuk-body-s">In this prototype, uploading uses sample patient data. No file is sent or stored.</p>
+    <script>
+      document.getElementById('csv-upload-form').addEventListener('submit', function (event) {
+        var file = document.getElementById('cohort-csv')
+        if (!file || !file.files || file.files.length === 0) {
+          event.preventDefault()
+          window.location.href = '/proposed/cohort/upload?error=missing'
+          return
+        }
+        if (!/\.csv$/i.test(file.files[0].name)) {
+          event.preventDefault()
+          window.location.href = '/proposed/cohort/upload?error=missing'
+          return
+        }
+        this.action = '/proposed/cohort/sample-upload?selected=yes'
+      })
+    </script>
   </div>
 </div>
 {% endblock %}
