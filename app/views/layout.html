@@ -61,11 +61,6 @@
             active: false
           } if currentPath | startsWith("/proposed/enrol"),
           {
-            href: "/catalogue",
-            text: "Product catalogue",
-            active: false
-          } if currentPath | startsWith("/proposed/enrol"),
-          {
             href: "/enrolments",
             text: "Enrolments",
             active: currentPath | startsWith("/enrolments") or currentPath | startsWith("/enrol/")
@@ -91,12 +86,35 @@
       }) }}
     {% endif %}
   {% else %}
-    {{ header({
-      service: {
-        text: serviceName,
-        href: "/sign-in"
-      }
-    }) }}
+    {% if currentPath | startsWith("/proposed/enrol") %}
+      {{ header({
+        service: {
+          text: "Clinical Enrolment App",
+          href: "/proposed/enrol/flow"
+        },
+        navigation: {
+          items: [
+            {
+              href: "/proposed/enrol/flow",
+              text: "Patient enrolment",
+              active: true
+            },
+            {
+              href: "/bulk",
+              text: "Cohort enrolment",
+              active: false
+            }
+          ]
+        }
+      }) }}
+    {% else %}
+      {{ header({
+        service: {
+          text: serviceName,
+          href: "/sign-in"
+        }
+      }) }}
+    {% endif %}
   {% endif %}
 {% endblock %}
 
