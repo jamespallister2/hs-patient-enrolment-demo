@@ -20,4 +20,6 @@ require('./routes/catalogue')(router) //  CES-005
 require('./routes/versions')(router) // Prototype comparison – not part of the service
 require('./routes/proposed-enrol')(router) // Proposed interaction design screens
 
+require('./routes/proposed-cohort')(router) // Proposed V2 cohort journey
+
 module.exports = router

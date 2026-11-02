@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% set pageName = "Check cohort details" %}
+{% block beforeContent %}{{ backLink({ href: "/proposed/cohort/detail", text: "Back" }) }}{% endblock %}
+{% block content %}
+<div class="nhsuk-grid-row"><div class="nhsuk-grid-column-two-thirds">
+<h1 class="nhsuk-heading-xl">Check cohort details</h1>
+{{ summaryList({ rows: [
+  { key: { text: "Cohort" }, value: { text: cohort.name } },
+  { key: { text: "Condition / pathway" }, value: { text: cohort.conditionLabel } },
+  { key: { text: "Digital therapeutic" }, value: { text: cohort.dtxLabel } },
+  { key: { text: "Patients" }, value: { text: cohortStats.total | string } },
+  { key: { text: "Ready to submit" }, value: { text: cohortStats.ready | string } },
+  { key: { text: "Needs review" }, value: { text: cohortStats.issues | string } }
+] }) }}
+{% if cohortStats.issues > 0 %}
+<div class="nhsuk-warning-callout">
+<h2 class="nhsuk-warning-callout__label">Patients need review</h2>
+<p>{{ cohortStats.issues }} patient(s) have potential issues and will not be submitted in this prototype.</p>
+</div>{% endif %}
+{% if cohortStats.ready > 0 %}
+<p>Submitting sends eligible patients for enrolment. This action cannot be undone.</p>
+<form action="/proposed/cohort/submit" method="post">{{ button({ text: "Submit cohort for enrolment" }) }}</form>
+{% else %}
+<p>No patients are ready for submission. <a href="/proposed/cohort/detail">Return to the cohort</a> to add patients.</p>
+{% endif %}
+</div></div>
+{% endblock %}
