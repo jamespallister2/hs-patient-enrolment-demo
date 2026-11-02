@@ -32,10 +32,20 @@
     <script>
       (function () {
         var form = document.getElementById('csv-upload-form')
+        var selectedFile = null
+        // The NHS enhanced uploader can replace or relocate its native input.
+        // Capture the actual File when the browser reports a selection.
+        document.addEventListener('change', function (event) {
+          var target = event.target
+          if (target && target.type === 'file' && target.files && target.files.length) {
+            selectedFile = target.files[0]
+          }
+        }, true)
         form.addEventListener('submit', function (event) {
           event.preventDefault()
-          var input = form.querySelector('input[type="file"]')
-          var file = input && input.files && input.files[0]
+          var inputs = Array.prototype.slice.call(document.querySelectorAll('input[type="file"]'))
+          var matching = inputs.find(function (el) { return el.files && el.files.length })
+          var file = selectedFile || (matching && matching.files[0])
           if (!file) {
             window.location.assign('/proposed/cohort/upload?error=missing')
             return
