@@ -29,6 +29,15 @@ module.exports = function (router) {
     res.redirect('/proposed/cohort/detail')
   })
   router.get('/proposed/cohort/detail', show('detail'))
+  router.get('/proposed/cohort/delete', function (req, res) {
+    if (cohort(req).status !== 'Draft') return res.redirect('/proposed/cohort/detail')
+    res.render('proposed/cohort/delete', { cohort: cohort(req) })
+  })
+  router.post('/proposed/cohort/delete', function (req, res) {
+    if (cohort(req).status !== 'Draft') return res.redirect('/proposed/cohort/detail')
+    delete req.session.data.proposedCohort
+    res.redirect('/proposed/cohort?deleted=1')
+  })
   router.get('/proposed/cohort/add', show('add'))
   router.get('/proposed/cohort/find', show('find'))
   router.get('/proposed/cohort/select', show('select', req => {
