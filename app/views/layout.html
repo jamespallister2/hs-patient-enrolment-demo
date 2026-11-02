@@ -58,25 +58,35 @@
             active: true
           } if currentPath | startsWith("/proposed/enrol"),
           {
-            href: "/bulk",
+            href: "/proposed/cohort",
             text: "Cohort enrolment",
             active: false
           } if currentPath | startsWith("/proposed/enrol"),
           {
+            href: "/proposed/enrol/flow",
+            text: "Patient enrolment",
+            active: false
+          } if currentPath | startsWith("/proposed/cohort"),
+          {
+            href: "/proposed/cohort",
+            text: "Cohort enrolment",
+            active: true
+          } if currentPath | startsWith("/proposed/cohort"),
+          {
             href: "/enrolments",
             text: "Enrolments",
             active: currentPath | startsWith("/enrolments") or currentPath | startsWith("/enrol/")
-          } if can("enrolments:view") and not (currentPath | startsWith("/proposed/enrol")),
+          } if can("enrolments:view") and not (currentPath | startsWith("/proposed/enrol")) and not (currentPath | startsWith("/proposed/cohort")),
           {
             href: "/bulk",
             html: bulkNavHtml,
             active: currentPath | startsWith("/bulk")
-          } if can("bulk:upload") and not (currentPath | startsWith("/proposed/enrol")),
+          } if can("bulk:upload") and not (currentPath | startsWith("/proposed/enrol")) and not (currentPath | startsWith("/proposed/cohort")),
           {
             href: "/catalogue",
             text: "Product catalogue",
             active: currentPath | startsWith("/catalogue")
-          } if can("catalogue:manage") and not (currentPath | startsWith("/proposed/enrol"))
+          } if can("catalogue:manage") and not (currentPath | startsWith("/proposed/enrol")) and not (currentPath | startsWith("/proposed/cohort"))
         ]
       }
     }) }}
@@ -88,7 +98,7 @@
       }) }}
     {% endif %}
   {% else %}
-    {% if currentPath | startsWith("/proposed/enrol") %}
+    {% if currentPath | startsWith("/proposed/enrol") or currentPath | startsWith("/proposed/cohort") %}
       {{ header({
         service: {
           text: "Clinical Enrolment App",
@@ -99,12 +109,12 @@
             {
               href: "/proposed/enrol/flow",
               text: "Patient enrolment",
-              active: true
+              active: currentPath | startsWith("/proposed/enrol")
             },
             {
-              href: "/bulk",
+              href: "/proposed/cohort",
               text: "Cohort enrolment",
-              active: false
+              active: currentPath | startsWith("/proposed/cohort")
             }
           ]
         }
