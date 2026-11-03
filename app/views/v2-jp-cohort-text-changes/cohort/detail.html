@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% set pageName = cohort.name %}
-{% block beforeContent %}{{ backLink({ href: "/proposed/cohort", text: "Back to cohorts" }) }}{% endblock %}
+{% block beforeContent %}{{ backLink({ href: basePath, text: "Back to cohorts" }) }}{% endblock %}
 {% block content %}
 {% set readyPatients = cohort.patients | rejectattr("issue") %}
 {% set reviewPatients = cohort.patients | selectattr("issue") %}
@@ -39,16 +39,16 @@
 {% else %}<p>You have not added any patients yet.</p>{% endif %}
 {% if cohort.status == "Draft" %}
   {% if cohort.patients.length == 0 %}
-    {{ button({ text: "Add patients", href: "/proposed/cohort/add" }) }}
+    {{ button({ text: "Add patients", href: basePath + "/add" }) }}
   {% else %}
-    <p><a class="nhsuk-link" href="/proposed/cohort/add">Add more patients</a></p>
+    <p><a class="nhsuk-link" href="{{ basePath }}/add">Add more patients</a></p>
     <h2 class="nhsuk-heading-m nhsuk-u-margin-top-6">Ready to submit?</h2>
     <p>Check the patients before you submit the cohort.</p>
-    {{ button({ text: "Check and submit", href: "/proposed/cohort/review" }) }}
+    {{ button({ text: "Check and submit", href: basePath + "/review" }) }}
   {% endif %}
-  <p class="nhsuk-u-margin-top-6"><a class="nhsuk-link" href="/proposed/cohort/delete">Delete this draft cohort</a></p>
+  <p class="nhsuk-u-margin-top-6"><a class="nhsuk-link" href="{{ basePath }}/delete">Delete this draft cohort</a></p>
 {% else %}
-  <p><a href="/proposed/cohort/outcome">See what happened to each patient</a></p>
+  <p><a href="{{ basePath }}/outcome">See what happened to each patient</a></p>
 {% endif %}
 </div></div>
 {% endblock %}

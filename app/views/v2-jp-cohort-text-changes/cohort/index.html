@@ -5,7 +5,7 @@
 <h1 class="nhsuk-heading-xl">Cohort enrolment</h1>
 <p>Enrol a group of patients on the same health app.</p>
 <p>A cohort is a group of patients you enrol at the same time. For example, everyone from one clinic.</p>
-{{ button({ text: "Add a cohort", href: "/proposed/cohort/new" }) }}
+{{ button({ text: "Add a cohort", href: basePath + "/new" }) }}
 <h2 class="nhsuk-heading-m">Your cohorts</h2>
 {% if cohort %}
 {% set readyCount = cohort.patients | rejectattr("issue") | length %}
@@ -20,7 +20,7 @@
     { text: "Cohort" }, { text: "Condition" }, { text: "Health app" }, { text: "Status" }
   ],
   rows: [[
-    { html: '<a href="/proposed/cohort/detail">' + cohort.name + '</a>' },
+    { html: '<a href="' + basePath + '/detail">' + cohort.name + '</a>' },
     { text: cohort.conditionLabel }, { text: cohort.dtxLabel or "Not selected" },
     { html: statusHtml }
   ]]

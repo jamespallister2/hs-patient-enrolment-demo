@@ -1,14 +1,14 @@
 {% extends "layout.html" %}
 {% set pageName = "Add a cohort" %}
 {% block beforeContent %}
-  {{ backLink({ href: "/proposed/cohort", text: "Back" }) }}
+  {{ backLink({ href: basePath, text: "Back" }) }}
 {% endblock %}
 {% block content %}
 <div class="nhsuk-grid-row">
   <div class="nhsuk-grid-column-two-thirds">
     <h1 class="nhsuk-heading-xl">Add a cohort</h1>
     <p>First you make the cohort. Then you add patients one at a time or from a CSV file.</p>
-    <form action="/proposed/cohort/create" method="post">
+    <form action="{{ basePath }}/create" method="post">
       {{ input({
         id: "cohort-name",
         name: "name",

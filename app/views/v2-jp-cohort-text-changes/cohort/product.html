@@ -1,9 +1,9 @@
 {% extends "layout.html" %}
 {% set pageName = "Which health app is this cohort for?" %}
-{% block beforeContent %}{{ backLink({ href: "/proposed/cohort/new", text: "Back" }) }}{% endblock %}
+{% block beforeContent %}{{ backLink({ href: basePath + "/new", text: "Back" }) }}{% endblock %}
 {% block content %}
 <div class="nhsuk-grid-row"><div class="nhsuk-grid-column-two-thirds">
-<form action="/proposed/cohort/save-product" method="post">
+<form action="{{ basePath }}/save-product" method="post">
 {{ radios({
   idPrefix: "product", name: "product",
   fieldset: { legend: {

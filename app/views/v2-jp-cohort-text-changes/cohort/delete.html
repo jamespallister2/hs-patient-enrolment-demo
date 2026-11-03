@@ -1,17 +1,17 @@
 {% extends "layout.html" %}
 {% set pageName = "Delete cohort" %}
 {% block beforeContent %}
-  {{ backLink({ href: "/proposed/cohort/detail", text: "Back" }) }}
+  {{ backLink({ href: basePath + "/detail", text: "Back" }) }}
 {% endblock %}
 {% block content %}
 <div class="nhsuk-grid-row"><div class="nhsuk-grid-column-two-thirds">
   <h1 class="nhsuk-heading-xl">Are you sure you want to delete this cohort?</h1>
   <p>You are about to delete <strong>{{ cohort.name }}</strong>, including its list of {{ cohort.patients.length }} patients.</p>
   <p>This cannot be undone. No patients will be submitted for enrolment.</p>
-  <form action="/proposed/cohort/delete" method="post">
+  <form action="{{ basePath }}/delete" method="post">
     <div class="nhsuk-button-group">
       {{ button({ text: "Delete cohort", variant: "warning" }) }}
-      <a class="nhsuk-link" href="/proposed/cohort/detail">Cancel</a>
+      <a class="nhsuk-link" href="{{ basePath }}/detail">Cancel</a>
     </div>
   </form>
 </div></div>

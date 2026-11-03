@@ -21,5 +21,6 @@ require('./routes/versions')(router) // Prototype comparison – not part of the
 require('./routes/proposed-enrol')(router) // Proposed interaction design screens
 
 require('./routes/proposed-cohort')(router) // Proposed V2 cohort journey
+require('./routes/v2-jp-cohort')(router) // V2 cohort journey with JP's content changes
 
 module.exports = router

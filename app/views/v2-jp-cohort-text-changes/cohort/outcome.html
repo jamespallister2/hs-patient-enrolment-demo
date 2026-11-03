@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% set pageName = "Patients sent for enrolment" %}
-{% block beforeContent %}{{ backLink({ href: "/proposed/cohort", text: "Back to cohorts" }) }}{% endblock %}
+{% block beforeContent %}{{ backLink({ href: basePath, text: "Back to cohorts" }) }}{% endblock %}
 {% block content %}
 {% set readyPatients = cohort.patients | rejectattr("issue") %}
 {% set reviewPatients = cohort.patients | selectattr("issue") %}
@@ -40,7 +40,7 @@
 {% endfor %}
 {{ table({ responsive: true, head: [{ text: "Patient" }, { text: "NHS number" }, { text: "Status" }], rows: sentRows }) }}
 {% endif %}
-<p><a href="/proposed/cohort">Back to cohorts</a></p>
-<p><a href="/proposed/cohort/new">Add another cohort</a></p>
+<p><a href="{{ basePath }}">Back to cohorts</a></p>
+<p><a href="{{ basePath }}/new">Add another cohort</a></p>
 </div></div>
 {% endblock %}

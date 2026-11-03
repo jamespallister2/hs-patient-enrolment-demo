@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% set pageName = "Upload a CSV file of patients" %}
 {% block beforeContent %}
-  {{ backLink({ href: "/proposed/cohort/add", text: "Back" }) }}
+  {{ backLink({ href: basePath + "/add", text: "Back" }) }}
 {% endblock %}
 {% block content %}
 <div class="nhsuk-grid-row">
@@ -15,7 +15,7 @@
     <span class="nhsuk-caption-l">Adding patients to {{ cohort.name }}</span>
     <h1 class="nhsuk-heading-xl">Upload a CSV file of patients</h1>
     <p>Use our template so the file is set up the right way.</p>
-    <p><a class="nhsuk-link" href="/proposed/cohort/template.csv">Download the CSV template (CSV, 1KB)</a></p>
+    <p><a class="nhsuk-link" href="{{ basePath }}/template.csv">Download the CSV template (CSV, 1KB)</a></p>
     {% set fileRulesHtml %}
       <ul>
         <li>Up to 100 patients, one on each row</li>
@@ -25,9 +25,9 @@
         <li>[List any other required columns in plain words.]</li>
       </ul>
     {% endset %}
-    {{ details({ text: "What to put in the file", html: fileRulesHtml }) }}
+    {{ details({ summaryText: "What to put in the file", html: fileRulesHtml }) }}
 
-    <form id="csv-upload-form" action="/proposed/cohort/sample-upload" method="post">
+    <form id="csv-upload-form" action="{{ basePath }}/sample-upload" method="post">
       <input type="hidden" id="csv-rows" name="csvRows">
       {{ fileUpload({
         id: "cohort-csv",
@@ -57,16 +57,16 @@
           var matching = inputs.find(function (el) { return el.files && el.files.length })
           var file = selectedFile || (matching && matching.files[0])
           if (!file) {
-            window.location.assign('/proposed/cohort/upload?error=missing')
+            window.location.assign('{{ basePath }}/upload?error=missing')
             return
           }
           if (!/\.csv$/i.test(file.name)) {
-            window.location.assign('/proposed/cohort/upload?error=invalid')
+            window.location.assign('{{ basePath }}/upload?error=invalid')
             return
           }
           var reader = new FileReader()
           reader.onerror = function () {
-            window.location.assign('/proposed/cohort/upload?error=invalid')
+            window.location.assign('{{ basePath }}/upload?error=invalid')
           }
           reader.onload = function () {
             try {
@@ -102,7 +102,7 @@
               form.querySelector('[name="csvRows"]').value = JSON.stringify(parsed)
               HTMLFormElement.prototype.submit.call(form)
             } catch (error) {
-              window.location.assign('/proposed/cohort/upload?error=invalid')
+              window.location.assign('{{ basePath }}/upload?error=invalid')
             }
           }
           reader.readAsText(file)

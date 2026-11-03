@@ -1,9 +1,9 @@
 {% extends "layout.html" %}
 {% set pageName = "How do you want to add patients?" %}
-{% block beforeContent %}{{ backLink({ href: "/proposed/cohort/detail", text: "Back" }) }}{% endblock %}
+{% block beforeContent %}{{ backLink({ href: basePath + "/detail", text: "Back" }) }}{% endblock %}
 {% block content %}
 <div class="nhsuk-grid-row"><div class="nhsuk-grid-column-two-thirds">
-<form id="add-method-form" action="/proposed/cohort/find" method="get">
+<form id="add-method-form" action="{{ basePath }}/find" method="get">
 {{ radios({
   idPrefix: "add-method", name: "addMethod",
   fieldset: { legend: {
@@ -23,7 +23,7 @@
     var chosen = document.querySelector('input[name="addMethod"]:checked')
     if (chosen && chosen.value === 'upload') {
       event.preventDefault()
-      window.location.assign('/proposed/cohort/upload')
+      window.location.assign('{{ basePath }}/upload')
     }
   })
 </script>

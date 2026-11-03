@@ -1,11 +1,11 @@
 {% extends "layout.html" %}
 {% set pageName = "Find a patient" %}
-{% block beforeContent %}{{ backLink({ href: "/proposed/cohort/add", text: "Back" }) }}{% endblock %}
+{% block beforeContent %}{{ backLink({ href: basePath + "/add", text: "Back" }) }}{% endblock %}
 {% block content %}
 <div class="nhsuk-grid-row"><div class="nhsuk-grid-column-two-thirds">
 <span class="nhsuk-caption-l">Adding patients to {{ cohort.name }}</span>
 <h1 class="nhsuk-heading-xl">Find a patient</h1>
-<form action="/proposed/cohort/select" method="get">
+<form action="{{ basePath }}/select" method="get">
 <h2 class="nhsuk-heading-m">Search by NHS number</h2>
 {{ input({
   id: "nhs-number", name: "nhsNumber",
