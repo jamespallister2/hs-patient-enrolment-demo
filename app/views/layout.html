@@ -83,20 +83,30 @@
             active: true
           } if currentPath | startsWith("/v2-jp/cohort"),
           {
+            href: "/proposed/enrol/flow",
+            text: "Patient enrolment",
+            active: false
+          } if currentPath | startsWith("/v3-jp/cohort"),
+          {
+            href: "/v3-jp/cohort",
+            text: "Cohort enrolment",
+            active: true
+          } if currentPath | startsWith("/v3-jp/cohort"),
+          {
             href: "/enrolments",
             text: "Enrolments",
             active: currentPath | startsWith("/enrolments") or currentPath | startsWith("/enrol/")
-          } if can("enrolments:view") and not (currentPath | startsWith("/proposed/enrol")) and not (currentPath | startsWith("/proposed/cohort")) and not (currentPath | startsWith("/v2-jp/cohort")),
+          } if can("enrolments:view") and not (currentPath | startsWith("/proposed/enrol")) and not (currentPath | startsWith("/proposed/cohort")) and not (currentPath | startsWith("/v2-jp/cohort")) and not (currentPath | startsWith("/v3-jp/cohort")),
           {
             href: "/bulk",
             html: bulkNavHtml,
             active: currentPath | startsWith("/bulk")
-          } if can("bulk:upload") and not (currentPath | startsWith("/proposed/enrol")) and not (currentPath | startsWith("/proposed/cohort")) and not (currentPath | startsWith("/v2-jp/cohort")),
+          } if can("bulk:upload") and not (currentPath | startsWith("/proposed/enrol")) and not (currentPath | startsWith("/proposed/cohort")) and not (currentPath | startsWith("/v2-jp/cohort")) and not (currentPath | startsWith("/v3-jp/cohort")),
           {
             href: "/catalogue",
             text: "Product catalogue",
             active: currentPath | startsWith("/catalogue")
-          } if can("catalogue:manage") and not (currentPath | startsWith("/proposed/enrol")) and not (currentPath | startsWith("/proposed/cohort")) and not (currentPath | startsWith("/v2-jp/cohort"))
+          } if can("catalogue:manage") and not (currentPath | startsWith("/proposed/enrol")) and not (currentPath | startsWith("/proposed/cohort")) and not (currentPath | startsWith("/v2-jp/cohort")) and not (currentPath | startsWith("/v3-jp/cohort"))
         ]
       }
     }) }}

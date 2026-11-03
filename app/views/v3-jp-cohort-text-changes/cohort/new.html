@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% set pageName = "Add a cohort" %}
+{% block beforeContent %}
+  {{ backLink({ href: basePath, text: "Back" }) }}
+{% endblock %}
+{% block content %}
+<div class="nhsuk-grid-row">
+  <div class="nhsuk-grid-column-two-thirds">
+    {% include "_partials/error-summary.njk" %}
+    <h1 class="nhsuk-heading-xl">Add a cohort</h1>
+    <p>Add the cohort first. Then add patients one at a time or from a CSV file.</p>
+    <form action="{{ basePath }}/create" method="post">
+      {{ input({
+        id: "cohort-name",
+        name: "name",
+        label: { text: "What do you want to call this cohort?", classes: "nhsuk-label--m" },
+        hint: { text: "Use a name your team will know, like the clinic and month." },
+        value: data.name if errors,
+        errorMessage: { text: errors.name.text } if errors.name
+      }) }}
+      {{ radios({
+        idPrefix: "condition",
+        name: "condition",
+        fieldset: { legend: { text: "Which condition is this cohort for?", size: "m" } },
+        value: data.condition if errors,
+        errorMessage: { text: errors.condition.text } if errors.condition,
+        items: [
+          { value: "copd", text: "COPD" },
+          { value: "asthma", text: "Asthma" }
+        ]
+      }) }}
+      {{ button({ text: "Continue" }) }}
+    </form>
+  </div>
+</div>
+{% endblock %}

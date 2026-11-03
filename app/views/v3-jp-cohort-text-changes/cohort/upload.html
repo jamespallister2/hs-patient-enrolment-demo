@@ -1,0 +1,122 @@
+{% extends "layout.html" %}
+{% set pageName = "Upload a CSV file of patients" %}
+{% if uploadError %}{% set errors = true %}{% endif %}
+{% set uploadMessage = uploadError %}
+{% block beforeContent %}
+  {{ backLink({ href: basePath + "/add", text: "Back" }) }}
+{% endblock %}
+{% block content %}
+<div class="nhsuk-grid-row">
+  <div class="nhsuk-grid-column-two-thirds">
+    {% if uploadError %}
+      {{ errorSummary({
+        titleText: "There is a problem",
+        errorList: [{ text: uploadMessage, href: "#cohort-csv" }] 
+      }) }}
+    {% endif %}
+    <span class="nhsuk-caption-l">Adding patients to {{ cohort.name }}</span>
+    <h1 class="nhsuk-heading-xl">Upload a CSV file of patients</h1>
+    <p>Use our template so the file is set up the right way.</p>
+    <p><a class="nhsuk-link" href="{{ basePath }}/template.csv">Download the CSV template (CSV, 1KB)</a></p>
+    {% set fileRulesHtml %}
+      <p>The file must have:</p>
+      <ul>
+        <li>up to 100 patients, one on each row</li>
+        <li>each patient's NHS number, with 10 digits</li>
+        <li>their given name and family name</li>
+        <li>their date of birth as day-month-year, like 30-01-2001</li>
+        <li>[list any other required columns in plain words]</li>
+      </ul>
+    {% endset %}
+    {{ details({ summaryText: "What to put in the file", html: fileRulesHtml }) }}
+
+    <form id="csv-upload-form" action="{{ basePath }}/sample-upload" method="post">
+      <input type="hidden" id="csv-rows" name="csvRows">
+      {{ fileUpload({
+        id: "cohort-csv",
+        name: "cohortCsv",
+        label: { text: "CSV file", classes: "nhsuk-label--m" },
+        attributes: { accept: ".csv,text/csv" },
+        errorMessage: { text: uploadMessage } if uploadError
+      }) }}
+      {{ button({ text: "Upload and check patients" }) }}
+    </form>
+    <p class="nhsuk-body-s">Prototype only. The file stays in your browser. Nothing is sent or saved.</p>
+    <script>
+      (function () {
+        var form = document.getElementById('csv-upload-form')
+        var selectedFile = null
+        // The NHS enhanced uploader can replace or relocate its native input.
+        // Capture the actual File when the browser reports a selection.
+        document.addEventListener('change', function (event) {
+          var target = event.target
+          if (target && target.type === 'file' && target.files && target.files.length) {
+            selectedFile = target.files[0]
+          }
+        }, true)
+        form.addEventListener('submit', function (event) {
+          event.preventDefault()
+          var inputs = Array.prototype.slice.call(document.querySelectorAll('input[type="file"]'))
+          var matching = inputs.find(function (el) { return el.files && el.files.length })
+          var file = selectedFile || (matching && matching.files[0])
+          if (!file) {
+            window.location.assign('{{ basePath }}/upload?error=missing')
+            return
+          }
+          if (!/\.csv$/i.test(file.name)) {
+            window.location.assign('{{ basePath }}/upload?error=type')
+            return
+          }
+          var reader = new FileReader()
+          reader.onerror = function () {
+            window.location.assign('{{ basePath }}/upload?error=failed')
+          }
+          reader.onload = function () {
+            try {
+              var source = String(reader.result || '').replace(/^\uFEFF/, '')
+              var records = [], row = [], value = '', quoted = false
+              for (var i = 0; i < source.length; i++) {
+                var ch = source[i]
+                if (ch === '"') {
+                  if (quoted && source[i + 1] === '"') { value += '"'; i++ }
+                  else { quoted = !quoted }
+                } else if (ch === ',' && !quoted) {
+                  row.push(value); value = ''
+                } else if ((ch === '\n' || ch === '\r') && !quoted) {
+                  if (ch === '\r' && source[i + 1] === '\n') i++
+                  row.push(value); value = ''
+                  if (row.some(function (cell) { return cell.trim() })) records.push(row)
+                  row = []
+                } else { value += ch }
+              }
+              // Error codes match the messages in routes/v3-jp-cohort.js
+              var fail = function (code) { var e = new Error(code); e.code = code; throw e }
+              if (!source.trim()) fail('empty')
+              if (quoted) fail('template')
+              row.push(value)
+              if (row.some(function (cell) { return cell.trim() })) records.push(row)
+              var expected = ['nhsNumber','patientGivenName','patientFamilyName','patientDateOfBirth','patientSex','contactEmail','contactPhone','practitionerIdValue','organisationOds','commissionerOds','coverageSiteOds']
+              var header = (records.shift() || []).map(function (cell) { return cell.trim() })
+              if (header.length !== expected.length ||
+                  expected.some(function (column, i) { return column !== header[i] })) fail('template')
+              if (records.length < 1) fail('empty')
+              if (records.length > 100) fail('rows')
+              var parsed = records.map(function (cells) {
+                if (cells.length !== expected.length) fail('template')
+                var patient = {}
+                expected.forEach(function (column, i) { patient[column] = cells[i] })
+                return patient
+              })
+              form.querySelector('[name="csvRows"]').value = JSON.stringify(parsed)
+              HTMLFormElement.prototype.submit.call(form)
+            } catch (error) {
+              window.location.assign('{{ basePath }}/upload?error=' + (error.code || 'failed'))
+            }
+          }
+          reader.readAsText(file)
+        })
+      })()
+    </script>
+  </div>
+</div>
+{% endblock %}

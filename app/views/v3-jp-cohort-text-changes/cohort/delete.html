@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% set pageName = "Delete " + cohort.name + "?" %}
+{% block beforeContent %}
+  {{ backLink({ href: basePath + "/detail", text: "Back" }) }}
+{% endblock %}
+{% block content %}
+{% set patientTotal = cohort.patients | length %}
+<div class="nhsuk-grid-row"><div class="nhsuk-grid-column-two-thirds">
+  <h1 class="nhsuk-heading-xl">Delete {{ cohort.name }}?</h1>
+  <p>This will delete the cohort and its list of {{ patientTotal }} {{ "patient" if patientTotal == 1 else "patients" }}. None of the patients will be sent.</p>
+  <p>You cannot undo this.</p>
+  <form action="{{ basePath }}/delete" method="post">
+    <div class="nhsuk-button-group">
+      {{ button({ text: "Delete cohort", variant: "warning" }) }}
+      <a class="nhsuk-link" href="{{ basePath }}/detail">No, keep this cohort</a>
+    </div>
+  </form>
+</div></div>
+{% endblock %}

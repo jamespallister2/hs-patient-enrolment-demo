@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% set pageName = "How do you want to add patients?" %}
+{% block beforeContent %}{{ backLink({ href: basePath + "/detail", text: "Back" }) }}{% endblock %}
+{% block content %}
+<div class="nhsuk-grid-row"><div class="nhsuk-grid-column-two-thirds">
+<form id="add-method-form" action="{{ basePath }}/find" method="get">
+{{ radios({
+  idPrefix: "add-method", name: "addMethod",
+  fieldset: { legend: {
+    html: '<span class="nhsuk-caption-l">' + cohort.name + '</span>How do you want to add patients?',
+    size: "l", isPageHeading: true
+  } },
+  items: [
+    { value: "find", text: "Find a patient", hint: { text: "Best for a few patients. Search using their NHS number, or their name and date of birth." } },
+    { value: "upload", text: "Upload a CSV file", hint: { text: "Best for a long list. You can add up to 100 patients." } }
+  ]
+}) }}
+{{ button({ text: "Continue" }) }}
+</form>
+<script>
+  // Prototype only: send the user to the page for the option they chose
+  document.getElementById('add-method-form').addEventListener('submit', function (event) {
+    var chosen = document.querySelector('input[name="addMethod"]:checked')
+    if (chosen && chosen.value === 'upload') {
+      event.preventDefault()
+      window.location.assign('{{ basePath }}/upload')
+    }
+  })
+</script>
+</div></div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% set pageName = "Patients sent for enrolment" %}
+{% block beforeContent %}{{ backLink({ href: basePath, text: "Back to cohorts" }) }}{% endblock %}
+{% block content %}
+{% set readyPatients = cohort.patients | rejectattr("issue") %}
+{% set reviewPatients = cohort.patients | selectattr("issue") %}
+{% set sentCount = readyPatients | length %}
+<div class="nhsuk-grid-row"><div class="nhsuk-grid-column-two-thirds">
+{{ panel({
+  heading: { text: sentCount + (" patient" if sentCount == 1 else " patients") + " sent for enrolment", size: "l" },
+  text: "Cohort: " + cohort.name
+}) }}
+<p class="nhsuk-body-s">Prototype only. No real patients have been enrolled.</p>
+<h2 class="nhsuk-heading-m">What happens next</h2>
+<p>The company that makes {{ cohort.dtxLabel }} will check each patient. This can take up to [time]. You will see the result for each patient here.</p>
+<p>Each patient will then get an invite in the NHS App. [Check this with the supplier.]</p>
+</div></div>
+<div class="nhsuk-grid-row"><div class="nhsuk-grid-column-full">
+{% if reviewPatients | length %}
+<h2 class="nhsuk-heading-m">Patients not sent</h2>
+<p>You can enrol these patients one at a time after you check their details.</p>
+{% set notSentRows = [] %}
+{% for p in reviewPatients %}
+  {% if p.issue == "Potential duplicate enrolment" %}
+    {% set reason = "Already uses " + cohort.dtxLabel %}
+  {% elif p.issue == "Already in this cohort" %}
+    {% set reason = "Already in this cohort" %}
+  {% else %}
+    {% set reason = "Check their name, NHS number and date of birth" %}
+  {% endif %}
+  {% set notSentRows = (notSentRows.push([{ text: p.name }, { text: p.nhsNumber }, { text: reason }]), notSentRows) %}
+{% endfor %}
+{{ table({ responsive: true, head: [{ text: "Patient" }, { text: "NHS number" }, { text: "Reason" }], rows: notSentRows }) }}
+{% endif %}
+{% if sentCount %}
+<h2 class="nhsuk-heading-m">Patients sent</h2>
+{% set sentRows = [] %}
+{% for p in readyPatients %}
+  {% set sentRows = (sentRows.push([{ text: p.name }, { text: p.nhsNumber }, { html: '<strong class="nhsuk-tag nhsuk-tag--blue">Sent</strong>' }]), sentRows) %}
+{% endfor %}
+{{ table({ responsive: true, head: [{ text: "Patient" }, { text: "NHS number" }, { text: "Status" }], rows: sentRows }) }}
+{% endif %}
+<p><a href="{{ basePath }}">Back to cohorts</a></p>
+<p><a href="{{ basePath }}/new">Add another cohort</a></p>
+</div></div>
+{% endblock %}
