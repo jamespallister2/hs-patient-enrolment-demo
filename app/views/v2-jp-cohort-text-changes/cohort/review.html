@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% set pageName = "Check the cohort before you submit it" %}
+{% block beforeContent %}{{ backLink({ href: "/proposed/cohort/detail", text: "Back" }) }}{% endblock %}
+{% block content %}
+{% set readyPatients = cohort.patients | rejectattr("issue") %}
+{% set reviewPatients = cohort.patients | selectattr("issue") %}
+{% macro patientCount(n) %}{{ n }} {{ "patient" if n == 1 else "patients" }}{% endmacro %}
+<div class="nhsuk-grid-row"><div class="nhsuk-grid-column-two-thirds">
+<span class="nhsuk-caption-l">{{ cohort.name }}</span>
+<h1 class="nhsuk-heading-xl">Check the cohort before you submit it</h1>
+{{ summaryList({ rows: [
+  { key: { text: "Condition" }, value: { text: cohort.conditionLabel } },
+  { key: { text: "Health app" }, value: { text: cohort.dtxLabel } }
+] }) }}
+{% if readyPatients | length %}
+<h2 class="nhsuk-heading-m">Patients we will send ({{ readyPatients | length }})</h2>
+{% set sendRows = [] %}
+{% for p in readyPatients %}
+  {% set sendRows = (sendRows.push([{ text: p.name }, { text: p.nhsNumber }]), sendRows) %}
+{% endfor %}
+{{ table({ head: [{ text: "Patient" }, { text: "NHS number" }], rows: sendRows }) }}
+{% endif %}
+{% if reviewPatients | length %}
+<div class="nhsuk-warning-callout">
+<h2 class="nhsuk-warning-callout__label">{{ patientCount(reviewPatients | length) }} need{{ "s" if (reviewPatients | length) == 1 }} review</h2>
+<p>We will not send {{ reviewPatients | pluck("name") | join(" or ") }}.{% if readyPatients | length %} You can fix {{ "them" if (reviewPatients | length) > 1 else "this patient" }} first, or send the other {{ patientCount(readyPatients | length) }} now.{% endif %}</p>
+<p><a href="/proposed/cohort/detail">Review {{ "these patients" if (reviewPatients | length) > 1 else "this patient" }}</a></p>
+</div>
+{% endif %}
+{% if readyPatients | length %}
+<h2 class="nhsuk-heading-m">Now send the cohort</h2>
+<p>We will send the {{ patientCount(readyPatients | length) | trim }} who {{ "is" if (readyPatients | length) == 1 else "are" }} ready to the company that makes {{ cohort.dtxLabel }}. You cannot undo this.</p>
+<form action="/proposed/cohort/submit" method="post">{{ button({ text: "Confirm and send" }) }}</form>
+{% else %}
+<p>No patients are ready to send. <a href="/proposed/cohort/detail">Go back to the cohort</a> to add or fix patients.</p>
+{% endif %}
+</div></div>
+{% endblock %}

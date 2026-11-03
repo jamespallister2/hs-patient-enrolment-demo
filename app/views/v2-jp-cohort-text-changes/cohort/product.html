@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% set pageName = "Which health app is this cohort for?" %}
+{% block beforeContent %}{{ backLink({ href: "/proposed/cohort/new", text: "Back" }) }}{% endblock %}
+{% block content %}
+<div class="nhsuk-grid-row"><div class="nhsuk-grid-column-two-thirds">
+<form action="/proposed/cohort/save-product" method="post">
+{{ radios({
+  idPrefix: "product", name: "product",
+  fieldset: { legend: {
+    html: '<span class="nhsuk-caption-l">' + cohort.name + ' (' + cohort.conditionLabel + ')</span>Which health app is this cohort for?',
+    size: "l", isPageHeading: true
+  } },
+  items: products
+}) }}
+{{ insetText({ text: "You cannot add patients who already use this app." }) }}
+<p>We will save the cohort as a draft. You can add patients next.</p>
+{{ button({ text: "Create cohort" }) }}
+</form></div></div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% set pageName = cohort.name %}
+{% block beforeContent %}{{ backLink({ href: "/proposed/cohort", text: "Back to cohorts" }) }}{% endblock %}
+{% block content %}
+{% set readyPatients = cohort.patients | rejectattr("issue") %}
+{% set reviewPatients = cohort.patients | selectattr("issue") %}
+<div class="nhsuk-grid-row"><div class="nhsuk-grid-column-full">
+<h1 class="nhsuk-heading-xl">{{ cohort.name }}</h1>
+{{ summaryList({ rows: [
+  { key: { text: "Status" }, value: { html: '<strong class="nhsuk-tag nhsuk-tag--' + ('grey' if cohort.status == 'Draft' else 'green') + '">' + cohort.status + '</strong>' } },
+  { key: { text: "Condition" }, value: { text: cohort.conditionLabel } },
+  { key: { text: "Health app" }, value: { text: cohort.dtxLabel } }
+] }) }}
+<h2 class="nhsuk-heading-m">Patients in this cohort ({{ cohort.patients | length }})</h2>
+{% if cohort.patients.length %}
+{% if reviewPatients | length %}
+<p>{{ readyPatients | length }} ready, {{ reviewPatients | length }} need review</p>
+{% endif %}
+{% set rows = [] %}
+{# Patients who need review are listed first so they are not missed #}
+{% for p in (reviewPatients | list).concat(readyPatients | list) %}
+  {% if p.issue == "Potential duplicate enrolment" %}
+    {% set reason = "Already uses " + cohort.dtxLabel %}
+  {% elif p.issue == "Already in this cohort" %}
+    {% set reason = "Already in this cohort" %}
+  {% elif p.issue %}
+    {% set reason = "Name, NHS number or date of birth is missing or wrong" %}
+  {% endif %}
+  {% set statusHtml %}{% if p.issue %}<strong class="nhsuk-tag nhsuk-tag--yellow">Needs review</strong> {{ reason }}{% else %}<strong class="nhsuk-tag nhsuk-tag--green">Ready</strong>{% endif %}{% endset %}
+  {% set rows = (rows.push([
+    { text: p.name }, { text: p.nhsNumber }, { html: statusHtml }
+  ]), rows) %}
+{% endfor %}
+{{ table({
+  responsive: true,
+  head: [{ text: "Patient" }, { text: "NHS number" }, { text: "Status" }],
+  rows: rows
+}) }}
+{% else %}<p>You have not added any patients yet.</p>{% endif %}
+{% if cohort.status == "Draft" %}
+  {% if cohort.patients.length == 0 %}
+    {{ button({ text: "Add patients", href: "/proposed/cohort/add" }) }}
+  {% else %}
+    <p><a class="nhsuk-link" href="/proposed/cohort/add">Add more patients</a></p>
+    <h2 class="nhsuk-heading-m nhsuk-u-margin-top-6">Ready to submit?</h2>
+    <p>Check the patients before you submit the cohort.</p>
+    {{ button({ text: "Check and submit", href: "/proposed/cohort/review" }) }}
+  {% endif %}
+  <p class="nhsuk-u-margin-top-6"><a class="nhsuk-link" href="/proposed/cohort/delete">Delete this draft cohort</a></p>
+{% else %}
+  <p><a href="/proposed/cohort/outcome">See what happened to each patient</a></p>
+{% endif %}
+</div></div>
+{% endblock %}

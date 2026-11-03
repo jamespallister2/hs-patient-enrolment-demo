@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% set pageName = "Cohort enrolment" %}
+{% block content %}
+<div class="nhsuk-grid-row"><div class="nhsuk-grid-column-full">
+<h1 class="nhsuk-heading-xl">Cohort enrolment</h1>
+<p>Enrol a group of patients on the same health app.</p>
+<p>A cohort is a group of patients you enrol at the same time. For example, everyone from one clinic.</p>
+{{ button({ text: "Add a cohort", href: "/proposed/cohort/new" }) }}
+<h2 class="nhsuk-heading-m">Your cohorts</h2>
+{% if cohort %}
+{% set readyCount = cohort.patients | rejectattr("issue") | length %}
+{% if cohort.status == "Draft" %}
+  {% set statusHtml = '<strong class="nhsuk-tag nhsuk-tag--grey">Draft</strong>' %}
+{% else %}
+  {% set statusHtml = '<strong class="nhsuk-tag nhsuk-tag--green">Sent: ' + readyCount + ' of ' + (cohort.patients | length) + ' patients</strong>' %}
+{% endif %}
+{{ table({
+  responsive: true,
+  head: [
+    { text: "Cohort" }, { text: "Condition" }, { text: "Health app" }, { text: "Status" }
+  ],
+  rows: [[
+    { html: '<a href="/proposed/cohort/detail">' + cohort.name + '</a>' },
+    { text: cohort.conditionLabel }, { text: cohort.dtxLabel or "Not selected" },
+    { html: statusHtml }
+  ]]
+}) }}
+{% else %}<p>You have not added any cohorts yet.</p>{% endif %}
+</div></div>
+{% endblock %}
