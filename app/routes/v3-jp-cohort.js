@@ -109,11 +109,13 @@ module.exports = function (router) {
     const p=Object.values(patients).find(p=>p.nhsNumber.replace(/\s/g,'')===q) ||
       Object.values(patients).find(p=>String(req.query.familyName||'').trim().toLowerCase()===p.name.split(' ').pop().toLowerCase()) ||
       patients.priya
-    return {patient:p, duplicate:cohort(req).patients.some(x=>x.key===p.key) || (p.key==='priya' && cohort(req).dtxLabel==='myCOPD')}
+    // Compare NHS numbers, so a patient added from a CSV file is also recognised here
+    const inCohort = cohort(req).patients.some(x=>x.nhsNumber.replace(/\s/g,'')===p.nhsNumber.replace(/\s/g,''))
+    return {patient:p, inCohort, duplicate: inCohort || (p.key==='priya' && cohort(req).dtxLabel==='myCOPD')}
   }))
   router.post(BASE + '/add-patient', function(req,res) {
     const c=cohort(req),p=patients[req.body.patient]
-    if (p && !c.patients.some(x=>x.key===p.key) && !(p.key==='priya' && c.dtxLabel==='myCOPD')) c.patients.push({...p,issue:null})
+    if (p && !c.patients.some(x=>x.nhsNumber.replace(/\s/g,'')===p.nhsNumber.replace(/\s/g,'')) && !(p.key==='priya' && c.dtxLabel==='myCOPD')) c.patients.push({...p,issue:null})
     res.redirect(BASE + '/detail')
   })
   const csvColumns = ['nhsNumber','patientGivenName','patientFamilyName','patientDateOfBirth','patientSex','contactEmail','contactPhone','practitionerIdValue','organisationOds','commissionerOds','coverageSiteOds']

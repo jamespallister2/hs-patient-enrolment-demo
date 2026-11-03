@@ -1,5 +1,4 @@
 {% extends "layout.html" %}
-{% set inCohort = patient.key in (cohort.patients | pluck("key")) %}
 {% if duplicate and inCohort %}
   {% set heading = patient.name + " is already in this cohort" %}
 {% elif duplicate %}
