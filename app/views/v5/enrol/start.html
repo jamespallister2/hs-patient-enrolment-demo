@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% set pageName = "Enrol a patient onto a health app" %}
+{% block content %}
+<div class="nhsuk-grid-row">
+  <div class="nhsuk-grid-column-two-thirds">
+    <h1 class="nhsuk-heading-xl">Enrol a patient onto a health app</h1>
+    <p>Use this service to enrol a patient onto a health app recommended by a clinician. Enrol means sign them up and initiate the NHS App message invitation.</p>
+    <p>A health app helps a patient manage a health condition. Some people call them digital therapeutics.</p>
+
+    <h2 class="nhsuk-heading-m">Before you start</h2>
+    <p>You will need the patient's:</p>
+    <ul class="nhsuk-list nhsuk-list--bullet">
+      <li>NHS number, or</li>
+      <li>family name and date of birth</li>
+    </ul>
+
+    <h2 class="nhsuk-heading-m">Who can use this service</h2>
+    <p>You can use this service if you work in an NHS team that is a participant in NHS HealthStore. This includes GP surgeries and NHS trusts. You need an NHS smartcard or Care Identity to log in. If you do not have one, ask your local smartcard team.</p>
+
+    {{ button({ text: "Log in with my Care Identity", href: "/prototype/sign-in-as/clinician?next=/proposed/enrol/flow" }) }}
+    <p class="nhsuk-body-s">Prototype only. Log in is not real and no real enrolments are made.</p>
+  </div>
+</div>
+{% endblock %}
