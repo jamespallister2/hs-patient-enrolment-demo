@@ -1,0 +1,196 @@
+{#
+  PES landing page, version 3
+
+  Same text as pes-landing2.html. Layout and styles now follow the NHS Notify
+  home page (https://notify.nhs.uk) and use NHS.UK frontend components.
+  Page styles: app/assets/sass/components/_app-landing.scss
+#}
+{% extends "prototype-kit-template.njk" %}
+
+{% set loginHref = "/prototype/sign-in-as/clinician?next=/proposed/enrol/flow" %}
+
+{% block pageTitle %}Enrol a patient onto a health app{% endblock %}
+
+{% block head %}
+  <link href="/assets/sass/main.css" rel="stylesheet">
+{% endblock %}
+
+{% block header %}
+  {{ header({
+    service: {
+      text: "Enrol a patient on a health app",
+      href: "/hp/pes-landing3"
+    },
+    account: {
+      items: [{ href: loginHref, text: "Log in" }]
+    }
+  }) }}
+
+  <div class="app-landing-phase-banner">
+    <div class="nhsuk-width-container">
+      <p class="app-landing-phase-banner__content">
+        <strong class="nhsuk-tag">Beta</strong>
+        <span class="app-landing-phase-banner__text">This is a new service. Your <a class="nhsuk-link" href="#">feedback</a> will help us make it better.</span>
+      </p>
+    </div>
+  </div>
+{% endblock %}
+
+{% block main %}
+<main id="maincontent" role="main">
+
+  {# Hero #}
+  <div class="app-landing-banner--blue">
+    <div class="nhsuk-width-container nhsuk-main-wrapper">
+      <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-one-half">
+          <h1 class="nhsuk-heading-l">The simple way to enrol patients onto health apps</h1>
+          <p>Sign a patient up to a health app and invite them via the NHS App in just a few steps. For people working in teams participating in NHS HealthStore, in primary and secondary care settings</p>
+          <p>An NHS <a class="nhsuk-link nhsuk-link--reverse" href="https://healthstore-nhs.vercel.app/">HealthStore</a> service</p>
+          {{ button({
+            text: "Log in with my Care Identity",
+            href: loginHref,
+            variant: "reverse",
+            classes: "nhsuk-u-margin-bottom-0"
+          }) }}
+        </div>
+        <div class="nhsuk-grid-column-one-half app-landing-hide-on-mobile">
+          {# Placeholder illustration: swap for a real image #}
+          <svg class="app-landing-hero-image" viewBox="0 0 400 260" aria-hidden="true" focusable="false">
+            <rect x="110" y="70" width="230" height="150" rx="6" fill="#e8edee"/>
+            <rect x="122" y="82" width="206" height="120" fill="#fff"/>
+            <rect x="122" y="82" width="206" height="18" fill="#005eb8"/>
+            <circle cx="140" cy="122" r="6" fill="none" stroke="#4c6272" stroke-width="2"/>
+            <rect x="152" y="119" width="70" height="6" fill="#aeb7bd"/>
+            <circle cx="140" cy="142" r="6" fill="none" stroke="#4c6272" stroke-width="2"/>
+            <rect x="152" y="139" width="54" height="6" fill="#aeb7bd"/>
+            <rect x="132" y="162" width="44" height="14" fill="#007f3b"/>
+            <rect x="90" y="220" width="270" height="10" rx="3" fill="#e8edee"/>
+            <rect x="30" y="20" width="56" height="100" rx="10" fill="#fff"/>
+            <rect x="38" y="34" width="40" height="66" rx="3" fill="#e8f1f8"/>
+            <rect x="46" y="46" width="24" height="24" rx="4" fill="#005eb8"/>
+            <path d="M92 60 H 250 V 70" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="4 6"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# Benefits #}
+  {% set benefits = [
+    {
+      heading: "Initiates NHS App invitation",
+      description: "Go from clinical discussion to initiating the NHS App invite message in a few basic steps"
+    },
+    {
+      heading: "Integrated with PDS",
+      description: "Finds patients using NHS records. Our service alerts the provider and sets up the patient's account"
+    },
+    {
+      heading: "Safety netting built in",
+      description: "Checks what a patient is already on, so they are not enrolled twice."
+    }
+  ] %}
+  <div class="app-landing-banner--white">
+    <div class="nhsuk-width-container nhsuk-main-wrapper">
+      <div class="nhsuk-grid-row">
+        {% for item in benefits %}
+        <div class="nhsuk-grid-column-one-third">
+          <h2 class="nhsuk-heading-m">{{ item.heading }}</h2>
+          <p>{{ item.description }}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  {# How it works #}
+  {% set steps = [
+    { heading: "Log in", description: "Log in with your NHS smartcard or Care Identity." },
+    { heading: "Find the patient", description: "Use their NHS number. Or use their name and date of birth." },
+    { heading: "Check what they are already on", description: "See the health apps the patient already uses. A patient can only be on each app once." }
+  ] %}
+  <div class="nhsuk-width-container nhsuk-main-wrapper">
+    <h2 class="nhsuk-heading-l">How it works</h2>
+    <div class="app-landing-list">
+      {% for step in steps %}
+      <div class="nhsuk-grid-row app-landing-list__item">
+        <div class="nhsuk-grid-column-one-half">
+          <h3 class="nhsuk-heading-m app-landing-list__heading">
+            <span class="app-landing-list__number">{{ loop.index }}</span>
+            <span class="app-landing-list__title">{{ step.heading }}</span>
+          </h3>
+          <div class="app-landing-list__description">
+            <p>{{ step.description }}</p>
+          </div>
+        </div>
+        <div class="nhsuk-grid-column-one-half app-landing-hide-on-mobile">
+          <div class="app-landing-image-placeholder" aria-hidden="true">Image</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  {# Headline numbers #}
+  {% set stats = [
+    { before: "More than", after: "patients enrolled" },
+    { before: "Over", after: "users" },
+    { before: "Works with", after: "health apps" }
+  ] %}
+  <div class="app-landing-banner--white">
+    <div class="nhsuk-width-container nhsuk-main-wrapper">
+      <div class="nhsuk-grid-row">
+        {% for stat in stats %}
+        <div class="nhsuk-grid-column-one-third">
+          <p class="app-landing-stat">
+            {{ stat.before }}
+            <strong class="app-landing-stat__number">[number]</strong>
+            {{ stat.after }}
+          </p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  {# Who can use this service #}
+  <div class="nhsuk-width-container nhsuk-main-wrapper">
+    <div class="nhsuk-grid-row">
+      <div class="nhsuk-grid-column-two-thirds">
+        <h2 class="nhsuk-heading-l">Who can use this service</h2>
+        <p>You can use this service if you work in an NHS team that is a participant in NHS HealthStore. This includes GP surgeries and NHS trusts.</p>
+        <p>You need an NHS smartcard or Care Identity to log in. If you do not have one, ask your local smartcard team.</p>
+      </div>
+    </div>
+  </div>
+
+  {# Quote #}
+  <div class="app-landing-banner--blue">
+    <div class="nhsuk-width-container nhsuk-main-wrapper">
+      <div class="app-landing-quote">
+        <div class="app-landing-quote__avatar" aria-hidden="true"></div>
+        <blockquote class="app-landing-quote__text">
+          <p>[Add a quote from a user in research.]</p>
+          <cite class="app-landing-quote__cite">[Name, role, organisation]</cite>
+        </blockquote>
+      </div>
+    </div>
+  </div>
+
+</main>
+{% endblock %}
+
+{% block footer %}
+  {{ footer({
+    meta: {
+      items: [
+        { href: "#", text: "Help and support" },
+        { href: "#", text: "User guide" },
+        { href: "#", text: "Cookies" },
+        { href: "#", text: "Accessibility statement" },
+        { href: "#", text: "Terms of use" }
+      ]
+    }
+  }) }}
+{% endblock %}

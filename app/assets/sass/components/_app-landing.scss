@@ -1,0 +1,141 @@
+// Landing page – views/hp/pes-landing3.html
+//
+// Layout and styles follow the NHS Notify home page (https://notify.nhs.uk).
+// Ported from docs/assets/css/_nhsnotify.scss in
+// https://github.com/NHSDigital/nhs-notify-web-cms, using NHS.UK frontend tokens.
+
+// Full-width coloured bands
+.app-landing-banner--blue {
+  background-color: $nhsuk-brand-colour;
+  color: $nhsuk-reverse-text-colour;
+}
+
+.app-landing-banner--white {
+  background-color: nhsuk-colour("white");
+}
+
+// Phase banner (not an NHS.UK frontend component, so styled here as Notify does)
+.app-landing-phase-banner {
+  padding-top: nhsuk-spacing(2);
+  padding-bottom: nhsuk-spacing(2);
+  border-bottom: 1px solid $nhsuk-border-colour;
+  background-color: nhsuk-colour("white");
+}
+
+.app-landing-phase-banner__content {
+  @include nhsuk-font-size(16);
+  margin-bottom: 0;
+}
+
+.app-landing-phase-banner__text {
+  padding-left: nhsuk-spacing(2);
+}
+
+// Hero illustration
+.app-landing-hero-image {
+  display: block;
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+}
+
+// Numbered "How it works" list
+.app-landing-list {
+  padding-top: nhsuk-spacing(4);
+}
+
+.app-landing-list__item {
+  padding-bottom: nhsuk-spacing(7);
+
+  &:last-child {
+    padding-bottom: 0;
+  }
+}
+
+.app-landing-list__heading {
+  display: flex;
+  align-items: center;
+  margin-bottom: nhsuk-spacing(3);
+}
+
+.app-landing-list__number {
+  flex: 0 0 auto;
+  width: 2em;
+  height: 2em;
+  border-radius: 50%;
+  background-color: $nhsuk-brand-colour;
+  color: $nhsuk-reverse-text-colour;
+  line-height: 2em;
+  text-align: center;
+}
+
+.app-landing-list__title {
+  padding-left: nhsuk-spacing(4);
+}
+
+.app-landing-list__description {
+  @include nhsuk-media-query($from: tablet) {
+    padding-left: 5.5em;
+  }
+}
+
+// Grey box standing in for an illustration until one is added
+.app-landing-image-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 378px;
+  aspect-ratio: 378 / 120;
+  background-color: $nhsuk-border-colour;
+  color: $nhsuk-secondary-text-colour;
+  @include nhsuk-font-size(16);
+}
+
+// Headline numbers
+.app-landing-stat {
+  margin-bottom: nhsuk-spacing(3);
+}
+
+.app-landing-stat__number {
+  display: block;
+  @include nhsuk-font-size(36);
+}
+
+// Quote from a user
+.app-landing-quote {
+  display: flex;
+  align-items: center;
+  gap: nhsuk-spacing(5);
+}
+
+.app-landing-quote__avatar {
+  flex: 0 0 auto;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: $nhsuk-border-colour;
+}
+
+.app-landing-quote__text {
+  margin: 0;
+
+  p {
+    margin-bottom: nhsuk-spacing(2);
+    @include nhsuk-font-size(26);
+    font-weight: $nhsuk-font-weight-bold;
+  }
+}
+
+.app-landing-quote__cite {
+  display: block;
+  @include nhsuk-font-size(16);
+  font-weight: $nhsuk-font-weight-normal;
+  font-style: normal;
+}
+
+// Images are decorative, so hide them on small screens as Notify does
+.app-landing-hide-on-mobile {
+  @include nhsuk-media-query($until: tablet) {
+    display: none;
+  }
+}
