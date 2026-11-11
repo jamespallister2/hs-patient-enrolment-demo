@@ -9,7 +9,7 @@
   "author": "https://github.com/nhsuk/",
   "license": "MIT",
   "dependencies": {
-    "accessible-autocomplete": "^3.0.1",
+    "accessible-autocomplete": "^3.0.2",
     "nhsuk-frontend": "^10.6.1",
     "nhsuk-prototype-kit": "^8.5.2"
   },
