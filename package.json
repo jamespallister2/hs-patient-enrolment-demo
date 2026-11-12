@@ -11,7 +11,7 @@
   "dependencies": {
     "accessible-autocomplete": "^3.0.1",
     "nhsuk-frontend": "^10.6.1",
-    "nhsuk-prototype-kit": "^8.5.2"
+    "nhsuk-prototype-kit": "^8.6.0"
   },
   "engines": {
     "node": "^22.11.0 || ^24.11.0"
